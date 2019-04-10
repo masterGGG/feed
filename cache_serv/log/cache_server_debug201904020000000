@@ -1,0 +1,154 @@
+[17:46:43][00539]CACHE_SERVER: version: 1.0.0 build time: Jan  2 2019 15:50:32
+[17:46:43][00539]SUCCESS: create_instance.
+[17:46:43][00539]msg_id:0x9102310, log_interval:60, logfile:./logfile
+[17:46:43][00541]cache queue ring queue len: 1024
+[17:46:43][00541]work_proc enter main loop.
+[17:46:44][00546]NET_PROC enter main loop.
+[17:46:45][00539]SUCCESS: init_instance.
+[17:46:45][00539]Enter main loop.
+[17:47:09][00539]Leave main loop.
+[17:47:09][00546]NET_PROC leave main loop.
+[17:47:09][00541]WORK_PROC leave main loop.
+[17:48:06][00710]CACHE_SERVER: version: 1.0.0 build time: Jan  2 2019 15:50:32
+[17:48:06][00710]SUCCESS: create_instance.
+[17:48:06][00710]msg_id:0x9102310, log_interval:60, logfile:./logfile
+[17:48:06][00712]cache queue ring queue len: 1024
+[17:48:06][00712]work_proc enter main loop.
+[17:48:07][00720]NET_PROC enter main loop.
+[17:48:08][00710]SUCCESS: init_instance.
+[17:48:08][00710]Enter main loop.
+[17:48:22][00710]Leave main loop.
+[17:48:22][00720]NET_PROC leave main loop.
+[17:48:22][00712]WORK_PROC leave main loop.
+[17:49:06][00814]CACHE_SERVER: version: 1.0.0 build time: Jan  2 2019 15:50:32
+[17:49:06][00814]SUCCESS: create_instance.
+[17:49:06][00814]msg_id:0x9102310, log_interval:60, logfile:./logfile
+[17:49:06][00816]cache queue ring queue len: 1024
+[17:49:06][00816]work_proc enter main loop.
+[17:49:07][00824]NET_PROC enter main loop.
+[17:49:08][00814]SUCCESS: init_instance.
+[17:49:08][00814]Enter main loop.
+[17:51:04][00814]Leave main loop.
+[17:51:04][00824]NET_PROC leave main loop.
+[17:51:04][00816]WORK_PROC leave main loop.
+[17:52:07][01488]CACHE_SERVER: version: 1.0.0 build time: Jan  2 2019 15:50:32
+[17:52:07][01488]SUCCESS: create_instance.
+[17:52:07][01488]msg_id:0x9102310, log_interval:60, logfile:./logfile
+[17:52:07][01490]cache queue ring queue len: 1024
+[17:52:07][01490]work_proc enter main loop.
+[17:52:08][01498]NET_PROC enter main loop.
+[17:52:09][01488]SUCCESS: init_instance.
+[17:52:09][01488]Enter main loop.
+[17:52:25][01488]Leave main loop.
+[17:52:25][01498]NET_PROC leave main loop.
+[17:52:25][01490]WORK_PROC leave main loop.
+[17:53:06][01638]CACHE_SERVER: version: 1.0.0 build time: Jan  2 2019 15:50:32
+[17:53:06][01638]SUCCESS: create_instance.
+[17:53:06][01638]msg_id:0x9102310, log_interval:60, logfile:./logfile
+[17:53:06][01640]cache queue ring queue len: 1024
+[17:53:06][01640]work_proc enter main loop.
+[17:53:07][01650]NET_PROC enter main loop.
+[17:53:08][01638]SUCCESS: init_instance.
+[17:53:08][01638]Enter main loop.
+[17:53:47][01638]Leave main loop.
+[17:53:47][01650]NET_PROC leave main loop.
+[17:53:47][01640]WORK_PROC leave main loop.
+[17:54:07][01716]CACHE_SERVER: version: 1.0.0 build time: Jan  2 2019 15:50:32
+[17:54:07][01716]SUCCESS: create_instance.
+[17:54:07][01716]msg_id:0x9102310, log_interval:60, logfile:./logfile
+[17:54:07][01718]cache queue ring queue len: 1024
+[17:54:07][01718]work_proc enter main loop.
+[17:54:08][01723]NET_PROC enter main loop.
+[17:54:09][01716]SUCCESS: init_instance.
+[17:54:09][01716]Enter main loop.
+[17:54:21][01716]Leave main loop.
+[17:54:21][01723]NET_PROC leave main loop.
+[17:54:21][01718]WORK_PROC leave main loop.
+[17:55:06][02117]CACHE_SERVER: version: 1.0.0 build time: Jan  2 2019 15:50:32
+[17:55:06][02117]SUCCESS: create_instance.
+[17:55:06][02117]msg_id:0x9102310, log_interval:60, logfile:./logfile
+[17:55:06][02120]cache queue ring queue len: 1024
+[17:55:06][02120]work_proc enter main loop.
+[17:55:07][02169]NET_PROC enter main loop.
+[17:55:08][02117]SUCCESS: init_instance.
+[17:55:08][02117]Enter main loop.
+[17:57:19][02117]Leave main loop.
+[17:57:19][02169]NET_PROC leave main loop.
+[17:57:19][02120]WORK_PROC leave main loop.
+[17:57:29][02379]CACHE_SERVER: version: 1.0.0 build time: Jan  2 2019 15:50:32
+[17:57:29][02379]SUCCESS: create_instance.
+[17:57:29][02379]msg_id:0x9102310, log_interval:60, logfile:./logfile
+[17:57:29][02381]cache queue ring queue len: 1024
+[17:57:29][02381]work_proc enter main loop.
+[17:57:30][02386]NET_PROC enter main loop.
+[17:57:31][02379]SUCCESS: init_instance.
+[17:57:31][02379]Enter main loop.
+[17:57:36][02379]Leave main loop.
+[17:57:36][02386]NET_PROC leave main loop.
+[17:57:36][02381]WORK_PROC leave main loop.
+[17:58:06][02488]CACHE_SERVER: version: 1.0.0 build time: Jan  2 2019 15:50:32
+[17:58:06][02488]SUCCESS: create_instance.
+[17:58:06][02488]msg_id:0x9102310, log_interval:60, logfile:./logfile
+[17:58:06][02490]cache queue ring queue len: 1024
+[17:58:06][02490]work_proc enter main loop.
+[17:58:07][02498]NET_PROC enter main loop.
+[17:58:08][02488]SUCCESS: init_instance.
+[17:58:08][02488]Enter main loop.
+[18:00:12][02488]Leave main loop.
+[18:00:12][02498]NET_PROC leave main loop.
+[18:00:12][02490]WORK_PROC leave main loop.
+[18:01:06][03103]CACHE_SERVER: version: 1.0.0 build time: Jan  2 2019 15:50:32
+[18:01:06][03103]SUCCESS: create_instance.
+[18:01:06][03103]msg_id:0x9102310, log_interval:60, logfile:./logfile
+[18:01:06][03105]cache queue ring queue len: 1024
+[18:01:06][03105]work_proc enter main loop.
+[18:01:07][03113]NET_PROC enter main loop.
+[18:01:08][03103]SUCCESS: init_instance.
+[18:01:08][03103]Enter main loop.
+[18:01:32][03103]Leave main loop.
+[18:01:32][03113]NET_PROC leave main loop.
+[18:01:32][03105]WORK_PROC leave main loop.
+[18:02:06][03215]CACHE_SERVER: version: 1.0.0 build time: Jan  2 2019 15:50:32
+[18:02:06][03215]SUCCESS: create_instance.
+[18:02:06][03215]msg_id:0x9102310, log_interval:60, logfile:./logfile
+[18:02:06][03217]cache queue ring queue len: 1024
+[18:02:06][03217]work_proc enter main loop.
+[18:02:07][03225]NET_PROC enter main loop.
+[18:02:08][03215]SUCCESS: init_instance.
+[18:02:08][03215]Enter main loop.
+[18:02:55][03215]Leave main loop.
+[18:02:55][03225]NET_PROC leave main loop.
+[18:02:55][03217]WORK_PROC leave main loop.
+[18:05:35][03785]CACHE_SERVER: version: 1.0.0 build time: Jan  2 2019 15:50:32
+[18:05:35][03785]SUCCESS: create_instance.
+[18:05:35][03785]msg_id:0x9102310, log_interval:60, logfile:./logfile
+[18:05:35][03787]cache queue ring queue len: 1024
+[18:05:35][03787]work_proc enter main loop.
+[18:05:36][03792]NET_PROC enter main loop.
+[18:05:37][03785]SUCCESS: init_instance.
+[18:05:37][03785]Enter main loop.
+[18:05:42][03785]Leave main loop.
+[18:05:42][03792]NET_PROC leave main loop.
+[18:05:42][03787]WORK_PROC leave main loop.
+[18:08:29][03996]CACHE_SERVER: version: 1.0.0 build time: Jan  2 2019 15:50:32
+[18:08:29][03996]SUCCESS: create_instance.
+[18:08:29][03996]msg_id:0x9102310, log_interval:60, logfile:./logfile
+[18:08:29][03998]cache queue ring queue len: 1024
+[18:08:29][03998]work_proc enter main loop.
+[18:08:30][04003]NET_PROC enter main loop.
+[18:08:31][03996]SUCCESS: init_instance.
+[18:08:31][03996]Enter main loop.
+[18:08:50][03996]Leave main loop.
+[18:08:50][04003]NET_PROC leave main loop.
+[18:08:50][03998]WORK_PROC leave main loop.
+[18:09:06][04157]CACHE_SERVER: version: 1.0.0 build time: Jan  2 2019 15:50:32
+[18:09:06][04157]SUCCESS: create_instance.
+[18:09:06][04157]msg_id:0x9102310, log_interval:60, logfile:./logfile
+[18:09:06][04159]cache queue ring queue len: 1024
+[18:09:06][04159]work_proc enter main loop.
+[18:09:07][04167]NET_PROC enter main loop.
+[18:09:08][04157]SUCCESS: init_instance.
+[18:09:08][04157]Enter main loop.
+[18:11:36][04157]Leave main loop.
+[18:11:36][04167]NET_PROC leave main loop.
+[18:11:36][04159]WORK_PROC leave main loop.

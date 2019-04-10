@@ -1,0 +1,701 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+ALERT_LOG	log.h	186;"	d
+ALERT_LOG	log.h	191;"	d
+BASENAME	Makefile	/^BASENAME   = storage_server$/;"	m
+BOOT_LOG	log.h	350;"	d
+BOOT_LOG2	log.h	361;"	d
+BUILD_DIR	Makefile	/^BUILD_DIR  = ..\/build$/;"	m
+CC	Makefile	/^CC         = gcc$/;"	m
+CFG_DIR	Makefile	/^CFG_DIR    = $(BUILD_DIR)\/conf\/$/;"	m
+CFG_FILES	Makefile	/^CFG_FILES  = `ls ..\/conf\/*.conf`$/;"	m
+CFLAGS	Makefile	/^CFLAGS     = -Wall -fPIC -ggdb$/;"	m
+COBJS	Makefile	/^COBJS      = $(patsubst %.c,%.o, $(CSOURCES))$/;"	m
+CRIT_LOG	log.h	208;"	d
+CRIT_LOG	log.h	213;"	d
+CSOURCES	Makefile	/^CSOURCES   = $(wildcard *.c)$/;"	m
+CXXFLAGS	Makefile	/^CXXFLAGS   = -Wall -fPIC -ggdb -Wno-non-virtual-dtor$/;"	m
+CXXOBJS	Makefile	/^CXXOBJS    = $(patsubst %.cpp,%.o, $(CXXSOURCES))$/;"	m
+CXXSOURCES	Makefile	/^CXXSOURCES = $(wildcard *.cpp *\/*.cpp)$/;"	m
+DB_CONN_NUM	config.h	49;"	d
+DEBUG_LOG	log.h	314;"	d
+DEBUG_LOG	log.h	319;"	d
+DEBUG_RETURN	log.h	416;"	d
+DEBUG_RETURN_VOID	log.h	427;"	d
+DEBUG_SHOW	util.h	58;"	d
+DEBUG_SHOW	util.h	63;"	d
+DEBUG_SQL	util.h	59;"	d
+DEBUG_SQL	util.h	64;"	d
+DEBUG_TRACE	util.h	60;"	d
+DEBUG_TRACE	util.h	65;"	d
+DEBUG_WARN	util.h	61;"	d
+DEBUG_WARN	util.h	66;"	d
+DETAIL	log.h	139;"	d
+DETAIL	log.h	142;"	d
+EMERG_LOG	log.h	165;"	d
+EMERG_LOG	log.h	170;"	d
+ERROR_LOG	log.h	229;"	d
+ERROR_LOG	log.h	234;"	d
+ERROR_RETURN	log.h	372;"	d
+ERROR_RETURN_VOID	log.h	383;"	d
+EXPIRE_TIME	util.h	/^const unsigned int EXPIRE_TIME = 7*24*60*60;$/;"	v
+FRM_FILES	Makefile	/^FRM_FILES  = ..\/newbench  ..\/storagectl $/;"	m
+FRM_LIBS	Makefile	/^FRM_LIBS   = ..\/libnetioserver.so.2  ..\/libringqueue.so.1$/;"	m
+F_DB	util.h	80;"	d
+F_MEM	util.h	79;"	d
+F_NONE	util.h	78;"	d
+GET2_LIMIT	util.h	70;"	d
+INCLUDES	Makefile	/^INCLUDES   = -I.\/$/;"	m
+INFO_LOG	log.h	293;"	d
+INFO_LOG	log.h	298;"	d
+I_INI_FILE_H	i_ini_file.h	21;"	d
+KALERT_LOG	log.h	188;"	d
+KALERT_LOG	log.h	192;"	d
+KCRIT_LOG	log.h	210;"	d
+KCRIT_LOG	log.h	214;"	d
+KDEBUG_LOG	log.h	316;"	d
+KDEBUG_LOG	log.h	320;"	d
+KEMERG_LOG	log.h	167;"	d
+KEMERG_LOG	log.h	171;"	d
+KERROR_LOG	log.h	231;"	d
+KERROR_LOG	log.h	235;"	d
+KINFO_LOG	log.h	295;"	d
+KINFO_LOG	log.h	299;"	d
+KNOTI_LOG	log.h	274;"	d
+KNOTI_LOG	log.h	278;"	d
+KTRACE_LOG	log.h	338;"	d
+KTRACE_LOG	log.h	342;"	d
+KWARN_LOG	log.h	253;"	d
+KWARN_LOG	log.h	257;"	d
+LIBS	Makefile	/^LIBS       = `mysql_config --libs` -ldl -lmemcached$/;"	m
+LIBTAOMEE_LOG_H_	log.h	18;"	d
+LINKNAME	Makefile	/^LINKNAME   = lib$(BASENAME).so$/;"	m
+LOG_CHECK_FMT	log.h	129;"	d
+LOG_CHECK_FMT	log.h	131;"	d
+MAX_ALLOW_UNITS	storage_proto.h	119;"	d
+MAX_CONF_STR_LEN	newbench.h	26;"	d
+MAX_FEEDDATA_SZ	feeds_store.cpp	23;"	d	file:
+MAX_FEEDID_NUM	util.h	75;"	d
+MAX_PACKAGE_LEN	newbench.h	27;"	d
+MEMSET_MAX_LEN	config.h	63;"	d
+MEM_FEEDKEY_MAX	util.h	76;"	d
+MYSQL_IFACE_E_ILLEGAL_CALL	handle_mysql/c_mysql_iface.h	35;"	d
+MYSQL_IFACE_E_MYSQL_API	handle_mysql/c_mysql_iface.h	31;"	d
+MYSQL_IFACE_E_NOT_INITED	handle_mysql/c_mysql_iface.h	32;"	d
+MYSQL_IFACE_E_NULL_FIELD	handle_mysql/c_mysql_iface.h	34;"	d
+MYSQL_IFACE_E_PARAMETER	handle_mysql/c_mysql_iface.h	33;"	d
+MYSQL_IFACE_E_SUCCESS	handle_mysql/c_mysql_iface.h	30;"	d
+MYSQL_MAX_HOST_BUF_LEN	handle_mysql/c_mysql_iface.h	27;"	d
+MYSQL_MAX_SQL_BUF_LEN	handle_mysql/c_mysql_iface.h	28;"	d
+NB_BOOT_LOG	newbench.h	29;"	d
+NOTI_LOG	log.h	272;"	d
+NOTI_LOG	log.h	277;"	d
+OBJS_DIR	Makefile	/^OBJS_DIR   = $(BUILD_DIR)\/objs\/$/;"	m
+PATH_MAX_LEN	config.h	100;"	d
+PROC_CONN	newbench.h	/^    PROC_CONN,$/;"	e	enum:__anon1
+PROC_MAIN	newbench.h	/^    PROC_MAIN = 0,$/;"	e	enum:__anon1
+PROC_WORK	newbench.h	/^    PROC_WORK,$/;"	e	enum:__anon1
+P_FEED_HEAD_SZ	storage_proto_pass.h	/^const int P_FEED_HEAD_SZ = sizeof(pfeed_pkg_t);$/;"	v
+P_FEED_MAX_SZ	storage_proto_pass.h	/^const int P_FEED_MAX_SZ = 80 * 1024;  $/;"	v
+REMOTE_IP	storage_server_so.cpp	119;"	d	file:
+REMOTE_PORT	storage_server_so.cpp	120;"	d	file:
+REQ_OP_DELETE	storage_proto.h	107;"	d
+REQ_OP_DELETE2	storage_proto.h	108;"	d
+REQ_OP_GETS	storage_proto.h	111;"	d
+REQ_OP_GETS2	storage_proto.h	114;"	d
+REQ_OP_GETS_KEYS	storage_proto.h	116;"	d
+REQ_OP_GET_N_INDEXS	storage_proto.h	112;"	d
+REQ_OP_GET_SPAN_INDEXS	storage_proto.h	113;"	d
+REQ_OP_INSERT	storage_proto.h	104;"	d
+REQ_OP_PASS_DELETE	storage_proto_pass.h	24;"	d
+REQ_OP_PASS_GETS_IDX	storage_proto_pass.h	26;"	d
+REQ_OP_PASS_GETS_KEYS	storage_proto_pass.h	27;"	d
+REQ_OP_PASS_GETS_PKG	storage_proto_pass.h	25;"	d
+REQ_OP_PASS_INSERT	storage_proto_pass.h	22;"	d
+REQ_OP_PASS_UPDATE	storage_proto_pass.h	23;"	d
+REQ_OP_SET	storage_proto.h	109;"	d
+REQ_OP_UPDATE	storage_proto.h	105;"	d
+REQ_OP_UPDATE2	storage_proto.h	106;"	d
+RES_OP_ERROR	storage_proto.h	200;"	d
+RES_OP_ERR_FEEDID	storage_proto.h	203;"	d
+RES_OP_ERR_REQUEST	storage_proto.h	204;"	d
+RES_OP_ERR_UNITS	storage_proto.h	202;"	d
+RES_OP_FEEDID_DUP	storage_proto.h	201;"	d
+RES_OP_INVALID	storage_proto.h	198;"	d
+RES_OP_SUCCESS	storage_proto.h	199;"	d
+RUNLIBS_DIR	Makefile	/^RUNLIBS_DIR= $(BUILD_DIR)\/libs\/$/;"	m
+SIMPLY	log.h	147;"	d
+SIMPLY	log.h	150;"	d
+SONAME	Makefile	/^SONAME	   = lib$(BASENAME).so.1$/;"	m
+SQL_MAX_SZ	util.h	72;"	d
+STAT_END2TIME	stat_analysis.h	60;"	d
+STAT_END2TIME	stat_analysis.h	70;"	d
+STAT_ENDTIME	stat_analysis.h	55;"	d
+STAT_ENDTIME	stat_analysis.h	69;"	d
+STAT_PKGLEN	stat_analysis.h	64;"	d
+STAT_PKGLEN	stat_analysis.h	71;"	d
+STAT_START	stat_analysis.h	54;"	d
+STAT_START	stat_analysis.h	68;"	d
+STR_MAX_LEN	config.h	35;"	d
+TARGET	Makefile	/^TARGET     = lib$(BASENAME).so.1.0.0$/;"	m
+TIMESTAMP_SIZE	pfeeds_memcached.cpp	/^static const int TIMESTAMP_SIZE = sizeof(uint32_t);$/;"	v	file:
+TRACE_DEBUG	util.h	56;"	d
+TRACE_LOG	log.h	336;"	d
+TRACE_LOG	log.h	341;"	d
+WARN_LOG	log.h	251;"	d
+WARN_LOG	log.h	256;"	d
+WARN_RETURN	log.h	394;"	d
+WARN_RETURN_VOID	log.h	405;"	d
+XX	Makefile	/^XX         = g++$/;"	m
+_NEWBENCH_H_	newbench.h	20;"	d
+__CONFIG_CPP__	config.h	17;"	d
+__FEEDS_DATABASE_H__	feeds_database.h	16;"	d
+__FEEDS_MEMCACHED_H__	feeds_memcached.h	16;"	d
+__FEEDS_STORE_H__	feeds_store.h	16;"	d
+__I_MYSQL_IFACE_H__	i_mysql_iface.h	20;"	d
+__MSGLOG_H__	msglog.h	20;"	d
+__MYSQL_IFACE_H__	handle_mysql/c_mysql_iface.h	20;"	d
+__NEWSFEEDID_H__	feedid.h	16;"	d
+__NEWSFEED_STORAGE_PROTO_H__	storage_proto.h	16;"	d
+__PFEEDS_DATABASE_H__	pfeeds_database.h	16;"	d
+__PFEEDS_MEMCACHED_H__	pfeeds_memcached.h	16;"	d
+__STAT_ANALYSIS_CPP__	stat_analysis.h	16;"	d
+__STORAGE_PROTO_PASS_H__	storage_proto_pass.h	16;"	d
+__STORAGE_SRV_UTIL_H__	util.h	16;"	d
+active_time	storage_proto_pass.h	/^    uint32_t    active_time;$/;"	m	struct:passive_key_feed_pkg
+active_time	storage_proto_pass.h	/^    uint32_t  active_time;$/;"	m	struct:passive_feed_pkg
+add	feeds_memcached.cpp	/^int feeds_memcached::add(memcached_st *memc, feedid_t *feedid, const char* escape_data, const size_t datalen)$/;"	f	class:feeds_memcached
+add	pfeeds_memcached.cpp	/^int pfeeds_memcached::add(memcached_st *memc, pfeed_pkg_t *pkg)$/;"	f	class:pfeeds_memcached
+app_id	feedid.h	/^    uint32_t app_id;$/;"	m	struct:feedid_st
+app_id	storage_proto.h	/^    uint32_t app_id;$/;"	m	struct:delete2_pkg
+app_id	storage_proto.h	/^    uint32_t app_id;$/;"	m	struct:get2_pkg
+app_id	storage_proto.h	/^    uint32_t app_id;$/;"	m	struct:get_n_indexs_pkg
+app_id	storage_proto.h	/^    uint32_t app_id;$/;"	m	struct:get_span_indexs_pkg
+append	util.cpp	/^int feedid_list::append(feedid_t *id)$/;"	f	class:feedid_list
+avg_pkg_len	util.h	/^    u_int avg_pkg_len;$/;"	m	struct:bench_config
+bench_config	util.h	/^typedef struct bench_config {$/;"	s
+bench_config_t	util.h	/^} bench_config_t;$/;"	t	typeref:struct:bench_config
+bench_storage	newbench.h	/^union bench_storage {$/;"	u
+bind_file	util.h	/^    char bind_file[MAX_CONF_STR_LEN];$/;"	m	struct:bench_config
+bind_list	util.h	/^    struct bind_config *bind_list;$/;"	m	struct:bench_config	typeref:struct:bench_config::bind_config
+build_feed	feeds_database.cpp	/^inline int feeds_database::build_feed(MYSQL_ROW row, char *buf, size_t buflen, bool withdata)$/;"	f	class:feeds_database
+build_simple_msg	util.cpp	/^int build_simple_msg(char *msgbuf, const int buflen, uint16_t ret_code)$/;"	f
+build_stat_pkg	feeds_store.cpp	/^inline int feeds_store::build_stat_pkg(char *buf, size_t buflen, feedid_t *fid, uint16_t status)$/;"	f	class:feeds_store
+c_mysql_iface	handle_mysql/c_mysql_iface.cpp	/^c_mysql_iface::c_mysql_iface()$/;"	f	class:c_mysql_iface
+c_mysql_iface	handle_mysql/c_mysql_iface.h	/^class c_mysql_iface : public i_mysql_iface$/;"	c
+c_time	stat_analysis.cpp	/^c_time::c_time() $/;"	f	class:c_time
+c_time	stat_analysis.cpp	/^c_time::c_time(long int sec, long int usec)$/;"	f	class:c_time
+c_time	stat_analysis.h	/^class c_time$/;"	c
+check_existed	feeds_database.cpp	/^bool feeds_database::check_existed(i_mysql_iface *db, feedid_t *fid)$/;"	f	class:feeds_database
+check_existed	pfeeds_database.cpp	/^bool pfeeds_database::check_existed(i_mysql_iface *db, pfeedid_t *fid)$/;"	f	class:pfeeds_database
+check_existed	pfeeds_memcached.cpp	/^bool pfeeds_memcached::check_existed(memcached_st *memc, pfeedid_t *fid)$/;"	f	class:pfeeds_memcached
+clear	util.cpp	/^void feedid_list::clear()$/;"	f	class:feedid_list
+clear	util.cpp	/^void pfeedid_list::clear()$/;"	f	class:pfeedid_list
+close_fd	stat_analysis.cpp	/^close_fd(int fd)$/;"	f	file:
+cmd_id	feedid.h	/^    uint16_t cmd_id;$/;"	m	struct:feedid_st
+cmd_id	storage_proto.h	/^    uint16_t cmd_id;$/;"	m	struct:delete2_pkg
+cmd_id	storage_proto.h	/^    uint16_t cmd_id;$/;"	m	struct:get2_pkg
+cmd_id	storage_proto.h	/^    uint16_t cmd_id;$/;"	m	struct:get_n_indexs_pkg
+cmd_id	storage_proto.h	/^    uint16_t cmd_id;$/;"	m	struct:get_span_indexs_pkg
+connection_id	newbench.h	/^    int connection_id;$/;"	m	struct:skinfo_struct
+conns_pool	config.h	/^    db_conns_handle_t   conns_pool;$/;"	m	class:db_conns
+create_mysql_iface_instance	handle_mysql/c_mysql_iface.cpp	/^int create_mysql_iface_instance(i_mysql_iface** pp_instance)$/;"	f
+cur_used	util.h	/^    int         cur_used;$/;"	m	struct:feedid_list
+cur_used	util.h	/^    int         cur_used;$/;"	m	struct:pfeedid_list
+current_dir	util.h	/^    char *current_dir;$/;"	m	struct:bench_config
+data	storage_proto.h	/^    char        data[0];        \/\/start of feed data$/;"	m	struct:feed_key_data_pkg
+data	storage_proto.h	/^    char data[0];               \/\/start of feed data$/;"	m	struct:feed_pkg
+data	storage_proto.h	/^    char data[0];             \/\/data for this feed$/;"	m	struct:set_pkg
+data	storage_proto.h	/^    char data[0];       \/\/data for this feed$/;"	m	struct:insert_pkg
+data	storage_proto.h	/^   char data[0];             \/\/data for this feed$/;"	m	struct:update2_pkg
+data	storage_proto.h	/^   char data[0];             \/\/data for this feed$/;"	m	struct:update_pkg
+data	storage_proto_pass.h	/^    char        data[0];          \/\/contain data content$/;"	m	struct:passive_key_feed_pkg
+data	storage_proto_pass.h	/^    char      data[0];          \/\/contain data content$/;"	m	struct:passive_feed_pkg
+db_conns	config.h	/^class db_conns $/;"	c
+db_conns_handle_t	config.h	/^typedef std::map<std::string, i_mysql_iface *> db_conns_handle_t; $/;"	t
+db_info	config.h	/^typedef struct db_info$/;"	s
+db_info_t	config.h	/^} db_info_t;$/;"	t	typeref:struct:db_info
+db_name	config.h	/^    char                db_name[STR_MAX_LEN];$/;"	m	struct:db_info
+db_num	stat_analysis.h	/^    uint32_t db_num;$/;"	m	struct:storage_stat_hits
+dbid	feedid.h	/^    uint8_t dbid;              \/\/0xFF is not valid$/;"	m	struct:feed_key_pkg
+dbs	config.h	/^    db_info_t           dbs[DB_CONN_NUM];$/;"	m	class:db_conns
+del	feeds_database.cpp	/^int feeds_database::del(i_mysql_iface *db, feedid_t *fid)$/;"	f	class:feeds_database
+del	feeds_memcached.cpp	/^int feeds_memcached::del(memcached_st *memc, feedid_t *fid)$/;"	f	class:feeds_memcached
+del	feeds_store.cpp	/^int feeds_store::del(char *send_buf, const size_t buflen, int *res_pkg_len,$/;"	f	class:feeds_store
+del	pfeeds_database.cpp	/^int pfeeds_database::del(i_mysql_iface *db, pfeedid_t *fid)$/;"	f	class:pfeeds_database
+del	pfeeds_memcached.cpp	/^int pfeeds_memcached::del(memcached_st *memc, pfeedid_t *fid)$/;"	f	class:pfeeds_memcached
+del2	feeds_database.cpp	/^int feeds_database::del2(i_mysql_iface *db, uint32_t mimi, uint16_t cmd_id, uint32_t app_id, uint64_t magic)$/;"	f	class:feeds_database
+del2	feeds_store.cpp	/^int feeds_store::del2(char *send_buf, const size_t buflen, int *res_pkg_len, const int units, delete2_pkg_t *pkg)$/;"	f	class:feeds_store
+del_p	feeds_store.cpp	/^int feeds_store::del_p(char *send_buf, const size_t buflen, int *res_pkg_len, const int units, del_p_pkg_t *pkg)$/;"	f	class:feeds_store
+del_p_items	storage_proto.h	/^        del_p_pkg_t             del_p_items[0];$/;"	m	union:request_pkg::__anon2
+del_p_pkg_t	storage_proto_pass.h	/^}__attribute__((packed)) del_p_pkg_t;$/;"	t	typeref:struct:delete_passive_feedpkg_t
+delete2_items	storage_proto.h	/^        delete2_pkg_t           delete2_items[0];$/;"	m	union:request_pkg::__anon2
+delete2_pkg	storage_proto.h	/^typedef struct delete2_pkg {  \/* delete only by mimi, cmd_id, magic *\/$/;"	s
+delete2_pkg_t	storage_proto.h	/^}__attribute__((packed)) delete2_pkg_t;  \/* ----------  end of struct delete_pkg  ---------- *\/$/;"	t	typeref:struct:delete2_pkg
+delete_items	storage_proto.h	/^        delete_pkg_t            delete_items[0];$/;"	m	union:request_pkg::__anon2
+delete_passive_feedpkg_t	storage_proto_pass.h	/^typedef struct delete_passive_feedpkg_t {$/;"	s
+delete_pkg	storage_proto.h	/^typedef struct delete_pkg {$/;"	s
+delete_pkg_t	storage_proto.h	/^}__attribute__((packed)) delete_pkg_t;  \/* ----------  end of struct delete_pkg  ---------- *\/$/;"	t	typeref:struct:delete_pkg
+dels	feeds_database.cpp	/^int feeds_database::dels(i_mysql_iface *db, feedid_list_t *fids)$/;"	f	class:feeds_database
+dels	feeds_memcached.cpp	/^int feeds_memcached::dels(memcached_st *memc, feedid_list_t *feedids)$/;"	f	class:feeds_memcached
+dll_func_struct	newbench.h	/^typedef struct  dll_func_struct {$/;"	s
+dll_func_t	newbench.h	/^} dll_func_t;$/;"	t	typeref:struct:dll_func_struct
+dump_cfg_info	config.cpp	/^void gconfig::dump_cfg_info(bool withinfo) {$/;"	f	class:gconfig
+dump_p_send_buf	util.cpp	/^void dump_p_send_buf(char *buf)$/;"	f
+dump_send_buf	util.cpp	/^void dump_send_buf(char *buf)$/;"	f
+dump_send_keybuf	util.cpp	/^void dump_send_keybuf(char *buf)$/;"	f
+dump_send_p_keybuf	util.cpp	/^void dump_send_p_keybuf(char *buf)$/;"	f
+endtime	storage_proto.h	/^    uint32_t endtime;           \/\/end time of fetched feedid$/;"	m	struct:get_span_indexs_pkg
+eno	storage_proto.h	/^    int eno;$/;"	m	struct:err_item
+err_item	storage_proto.h	/^static struct err_item {$/;"	s
+esc_data_buf	feeds_store.cpp	/^char *feeds_store::esc_data_buf = NULL;$/;"	m	class:feeds_store	file:
+esc_data_buf	feeds_store.h	/^        static char *esc_data_buf;$/;"	m	class:feeds_store
+esc_data_buf	pfeeds_database.cpp	/^static char esc_data_buf[SQL_MAX_SZ] = {0};$/;"	v	file:
+execsql	handle_mysql/c_mysql_iface.cpp	/^int c_mysql_iface::execsql(const char* sql_fmt, ...)$/;"	f	class:c_mysql_iface
+fd_info	stat_analysis.cpp	/^} fd_info = {-1, 0, -1};$/;"	v	typeref:struct:fd_t	file:
+fd_t	stat_analysis.cpp	/^static struct fd_t {$/;"	s	file:
+feed	storage_proto_pass.h	/^    pfeed_pkg_t   feed;         \/\/entire feed$/;"	m	struct:update_passive_feedpkg_t
+feed	storage_proto_pass.h	/^    pfeed_pkg_t feed;           \/\/entire feed$/;"	m	struct:insert_passive_feedpkg_t
+feed_hsz	util.h	/^const unsigned int feed_hsz = (unsigned int)sizeof(feed_pkg_t);$/;"	v
+feed_key_data_pkg	storage_proto.h	/^typedef struct feed_key_data_pkg {$/;"	s
+feed_key_pkg	feedid.h	/^typedef struct feed_key_pkg {$/;"	s
+feed_key_pkg_t	storage_proto.h	/^}__attribute__((packed)) feed_key_pkg_t;$/;"	t	typeref:struct:feed_key_data_pkg
+feed_operation_status_pkg	storage_proto.h	/^typedef struct feed_operation_status_pkg {    \/\/fixed package denote feed operated status$/;"	s
+feed_pkg	storage_proto.h	/^typedef struct feed_pkg {       \/\/len == (sizeof(feedid_t) + sizeof(uint32_t)) => contain only feedid in one package$/;"	s
+feed_pkg_t	storage_proto.h	/^}__attribute__((packed)) feed_pkg_t;$/;"	t	typeref:struct:feed_pkg
+feed_status_pkg_t	storage_proto.h	/^}__attribute__((packed)) feed_status_pkg_t;$/;"	t	typeref:struct:feed_operation_status_pkg
+feedid	storage_proto.h	/^    feedid_t feedid;             \/\/feed identification$/;"	m	struct:get_key_data_pkg
+feedid	storage_proto.h	/^    feedid_t feedid;            \/\/identification for one feed$/;"	m	struct:feed_operation_status_pkg
+feedid	storage_proto.h	/^    feedid_t feedid;            \/\/identification for one feed$/;"	m	struct:feed_pkg
+feedid	storage_proto.h	/^    feedid_t feedid;       \/\/identification for one feed$/;"	m	struct:insert_pkg
+feedid	storage_proto.h	/^   feedid_t feedid;             \/\/identification for one feed$/;"	m	struct:get_pkg
+feedid	storage_proto.h	/^   feedid_t feedid;            \/\/identification for one feed$/;"	m	struct:delete_pkg
+feedid	storage_proto.h	/^   feedid_t feedid;            \/\/identification for one feed$/;"	m	struct:update_pkg
+feedid_equal	feeds_store.cpp	/^inline bool feeds_store::feedid_equal(feedid_t *lhs, feedid_t *rhs)$/;"	f	class:feeds_store
+feedid_list	util.h	/^typedef struct feedid_list{$/;"	s
+feedid_list_t	util.h	/^} feedid_list_t;$/;"	t	typeref:struct:feedid_list
+feedid_st	feedid.h	/^typedef struct feedid_st {$/;"	s
+feedid_t	feedid.h	/^}__attribute__((packed)) feedid_t; \/* ----------  end of struct feed_id  ---------- *\/$/;"	t	typeref:struct:feedid_st
+feedidsz	util.h	/^const unsigned int feedidsz = (unsigned int)sizeof(feedid_t);$/;"	v
+feedkey	feeds_memcached.cpp	/^char feeds_memcached::feedkey[MEM_FEEDKEY_MAX] = { 0 };$/;"	m	class:feeds_memcached	file:
+feedkey	feeds_memcached.h	/^        static char feedkey[MEM_FEEDKEY_MAX];$/;"	m	class:feeds_memcached
+feedkey_t	feedid.h	/^}__attribute__((packed)) feedkey_t; \/* --  end of struct  -- *\/$/;"	t	typeref:struct:feed_key_pkg
+feeds	storage_proto.h	/^        feed_pkg_t              feeds[0]; \/\/feeds$/;"	m	union:response_pkg::__anon3
+feeds_database	feeds_database.h	/^class feeds_database$/;"	c
+feeds_memcached	feeds_memcached.h	/^class feeds_memcached$/;"	c
+feeds_store	feeds_store.h	/^class feeds_store$/;"	c
+fid	storage_proto_pass.h	/^    pfeedid_t fid;              \/\/passive feed id for update$/;"	m	struct:update_passive_feedpkg_t
+fid	storage_proto_pass.h	/^    pfeedid_t fid;$/;"	m	struct:delete_passive_feedpkg_t
+fid	storage_proto_pass.h	/^    pfeedid_t fid;$/;"	m	struct:passive_feed_pkg
+fid	storage_proto_pass.h	/^   pfeedid_t fid;               \/\/passive feed id $/;"	m	struct:get_passive_key_pkg
+fid	storage_proto_pass.h	/^   pfeedid_t fid;               \/\/passive feed id$/;"	m	struct:get_passive_pkg
+fidlist	feeds_store.cpp	/^feedid_list_t feeds_store::fidlist = { 0, 0, {0}, {0}, {0}};$/;"	m	class:feeds_store	file:
+fidlist	feeds_store.h	/^        static feedid_list_t fidlist;$/;"	m	class:feeds_store
+filename	stat_analysis.cpp	/^static char filename[512] = {0};$/;"	v	file:
+fkeys	util.h	/^    char        *fkeys[MAX_FEEDID_NUM];$/;"	m	struct:feedid_list
+fkeyslen	util.h	/^    size_t      fkeyslen[MAX_FEEDID_NUM];$/;"	m	struct:feedid_list
+flag	feedid.h	/^    uint8_t flag;              \/\/keep for other usage$/;"	m	struct:feed_key_pkg
+flag	msglog.h	/^        uint32_t  flag;$/;"	m	struct:message_header
+flag	storage_proto.h	/^    uint16_t flag;              \/\/TODO: see intepretation in indexn_pkg_t$/;"	m	struct:get_span_indexs_pkg
+flag	storage_proto.h	/^    uint16_t flag;              \/\/denote filter way of (cmd_id, app_id), have same meaning in following package$/;"	m	struct:get_n_indexs_pkg
+flag	util.h	/^    int         flag[MAX_FEEDID_NUM];  \/* flag = 0 => F_NONE not fetched$/;"	m	struct:pfeedid_list
+flag	util.h	/^    int         flag[MAX_FEEDID_NUM];  \/* flag = 0 F_NONE => not fetched$/;"	m	struct:feedid_list
+flag0	msglog.h	/^        unsigned char  flag0;$/;"	m	struct:message_header
+ftid	feedid.h	/^    uint8_t ftid;              \/\/feed table id, 0xFF is not valid$/;"	m	struct:feed_key_pkg
+gconfig	config.h	/^class gconfig$/;"	c
+gen_pfid_memkey	pfeeds_memcached.cpp	/^inline int gen_pfid_memkey(pfeedid_t *fid, char *buf, int buf_size)$/;"	f
+generate_feedkey	feeds_memcached.cpp	/^inline int feeds_memcached::generate_feedkey(feedid_t *f, char * fkey)$/;"	f	class:feeds_memcached
+generate_keykey	feeds_memcached.cpp	/^inline int generate_keykey(feedid_t *f, char * fkey)$/;"	f
+generate_keykey	pfeeds_memcached.cpp	/^inline int generate_keykey(pfeedid_t *fid, char *buf, int buf_size)$/;"	f
+get	feeds_memcached.cpp	/^int feeds_memcached::get(memcached_st *memc, char* get_buf, size_t buflen, uint32_t *datalen, feedid_t * fid)$/;"	f	class:feeds_memcached
+get2_items	storage_proto.h	/^        get2_pkg_t              get2_items[0];$/;"	m	union:request_pkg::__anon2
+get2_pkg	storage_proto.h	/^typedef struct get2_pkg {  \/* get feed only by mimi, cmd_id, magic *\/$/;"	s
+get2_pkg_t	storage_proto.h	/^}__attribute__((packed)) get2_pkg_t;  \/* ----------  end of struct get2_pkg  ---------- *\/$/;"	t	typeref:struct:get2_pkg
+get2_pkgs	feeds_store.cpp	/^int feeds_store::get2_pkgs(char *send_buf, const size_t buflen, int *res_pkg_len, const int units, get2_pkg_t *pkg)$/;"	f	class:feeds_store
+get_bydbid	config.cpp	/^i_mysql_iface * gconfig::get_bydbid(uint32_t dbid){$/;"	f	class:gconfig
+get_bydbid	config.cpp	/^i_mysql_iface *db_conns::get_bydbid(uint32_t dbid) {$/;"	f	class:db_conns
+get_conn	handle_mysql/c_mysql_iface.cpp	/^MYSQL* c_mysql_iface::get_conn()$/;"	f	class:c_mysql_iface
+get_db_conn	config.cpp	/^i_mysql_iface * gconfig::get_db_conn(uint32_t mimi){$/;"	f	class:gconfig
+get_dbhost	config.cpp	/^const char* gconfig::get_dbhost() {$/;"	f	class:gconfig
+get_dbid	config.h	29;"	d
+get_dbname	config.cpp	/^const char* gconfig::get_dbname() {$/;"	f	class:gconfig
+get_dbpassword	config.cpp	/^const char* gconfig::get_dbpassword() {$/;"	f	class:gconfig
+get_dbport	config.cpp	/^const int gconfig::get_dbport() {$/;"	f	class:gconfig
+get_dbusername	config.cpp	/^const char* gconfig::get_dbusername() {$/;"	f	class:gconfig
+get_feedids	feeds_database.cpp	/^int feeds_database::get_feedids(i_mysql_iface *db, uint32_t mimi, uint16_t cmd_id, uint32_t app_id, uint64_t magic, feedid_list_t *list)$/;"	f	class:feeds_database
+get_feedidstr	util.cpp	/^char *get_feedidstr(const feedid_t *t)$/;"	f
+get_feedkey_str	util.cpp	/^char *get_feedkey_str(feedkey_t *key)$/;"	f
+get_feedspkg	feeds_database.cpp	/^inline int feeds_database::get_feedspkg(i_mysql_iface *db, char *buf, size_t buflen,$/;"	f	class:feeds_database
+get_fidstatid	stat_analysis.h	/^inline char *get_fidstatid(feedid_t *fid) {$/;"	f
+get_handle	config.cpp	/^i_mysql_iface *db_conns::get_handle(uint32_t mimi) {$/;"	f	class:db_conns
+get_handle	config.cpp	/^memcached_st * memcached_server::get_handle() {$/;"	f	class:memcached_server
+get_indexs	pfeeds_database.cpp	/^int pfeeds_database::get_indexs(char *resbuf, const int buflen, int *reslen, const int units, indexn_p_pkg_t *pkg)$/;"	f	class:pfeeds_database
+get_ini_str_cfg	config.cpp	/^inline bool gconfig::get_ini_str_cfg(char *buf, size_t bufsz, const char *section, const char * key)$/;"	f	class:gconfig
+get_items	storage_proto.h	/^        get_pkg_t               get_items[0];$/;"	m	union:request_pkg::__anon2
+get_key	feeds_database.cpp	/^int feeds_database::get_key(feedid_t *fid, feedkey_t *fkey)$/;"	f	class:feeds_database
+get_key	feeds_memcached.cpp	/^int feeds_memcached::get_key(memcached_st *memc, feedid_t *fid, feedkey_t *fkey)$/;"	f	class:feeds_memcached
+get_key	pfeeds_database.cpp	/^int pfeeds_database::get_key(pfeedid_t *fid, feedkey_t *fkey)$/;"	f	class:pfeeds_database
+get_key	pfeeds_memcached.cpp	/^int pfeeds_memcached::get_key(memcached_st *memc, pfeedid_t *fid, feedkey_t *fkey)$/;"	f	class:pfeeds_memcached
+get_key_data_pkg	storage_proto.h	/^typedef struct get_key_data_pkg {$/;"	s
+get_key_items	storage_proto.h	/^        get_key_pkg_t           get_key_items[0];$/;"	m	union:request_pkg::__anon2
+get_key_pkg_t	storage_proto.h	/^}__attribute__((packed)) get_key_pkg_t;  \/* ----------  end of struct gets_pkg  ---------- *\/$/;"	t	typeref:struct:get_key_data_pkg
+get_key_pkgs	feeds_store.cpp	/^int feeds_store::get_key_pkgs(char *send_buf, const size_t buflen, int *res_pkg_len, const int units, get_key_pkg_t *pkg)$/;"	f	class:feeds_store
+get_key_pkgs	pfeeds_database.cpp	/^int pfeeds_database::get_key_pkgs(char *resbuf, const int buflen, int *reslen, pfeedid_list_t *pfids)$/;"	f	class:pfeeds_database
+get_key_pkgs	pfeeds_memcached.cpp	/^int pfeeds_memcached::get_key_pkgs(memcached_st *memc, char *resbuf, const int buflen, int *reslen, pfeedid_list_t *pfids)$/;"	f	class:pfeeds_memcached
+get_last_errno	handle_mysql/c_mysql_iface.cpp	/^int c_mysql_iface::get_last_errno() const$/;"	f	class:c_mysql_iface
+get_last_errstr	handle_mysql/c_mysql_iface.cpp	/^const char* c_mysql_iface::get_last_errstr() const$/;"	f	class:c_mysql_iface
+get_mem_handle	config.cpp	/^memcached_st * gconfig::get_mem_handle() {$/;"	f	class:gconfig
+get_memserverlist	config.cpp	/^const char* gconfig::get_memserverlist() {$/;"	f	class:gconfig
+get_msg_file_path	config.cpp	/^char* gconfig::get_msg_file_path()$/;"	f	class:gconfig
+get_n_indexs_pkg	storage_proto.h	/^typedef struct get_n_indexs_pkg {$/;"	s
+get_n_passive_indexs_pkg	storage_proto_pass.h	/^typedef struct get_n_passive_indexs_pkg {$/;"	s
+get_nidx_presql	feeds_database.cpp	/^inline char* feeds_database::get_nidx_presql(char *sqlbuf, size_t buflen, uint32_t mimi, uint16_t cmd_id, uint32_t app_id,$/;"	f	class:feeds_database
+get_nindexs	feeds_database.cpp	/^int feeds_database::get_nindexs(i_mysql_iface *db, char *buf, size_t buflen, uint32_t *fids_len,$/;"	f	class:feeds_database
+get_nindexs	feeds_store.cpp	/^int feeds_store::get_nindexs(char *send_buf, const size_t buflen, int *res_pkg_len, const int units, indexn_pkg_t *pkg_start)$/;"	f	class:feeds_store
+get_p_items	storage_proto.h	/^        get_p_pkg_t             get_p_items[0];$/;"	m	union:request_pkg::__anon2
+get_p_key_items	storage_proto.h	/^        get_p_key_pkg_t         get_p_key_items[0];$/;"	m	union:request_pkg::__anon2
+get_p_key_pkg_t	storage_proto_pass.h	/^}__attribute__((packed)) get_p_key_pkg_t; $/;"	t	typeref:struct:get_passive_key_pkg
+get_p_key_pkgs	feeds_store.cpp	/^int feeds_store::get_p_key_pkgs(char *send_buf, const size_t buflen, int *res_pkg_len,$/;"	f	class:feeds_store
+get_p_nindexs	feeds_store.cpp	/^int feeds_store::get_p_nindexs(char *send_buf, const size_t buflen, int *res_pkg_len, const int units, indexn_p_pkg_t *pkg)$/;"	f	class:feeds_store
+get_p_pkg_t	storage_proto_pass.h	/^}__attribute__((packed)) get_p_pkg_t; $/;"	t	typeref:struct:get_passive_pkg
+get_p_pkgs	feeds_store.cpp	/^int feeds_store::get_p_pkgs(char *send_buf, const size_t buflen, int *res_pkg_len, const int units, get_p_pkg_t *pkg)$/;"	f	class:feeds_store
+get_passive_key_pkg	storage_proto_pass.h	/^typedef struct get_passive_key_pkg {$/;"	s
+get_passive_pkg	storage_proto_pass.h	/^typedef struct get_passive_pkg {$/;"	s
+get_pfeedid_str	util.cpp	/^char *get_pfeedid_str(const pfeedid_t *fid)$/;"	f
+get_pkg	feeds_database.cpp	/^int feeds_database::get_pkg(i_mysql_iface *db, char *buf, size_t buflen, uint32_t *pkg_len, feedid_t *fid)$/;"	f	class:feeds_database
+get_pkg	storage_proto.h	/^typedef struct get_pkg {$/;"	s
+get_pkg_t	storage_proto.h	/^}__attribute__((packed)) get_pkg_t;  \/* ----------  end of struct gets_pkg  ---------- *\/$/;"	t	typeref:struct:get_pkg
+get_pkgs	feeds_store.cpp	/^int feeds_store::get_pkgs(char *send_buf, const size_t buflen, int *res_pkg_len,$/;"	f	class:feeds_store
+get_pkgs	pfeeds_database.cpp	/^int pfeeds_database::get_pkgs(char *resbuf, const int buflen, int *reslen, pfeedid_list_t *pfids)$/;"	f	class:pfeeds_database
+get_pkgs	pfeeds_memcached.cpp	/^int pfeeds_memcached::get_pkgs(memcached_st *memc, char *resbuf, const int buflen, int *reslen, pfeedid_list_t *pfids)$/;"	f	class:pfeeds_memcached
+get_span_indexs_pkg	storage_proto.h	/^typedef struct get_span_indexs_pkg {$/;"	s
+get_spanindexs	feeds_database.cpp	/^int feeds_database::get_spanindexs(i_mysql_iface *db, char *buf, size_t buflen, uint32_t *fids_len,$/;"	f	class:feeds_database
+get_spanindexs	feeds_store.cpp	/^int feeds_store::get_spanindexs(char *send_buf, const size_t buflen, int *res_pkg_len,$/;"	f	class:feeds_store
+get_stat_path	config.cpp	/^char* gconfig::get_stat_path()$/;"	f	class:gconfig
+get_table_name	config.cpp	/^const char* gconfig::get_table_name(uint32_t mimi) {$/;"	f	class:gconfig
+get_tid	config.h	30;"	d
+gets	feeds_memcached.cpp	/^int feeds_memcached::gets(memcached_st *memc, char* gets_buf, size_t buflen, uint32_t *datalen, feedid_list_t * fids)$/;"	f	class:feeds_memcached
+gets2_pkg	feeds_database.cpp	/^int feeds_database::gets2_pkg(i_mysql_iface *db, char *buf, size_t buflen, uint32_t *pkgs_len, get2_pkg_t *pkg)$/;"	f	class:feeds_database
+gets_key_pkg	feeds_database.cpp	/^int feeds_database::gets_key_pkg(char *buf, size_t buflen, uint32_t *pkgs_len, feedid_list_t * fidlist)$/;"	f	class:feeds_database
+gets_key_pkg	feeds_memcached.cpp	/^int feeds_memcached::gets_key_pkg(memcached_st *memc, char* gets_buf, size_t buflen, uint32_t *datalen, feedid_list_t *fids)$/;"	f	class:feeds_memcached
+gets_pkg	feeds_database.cpp	/^int feeds_database::gets_pkg(i_mysql_iface *db, char *buf, size_t buflen, uint32_t *pkgs_len, feedid_list_t * fidlist)$/;"	f	class:feeds_database
+getstorage_errstr	storage_proto.h	/^inline const char* getstorage_errstr(int errno) {$/;"	f
+handle	config.h	/^    i_mysql_iface       *handle;$/;"	m	struct:db_info
+handle	config.h	/^    memcached_st  *handle;$/;"	m	struct:memcached_server
+handle	newbench.h	/^    void *handle;$/;"	m	struct:dll_func_struct
+handle_close	newbench.h	/^    int (* handle_close)(const skinfo_t *p_skinfo);$/;"	m	struct:dll_func_struct
+handle_close	storage_server_so.cpp	/^extern "C" int handle_close(skinfo_t *p_skinfo)$/;"	f
+handle_dispatch	newbench.h	/^    int (* handle_dispatch)(const char* p_buf,$/;"	m	struct:dll_func_struct
+handle_dispatch	storage_server_so.cpp	/^extern "C" int handle_dispatch(const char *p_recv, int recv_len, int proc, int *p_key)$/;"	f
+handle_fini	newbench.h	/^    void (* handle_fini)(int proc_type);$/;"	m	struct:dll_func_struct
+handle_fini	storage_server_so.cpp	/^extern "C" int handle_fini(int ptype)$/;"	f
+handle_init	newbench.h	/^    int (* handle_init)(int argc, char **argv, int proc_type);$/;"	m	struct:dll_func_struct
+handle_init	storage_server_so.cpp	/^extern "C" int handle_init(int argc, char **argv, int ptype)$/;"	f
+handle_input	newbench.h	/^    int (* handle_input)(const char *p_recv,$/;"	m	struct:dll_func_struct
+handle_input	storage_server_so.cpp	/^extern "C" int handle_input(const char *p_recv,  int recv_len,$/;"	f
+handle_input_complete	storage_server_so.cpp	/^extern "C" int handle_input_complete(const char *p_recv, int recv_len, char **pp_send, int *p_send_len, skinfo_t *p_skinfo, int flag)$/;"	f
+handle_open	newbench.h	/^    int (* handle_open)(char **, int *, skinfo_t *p_skinfo);$/;"	m	struct:dll_func_struct
+handle_open	storage_server_so.cpp	/^extern "C" int handle_open(char **pp_send, int *p_send_len, skinfo_t *p_skinfo)$/;"	f
+handle_process	newbench.h	/^    int (* handle_process)(char *p_recv,$/;"	m	struct:dll_func_struct
+handle_process	storage_server_so.cpp	/^extern "C" int handle_process(const char *p_recv, int recv_len,$/;"	f
+handle_schedule	newbench.h	/^    int (* handle_schedule)();$/;"	m	struct:dll_func_struct
+handle_schedule	storage_server_so.cpp	/^extern "C" int handle_schedule()$/;"	f
+handle_timer	newbench.h	/^    int (* handle_timer)(int *);$/;"	m	struct:dll_func_struct
+has_init	stat_analysis.cpp	/^static int has_init = false;$/;"	v	file:
+hlen	msglog.h	/^        unsigned char  hlen;$/;"	m	struct:message_header
+host	config.h	/^    char                host[20];$/;"	m	struct:db_info
+i_ini_file	i_ini_file.h	/^struct i_ini_file$/;"	s
+i_mysql_iface	i_mysql_iface.h	/^struct i_mysql_iface$/;"	s
+id	config.h	/^    unsigned int        id;$/;"	m	struct:db_info
+id	feedid.h	/^    uint32_t id;               \/\/auto inc num in db\/table$/;"	m	struct:feed_key_pkg
+id	storage_proto.h	/^    feedid_t    id;             \/\/identification for one feed$/;"	m	struct:feed_key_data_pkg
+id	storage_proto_pass.h	/^    pfeedid_t   id;$/;"	m	struct:passive_key_feed_pkg
+indexn_p_pkg_t	storage_proto_pass.h	/^}__attribute__((packed)) indexn_p_pkg_t;$/;"	t	typeref:struct:get_n_passive_indexs_pkg
+indexn_pkg_t	storage_proto.h	/^}__attribute__((packed)) indexn_pkg_t; \/* ----------  end of struct get_n_indexs_pkg  ---------- *\/$/;"	t	typeref:struct:get_n_indexs_pkg
+indexns	storage_proto.h	/^        indexn_pkg_t            indexns[0];$/;"	m	union:request_pkg::__anon2
+indexns_p	storage_proto.h	/^        indexn_p_pkg_t          indexns_p[0];$/;"	m	union:request_pkg::__anon2
+indexspan_pkg_t	storage_proto.h	/^}__attribute__((packed)) indexspan_pkg_t; \/* ----------  end of struct get_ndays_indexs_pkg  ---------- *\/$/;"	t	typeref:struct:get_span_indexs_pkg
+indexspans	storage_proto.h	/^        indexspan_pkg_t         indexspans[0];$/;"	m	union:request_pkg::__anon2
+init	config.cpp	/^bool gconfig::init(const char* cfg_file, bool reload) {$/;"	f	class:gconfig
+init	feeds_database.cpp	/^bool feeds_database::init()$/;"	f	class:feeds_database
+init	feeds_store.cpp	/^bool feeds_store::init()$/;"	f	class:feeds_store
+init	handle_mysql/c_mysql_iface.cpp	/^int c_mysql_iface::init(const char* host, unsigned short port, const char* db_name, const char* user, const char* passwd, const char* charset)$/;"	f	class:c_mysql_iface
+init	util.cpp	/^bool feedid_list::init()$/;"	f	class:feedid_list
+init	util.cpp	/^bool pfeedid_list::init()$/;"	f	class:pfeedid_list
+inited	config.h	/^    bool                inited;$/;"	m	struct:db_info
+inited	config.h	/^    bool inited;$/;"	m	struct:memcached_server
+inited	feeds_store.cpp	/^bool feeds_store::inited = false;$/;"	m	class:feeds_store	file:
+inited	feeds_store.h	/^        static bool inited;$/;"	m	class:feeds_store
+insert	feeds_database.cpp	/^int feeds_database::insert(i_mysql_iface *h_db, feedid_t *feedid, const char * feeddata, const int datalen)$/;"	f	class:feeds_database
+insert	feeds_store.cpp	/^int feeds_store::insert(char *send_buf, const size_t buflen, int *res_pkg_len,$/;"	f	class:feeds_store
+insert	pfeeds_database.cpp	/^int pfeeds_database::insert(i_mysql_iface *db, pfeed_pkg_t *pkg)$/;"	f	class:pfeeds_database
+insert_items	storage_proto.h	/^        insert_pkg_t            insert_items[0];$/;"	m	union:request_pkg::__anon2
+insert_p	feeds_store.cpp	/^int feeds_store::insert_p(char *send_buf, const size_t buflen, int *res_pkg_len, const int units, insert_p_pkg_t *pkg)$/;"	f	class:feeds_store
+insert_p_items	storage_proto.h	/^        insert_p_pkg_t          insert_p_items[0];$/;"	m	union:request_pkg::__anon2
+insert_p_pkg_t	storage_proto_pass.h	/^}__attribute__((packed)) insert_p_pkg_t;$/;"	t	typeref:struct:insert_passive_feedpkg_t
+insert_passive_feedpkg_t	storage_proto_pass.h	/^typedef struct insert_passive_feedpkg_t {$/;"	s
+insert_pkg	storage_proto.h	/^typedef struct insert_pkg {$/;"	s
+insert_pkg_t	storage_proto.h	/^}__attribute__((packed)) insert_pkg_t; \/* ----------  end of struct insert_pkg  ---------- *\/$/;"	t	typeref:struct:insert_pkg
+is_startuser	config.cpp	/^bool gconfig::is_startuser(uint32_t mimi)$/;"	f	class:gconfig
+key	storage_proto.h	/^    feedkey_t   key;            \/\/8 bytes feed key$/;"	m	struct:feed_key_data_pkg
+key	storage_proto_pass.h	/^    feedkey_t   key;$/;"	m	struct:passive_key_feed_pkg
+kfeeds	storage_proto.h	/^        feed_key_pkg_t          kfeeds[0];\/\/key feeds$/;"	m	union:response_pkg::__anon3
+len	msglog.h	/^        uint16_t len;$/;"	m	struct:message_header
+len	storage_proto.h	/^    uint32_t    len;            \/\/length for one entire feed, contain len, feedid, data$/;"	m	struct:feed_key_data_pkg
+len	storage_proto.h	/^    uint32_t len;               \/\/len for one set package$/;"	m	struct:set_pkg
+len	storage_proto.h	/^    uint32_t len;               \/\/length for one feed$/;"	m	struct:feed_pkg
+len	storage_proto.h	/^    uint32_t len;          \/\/len for one insert package$/;"	m	struct:insert_pkg
+len	storage_proto.h	/^    uint32_t len;        \/\/length for one request package$/;"	m	struct:request_pkg
+len	storage_proto.h	/^    uint32_t len;        \/\/length for response package$/;"	m	struct:response_pkg
+len	storage_proto.h	/^   uint32_t len;                \/\/len for one insert package$/;"	m	struct:update_pkg
+len	storage_proto.h	/^   uint32_t len;                \/\/len for one insert2 package$/;"	m	struct:update2_pkg
+len	storage_proto_pass.h	/^    uint32_t    len;              \/\/length of entire package$/;"	m	struct:passive_key_feed_pkg
+len	storage_proto_pass.h	/^    uint32_t  len;              \/\/denote length of passive feed package$/;"	m	struct:passive_feed_pkg
+likely	stat_analysis.cpp	150;"	d	file:
+likely	stat_analysis.cpp	29;"	d	file:
+likely	stat_analysis.cpp	31;"	d	file:
+list	util.h	/^    feedid_t    *list;$/;"	m	struct:feedid_list
+list	util.h	/^    pfeedid_t   *list;$/;"	m	struct:pfeedid_list
+local_ip	newbench.h	/^    u_int local_ip;$/;"	m	struct:skinfo_struct
+local_port	newbench.h	/^    u_short local_port;$/;"	m	struct:skinfo_struct
+log_dest	log.h	/^typedef enum log_dest {$/;"	g
+log_dest_both	log.h	/^	log_dest_both		= 3$/;"	e	enum:log_dest
+log_dest_file	log.h	/^	log_dest_file		= 2,$/;"	e	enum:log_dest
+log_dest_t	log.h	/^} log_dest_t;$/;"	t	typeref:enum:log_dest
+log_dest_terminal	log.h	/^	log_dest_terminal	= 1,$/;"	e	enum:log_dest
+log_dir	stat_analysis.cpp	/^static char log_dir[256];$/;"	v	file:
+log_dir	util.h	/^    char log_dir[MAX_CONF_STR_LEN];$/;"	m	struct:bench_config
+log_file_path	stat_analysis.cpp	/^log_file_path(char* file_path, int seq, const struct tm* tm)$/;"	f	file:
+log_level	util.h	/^    int log_level;$/;"	m	struct:bench_config
+log_lvl	log.h	/^typedef enum log_lvl {$/;"	g
+log_lvl_alert	log.h	/^	log_lvl_alert,$/;"	e	enum:log_lvl
+log_lvl_crit	log.h	/^	log_lvl_crit,$/;"	e	enum:log_lvl
+log_lvl_debug	log.h	/^	log_lvl_debug,$/;"	e	enum:log_lvl
+log_lvl_emerg	log.h	/^	log_lvl_emerg,$/;"	e	enum:log_lvl
+log_lvl_error	log.h	/^	log_lvl_error,$/;"	e	enum:log_lvl
+log_lvl_info	log.h	/^	log_lvl_info,$/;"	e	enum:log_lvl
+log_lvl_max	log.h	/^	log_lvl_max$/;"	e	enum:log_lvl
+log_lvl_notice	log.h	/^	log_lvl_notice,$/;"	e	enum:log_lvl
+log_lvl_t	log.h	/^} log_lvl_t;$/;"	t	typeref:enum:log_lvl
+log_lvl_trace	log.h	/^	log_lvl_trace,$/;"	e	enum:log_lvl
+log_lvl_warning	log.h	/^	log_lvl_warning,$/;"	e	enum:log_lvl
+log_maxfiles	util.h	/^    u_int log_maxfiles;$/;"	m	struct:bench_config
+log_pre	stat_analysis.cpp	/^static char log_pre[32];$/;"	v	file:
+log_prefix	util.h	/^    char log_prefix[MAX_CONF_STR_LEN];$/;"	m	struct:bench_config
+log_size	stat_analysis.cpp	/^static const uint32_t log_size = 64*1024*1024; \/\/64M$/;"	v	file:
+log_size	util.h	/^    u_int log_size;$/;"	m	struct:bench_config
+logbuf	stat_analysis.cpp	/^static char logbuf[8*1024] = {0};$/;"	v	file:
+m_cfgfile	config.cpp	/^char gconfig::m_cfgfile[PATH_MAX_LEN]   = { 0 };$/;"	m	class:gconfig	file:
+m_cfgfile	config.h	/^        static char             m_cfgfile[PATH_MAX_LEN];$/;"	m	class:gconfig
+m_config_db	config.cpp	/^i_mysql_iface* gconfig::m_config_db     = NULL;$/;"	m	class:gconfig	file:
+m_config_db	config.h	/^        static i_mysql_iface *m_config_db;  \/\/conn for configuration database$/;"	m	class:gconfig
+m_dbhost	config.cpp	/^char gconfig::m_dbhost[STR_MAX_LEN]     = { 0 };$/;"	m	class:gconfig	file:
+m_dbhost	config.h	/^        static char     m_dbhost[STR_MAX_LEN];$/;"	m	class:gconfig
+m_dbname	config.cpp	/^char gconfig::m_dbname[STR_MAX_LEN]     = { 0 };$/;"	m	class:gconfig	file:
+m_dbname	config.h	/^        static char     m_dbname[STR_MAX_LEN];$/;"	m	class:gconfig
+m_dbpassword	config.cpp	/^char gconfig::m_dbpassword[STR_MAX_LEN] = { 0 };$/;"	m	class:gconfig	file:
+m_dbpassword	config.h	/^        static char     m_dbpassword[STR_MAX_LEN];$/;"	m	class:gconfig
+m_dbport	config.cpp	/^int gconfig::m_dbport                   =  -1;$/;"	m	class:gconfig	file:
+m_dbport	config.h	/^        static int      m_dbport;$/;"	m	class:gconfig
+m_dbusername	config.cpp	/^char gconfig::m_dbusername[STR_MAX_LEN] = { 0 };$/;"	m	class:gconfig	file:
+m_dbusername	config.h	/^        static char     m_dbusername[STR_MAX_LEN];$/;"	m	class:gconfig
+m_errno	handle_mysql/c_mysql_iface.h	/^    int m_errno; \/**< @brief 保存本对象错误号 *\/$/;"	m	class:c_mysql_iface
+m_errstr	handle_mysql/c_mysql_iface.h	/^    char m_errstr[1024]; \/**< @brief 保存本对象的错误描述 *\/$/;"	m	class:c_mysql_iface
+m_feeds_databases	config.cpp	/^db_conns  gconfig::m_feeds_databases    = { { {0, {0}, 0, {0}, {0}, {0}, false, NULL} },$/;"	m	class:gconfig	file:
+m_feeds_databases	config.h	/^        static db_conns  m_feeds_databases;$/;"	m	class:gconfig
+m_feeds_memcached	config.cpp	/^memcached_srv_t  gconfig::m_feeds_memcached   = { false, {0}, NULL};$/;"	m	class:gconfig	file:
+m_feeds_memcached	config.h	/^        static memcached_srv_t  m_feeds_memcached;$/;"	m	class:gconfig
+m_hdb	handle_mysql/c_mysql_iface.h	/^    MYSQL* m_hdb; \/**< @brief 对象内部维护的MYSQL连接指针 *\/$/;"	m	class:c_mysql_iface
+m_host	handle_mysql/c_mysql_iface.h	/^    char m_host[MYSQL_MAX_HOST_BUF_LEN]; \/**< @brief 数据库主机地址 *\/$/;"	m	class:c_mysql_iface
+m_ini_handle	config.cpp	/^i_ini_file* gconfig::m_ini_handle       = NULL;$/;"	m	class:gconfig	file:
+m_ini_handle	config.h	/^        static i_ini_file*      m_ini_handle;$/;"	m	class:gconfig
+m_ini_inited	config.cpp	/^bool gconfig::m_ini_inited              = false;$/;"	m	class:gconfig	file:
+m_ini_inited	config.h	/^        static bool             m_ini_inited;$/;"	m	class:gconfig
+m_inited	config.cpp	/^bool gconfig::m_inited                  = false;$/;"	m	class:gconfig	file:
+m_inited	config.h	/^        static bool             m_inited;$/;"	m	class:gconfig
+m_msgfile	config.cpp	/^char gconfig::m_msgfile[PATH_MAX_LEN]   = { 0 };$/;"	m	class:gconfig	file:
+m_msgfile	config.h	/^        static char             m_msgfile[PATH_MAX_LEN];$/;"	m	class:gconfig
+m_port	handle_mysql/c_mysql_iface.h	/^    unsigned short m_port; \/**< @brief 数据库主机端口 *\/$/;"	m	class:c_mysql_iface
+m_res	handle_mysql/c_mysql_iface.h	/^    MYSQL_RES* m_res; \/**< @brief  维护select_first_row和select_next_row查询结果的内部资源*\/$/;"	m	class:c_mysql_iface
+m_row	handle_mysql/c_mysql_iface.h	/^    MYSQL_ROW m_row;  \/**< @brief  维护select_first_row和select_next_row查询结果的内部资源*\/$/;"	m	class:c_mysql_iface
+m_sql_buf	handle_mysql/c_mysql_iface.h	/^    char m_sql_buf[MYSQL_MAX_SQL_BUF_LEN]; \/**< @brief  接保存接口串入的SQL语句的缓存*\/$/;"	m	class:c_mysql_iface
+m_statpath	config.cpp	/^char gconfig::m_statpath[PATH_MAX_LEN]  = { 0 };$/;"	m	class:gconfig	file:
+m_statpath	config.h	/^        static char             m_statpath[PATH_MAX_LEN];$/;"	m	class:gconfig
+magic	feedid.h	/^    uint64_t magic;        \/\/for specified id or random id$/;"	m	struct:feedid_st
+magic	storage_proto.h	/^    uint64_t magic;$/;"	m	struct:delete2_pkg
+magic	storage_proto.h	/^    uint64_t magic;$/;"	m	struct:get2_pkg
+max_buf_size	pfeeds_database.cpp	/^static const int max_buf_size = SQL_MAX_SZ - 1;$/;"	v	file:
+max_membuf_size	pfeeds_memcached.cpp	/^static const int max_membuf_size = MEM_FEEDKEY_MAX - 1;$/;"	v	file:
+max_pkg_len	util.h	/^    u_int max_pkg_len;$/;"	m	struct:bench_config
+mem_num	stat_analysis.h	/^    uint32_t mem_num;$/;"	m	struct:storage_stat_hits
+memcached_server	config.h	/^typedef struct memcached_server $/;"	s
+memcached_srv_t	config.h	/^}memcached_srv_t;$/;"	t	typeref:struct:memcached_server
+memkey_buf	pfeeds_memcached.cpp	/^static char memkey_buf[MEM_FEEDKEY_MAX] = {0};$/;"	v	file:
+memkeys	util.h	/^    char        *memkeys[MAX_FEEDID_NUM];$/;"	m	struct:pfeedid_list
+memkeyslen	util.h	/^    size_t      memkeyslen[MAX_FEEDID_NUM];$/;"	m	struct:pfeedid_list
+message_header	msglog.h	/^    struct message_header {$/;"	s
+message_header_t	msglog.h	/^    typedef struct message_header message_header_t;$/;"	t	typeref:struct:message_header
+mimi	feedid.h	/^    uint32_t mimi;$/;"	m	struct:feedid_st
+mimi	storage_proto.h	/^    uint32_t mimi;$/;"	m	struct:delete2_pkg
+mimi	storage_proto.h	/^    uint32_t mimi;$/;"	m	struct:get2_pkg
+mimi	storage_proto.h	/^    uint32_t mimi;$/;"	m	struct:get_n_indexs_pkg
+mimi	storage_proto.h	/^    uint32_t mimi;$/;"	m	struct:get_span_indexs_pkg
+mimi	storage_proto_pass.h	/^    uint32_t mimi;              \/\/fetch passive feed index for user$/;"	m	struct:get_n_passive_indexs_pkg
+msglog	msglog.c	/^int msglog(const char *logfile, uint32_t type, uint32_t timestamp, const void *data, int len) $/;"	f
+new_feedid	storage_proto.h	/^    feedid_t new_feedid;        \/\/identification for new feed$/;"	m	struct:set_pkg
+new_feedid	storage_proto.h	/^   feedid_t new_feedid;         \/\/identification for new feed$/;"	m	struct:update2_pkg
+next_num	storage_proto.h	/^    uint16_t next_num;          \/\/fetch next_num feedid, after starttime ( >= starttime)$/;"	m	struct:get_n_indexs_pkg
+old_feedid	storage_proto.h	/^    feedid_t old_feedid;        \/\/identification for old feed$/;"	m	struct:set_pkg
+old_feedid	storage_proto.h	/^   feedid_t old_feedid;         \/\/identification for old feed$/;"	m	struct:update2_pkg
+op	storage_proto.h	/^    uint16_t op;         \/\/operation type(reference forward macro define): insert update delete gets ...$/;"	m	struct:request_pkg
+op_buf	storage_server_so.cpp	/^static char op_buf[MAX_PACKAGE_LEN];$/;"	v	file:
+open_fd	stat_analysis.cpp	/^static int open_fd(struct fd_t *fds, struct tm *ts) $/;"	f	file:
+operator -	stat_analysis.cpp	/^long int c_time::operator-(const c_time &rhs) {$/;"	f	class:c_time
+operator []	util.cpp	/^feedid_t &feedid_list::operator[](int idx)$/;"	f	class:feedid_list
+operator []	util.cpp	/^pfeedid_t &pfeedid_list::operator[](int idx)$/;"	f	class:pfeedid_list
+opfd	stat_analysis.cpp	/^	int	opfd;$/;"	m	struct:fd_t	file:
+p	Makefile	/^	-alias cp=cp ; cp -Pfv $(BUILD_DIR)\/$(LINKNAME)* libs\/$/;"	m
+p_magic	feedid.h	/^    uint32_t p_magic;           \/\/magic field for passive feed$/;"	m	struct:passive_feedid
+p_signal_handler	storage_server_so.cpp	/^void p_signal_handler(int sig)$/;"	f
+passive_feed_pkg	storage_proto_pass.h	/^typedef struct passive_feed_pkg {$/;"	s
+passive_feedid	feedid.h	/^typedef struct passive_feedid {$/;"	s
+passive_key_feed_pkg	storage_proto_pass.h	/^typedef struct passive_key_feed_pkg {$/;"	s
+password	config.h	/^    char                password[STR_MAX_LEN];$/;"	m	struct:db_info
+pfeed_key_pkg_t	storage_proto_pass.h	/^}__attribute__((packed))  pfeed_key_pkg_t;$/;"	t	typeref:struct:passive_key_feed_pkg
+pfeed_pkg_t	storage_proto_pass.h	/^}__attribute__((packed))  pfeed_pkg_t;$/;"	t	typeref:struct:passive_feed_pkg
+pfeedid_equal	util.cpp	/^bool pfeedid_equal(const pfeedid_t *fid1, const pfeedid_t *fid2)$/;"	f
+pfeedid_list	util.h	/^typedef struct pfeedid_list{$/;"	s
+pfeedid_list_t	util.h	/^} pfeedid_list_t;$/;"	t	typeref:struct:pfeedid_list
+pfeedid_t	feedid.h	/^}__attribute__((packed)) pfeedid_t; $/;"	t	typeref:struct:passive_feedid
+pfeeds	storage_proto.h	/^        pfeed_pkg_t             pfeeds[0];\/\/passive feeds$/;"	m	union:response_pkg::__anon3
+pfeeds_database	pfeeds_database.h	/^class pfeeds_database$/;"	c
+pfeeds_memcached	pfeeds_memcached.h	/^class pfeeds_memcached$/;"	c
+pfidlist	feeds_store.cpp	/^pfeedid_list_t feeds_store::pfidlist = { 0, 0, {0}, {0}, {0}};$/;"	m	class:feeds_store	file:
+pfidlist	feeds_store.h	/^        static pfeedid_list_t pfidlist;$/;"	m	class:feeds_store
+pftid	feedid.h	/^    uint8_t pftid;             \/\/passive feed table id, 0xFF is not valid$/;"	m	struct:feed_key_pkg
+pkfeeds	storage_proto.h	/^        pfeed_key_pkg_t         pkfeeds[0];\/\/passive key feeds$/;"	m	union:response_pkg::__anon3
+pkg_timeout	util.h	/^    u_int pkg_timeout;$/;"	m	struct:bench_config
+port	config.h	/^    unsigned int        port;$/;"	m	struct:db_info
+prev_num	storage_proto.h	/^    uint16_t prev_num;          \/\/fetch prev_num feedid, before starttime ( <= starttime)$/;"	m	struct:get_n_indexs_pkg
+prev_num	storage_proto_pass.h	/^    uint32_t prev_num;          \/\/fetch prev_num feedid, before starttime ( <= starttime)$/;"	m	struct:get_n_passive_indexs_pkg
+print_feedid	util.cpp	/^inline void print_feedid(feedid_t *fid)$/;"	f
+print_p_feed	util.cpp	/^inline void print_p_feed(pfeed_pkg_t *pkg)$/;"	f
+process_type	storage_server_so.cpp	/^static int process_type = PROC_WORK;$/;"	v	file:
+prog_name	util.h	/^    char *prog_name;$/;"	m	struct:bench_config
+ptr	newbench.h	/^    void *ptr;$/;"	m	union:bench_storage
+ptr_lookout	newbench.h	/^    void *ptr_lookout;$/;"	m	struct:skinfo_struct
+recvtm	newbench.h	/^    long long recvtm;$/;"	m	struct:skinfo_struct
+release	handle_mysql/c_mysql_iface.cpp	/^int c_mysql_iface::release()$/;"	f	class:c_mysql_iface
+remote_ip	newbench.h	/^    u_int remote_ip;$/;"	m	struct:skinfo_struct
+remote_port	newbench.h	/^    u_short remote_port;$/;"	m	struct:skinfo_struct
+replace	feeds_memcached.cpp	/^int feeds_memcached::replace(memcached_st *memc, feedid_t *feedid, const char* escape_data, const size_t datalen)$/;"	f	class:feeds_memcached
+replace	pfeeds_memcached.cpp	/^int pfeeds_memcached::replace(memcached_st *memc, pfeedid_t *fid, pfeed_pkg_t *pkg)$/;"	f	class:pfeeds_memcached
+req_hsz	util.h	/^const unsigned int req_hsz = (unsigned int)sizeof(request_pkg_t);$/;"	v
+request_pkg	storage_proto.h	/^typedef struct request_pkg {$/;"	s
+request_pkg_t	storage_proto.h	/^}__attribute__((packed)) request_pkg_t;$/;"	t	typeref:struct:request_pkg
+res_hsz	util.h	/^const unsigned int res_hsz = (unsigned int)sizeof(response_pkg_t);$/;"	v
+reset	util.cpp	/^void pfeedid_list::reset()$/;"	f	class:pfeedid_list
+response_pkg	storage_proto.h	/^typedef struct response_pkg {$/;"	s
+response_pkg_t	storage_proto.h	/^}__attribute__((packed)) response_pkg_t; \/* ----------  end of struct response_pkg  ---------- *\/$/;"	t	typeref:struct:response_pkg
+ret	storage_proto.h	/^    uint16_t ret;        \/\/operation result (refer to forward macro define)$/;"	m	struct:response_pkg
+ret_memc	feeds_memcached.cpp	/^memcached_return_t feeds_memcached::ret_memc = MEMCACHED_SUCCESS;$/;"	m	class:feeds_memcached	file:
+ret_memc	feeds_memcached.h	/^        static memcached_return_t ret_memc;$/;"	m	class:feeds_memcached
+ret_memc	pfeeds_memcached.cpp	/^static memcached_return_t ret_memc = MEMCACHED_SUCCESS;$/;"	v	file:
+run_mode	util.h	/^    char run_mode[MAX_CONF_STR_LEN];$/;"	m	struct:bench_config
+saddr	msglog.h	/^        uint32_t  saddr;$/;"	m	struct:message_header
+saved_argv	util.h	/^    char **saved_argv;$/;"	m	struct:bench_config
+select_first_row	handle_mysql/c_mysql_iface.cpp	/^int c_mysql_iface::select_first_row(MYSQL_ROW* row, const char* sql_fmt, ...)$/;"	f	class:c_mysql_iface
+select_next_row	handle_mysql/c_mysql_iface.cpp	/^MYSQL_ROW c_mysql_iface::select_next_row(bool check_field)$/;"	f	class:c_mysql_iface
+sender_id	feedid.h	/^    uint32_t sender_id;         \/\/sender user$/;"	m	struct:passive_feedid
+sendtm	newbench.h	/^    long long sendtm;$/;"	m	struct:skinfo_struct
+seq	stat_analysis.cpp	/^	int	seq;$/;"	m	struct:fd_t	file:
+seqno	msglog.h	/^        uint32_t  seqno;$/;"	m	struct:message_header
+servers_list	config.h	/^    char servers_list[MEMSET_MAX_LEN];$/;"	m	struct:memcached_server
+set	feeds_memcached.cpp	/^int feeds_memcached::set(memcached_st *memc, feedid_t * feedid, const char* escape_data, const size_t datalen)$/;"	f	class:feeds_memcached
+set	feeds_store.cpp	/^int feeds_store::set(char *send_buf, const size_t buflen, int *res_pkg_len, const int units, set_pkg_t *pkg)$/;"	f	class:feeds_store
+set	pfeeds_memcached.cpp	/^int pfeeds_memcached::set(memcached_st *memc, pfeedid_t *pfid, char *pkg_data, size_t datalen)$/;"	f	class:pfeeds_memcached
+set	stat_analysis.cpp	/^void c_time::set()$/;"	f	class:c_time
+set_err	handle_mysql/c_mysql_iface.cpp	/^void c_mysql_iface::set_err(int errnoX, const char* msg, ...)$/;"	f	class:c_mysql_iface
+set_items	storage_proto.h	/^        set_pkg_t               set_items[0];$/;"	m	union:request_pkg::__anon2
+set_key	feeds_memcached.cpp	/^int feeds_memcached::set_key(memcached_st *memc, feedid_t *fid, feedkey_t *fkey)$/;"	f	class:feeds_memcached
+set_key	pfeeds_memcached.cpp	/^int pfeeds_memcached::set_key(memcached_st *memc, pfeedid_t *fid, feedkey_t *fkey)$/;"	f	class:pfeeds_memcached
+set_pkg	storage_proto.h	/^typedef struct set_pkg {        \/\/set new feed to db, do not care old feed existed or not$/;"	s
+set_pkg_t	storage_proto.h	/^}__attribute__((packed)) set_pkg_t; \/* ----------  end of struct update_pkg  ---------- *\/$/;"	t	typeref:struct:set_pkg
+shift_fd	stat_analysis.cpp	/^static int shift_fd(struct fd_t *fds, struct tm *ts) $/;"	f	file:
+shmq_length	util.h	/^    u_int shmq_length;$/;"	m	struct:bench_config
+skinfo_struct	newbench.h	/^typedef struct skinfo_struct {$/;"	s
+skinfo_t	newbench.h	/^}skinfo_t;$/;"	t	typeref:struct:skinfo_struct
+so_file	util.h	/^    char so_file[MAX_CONF_STR_LEN];$/;"	m	struct:bench_config
+sockfd	newbench.h	/^    int sockfd;$/;"	m	struct:skinfo_struct
+sql2_buf	feeds_database.cpp	/^static char sql2_buf[SQL_MAX_SZ];$/;"	v	file:
+sql3_buf	feeds_database.cpp	/^static char sql3_buf[SQL_MAX_SZ];$/;"	v	file:
+sql_buf	feeds_database.cpp	/^static char sql_buf[SQL_MAX_SZ];$/;"	v	file:
+sql_buf	pfeeds_database.cpp	/^static char sql_buf[SQL_MAX_SZ] = {0};$/;"	v	file:
+sql_buf_max	feeds_database.cpp	/^static const int sql_buf_max = SQL_MAX_SZ - 1;$/;"	v	file:
+src_fid	feedid.h	/^    feedid_t src_fid;           \/\/source feed id related$/;"	m	struct:passive_feedid
+start_users	config.cpp	/^std::set<uint32_t> gconfig::start_users;$/;"	m	class:gconfig	file:
+start_users	config.h	/^        static std::set<uint32_t> start_users;$/;"	m	class:gconfig
+starttime	storage_proto.h	/^    uint32_t starttime;         \/\/start time of lastest n indexs$/;"	m	struct:get_n_indexs_pkg
+starttime	storage_proto.h	/^    uint32_t starttime;         \/\/start time$/;"	m	struct:get_span_indexs_pkg
+starttime	storage_proto_pass.h	/^    uint32_t starttime;         \/\/start time of lastest n indexs, before starttime$/;"	m	struct:get_n_passive_indexs_pkg
+stat_init	stat_analysis.cpp	/^bool stat_init(const char * logdir, const char * logpre)$/;"	f
+stat_log	stat_analysis.h	43;"	d
+stat_pkg_len	feeds_store.h	/^        const static int stat_pkg_len = ((int)sizeof(feed_status_pkg_t));$/;"	m	class:feeds_store
+stat_uninit	stat_analysis.cpp	/^void stat_uninit()$/;"	f
+status	storage_proto.h	/^        feed_status_pkg_t       status[0];\/\/handle for feeds status$/;"	m	union:response_pkg::__anon3
+status	storage_proto.h	/^    uint16_t status;            \/\/status, such as units error, feedid error, request op error, etc.$/;"	m	struct:feed_operation_status_pkg
+storage	newbench.h	/^    union bench_storage storage;$/;"	m	struct:skinfo_struct	typeref:union:skinfo_struct::bench_storage
+storage_errstr	storage_proto.h	/^}storage_errstr[] = {$/;"	v	typeref:struct:err_item
+storage_hits	stat_analysis.h	/^} storage_hits;$/;"	t	typeref:struct:storage_stat_hits
+storage_hits_log	stat_analysis.h	/^inline void storage_hits_log(uint32_t msgid, time_t *base_time, storage_hits *hit)$/;"	f
+storage_hits_size	stat_analysis.h	/^const int storage_hits_size = sizeof(storage_hits);$/;"	v
+storage_stat_hits	stat_analysis.h	/^typedef struct storage_stat_hits {$/;"	s
+str	storage_proto.h	/^    const char *str;$/;"	m	struct:err_item
+strtoul_wrapper	util.cpp	/^bool strtoul_wrapper(const char* str, int base, uint32_t *value)$/;"	f
+target_id	feedid.h	/^    uint32_t target_id;         \/\/target user$/;"	m	struct:passive_feedid
+timestamp	feedid.h	/^    uint32_t timestamp;$/;"	m	struct:feedid_st
+timestamp	msglog.h	/^        uint32_t  timestamp;$/;"	m	struct:message_header
+tv	stat_analysis.h	/^        struct timeval tv;$/;"	m	class:c_time	typeref:struct:c_time::timeval
+type	msglog.h	/^        uint32_t  type;$/;"	m	struct:message_header
+type	newbench.h	/^    int type;$/;"	m	struct:skinfo_struct
+u32	newbench.h	/^    uint32_t u32;$/;"	m	union:bench_storage
+u64	newbench.h	/^    uint64_t u64;$/;"	m	union:bench_storage
+uninit	config.cpp	/^void db_conns::uninit() {$/;"	f	class:db_conns
+uninit	config.cpp	/^void gconfig::uninit() {$/;"	f	class:gconfig
+uninit	config.cpp	/^void memcached_server::uninit() {$/;"	f	class:memcached_server
+uninit	feeds_database.cpp	/^void feeds_database::uninit()$/;"	f	class:feeds_database
+uninit	feeds_store.cpp	/^void feeds_store::uninit()$/;"	f	class:feeds_store
+uninit	handle_mysql/c_mysql_iface.cpp	/^int c_mysql_iface::uninit()$/;"	f	class:c_mysql_iface
+uninit	util.cpp	/^void feedid_list::uninit()$/;"	f	class:feedid_list
+uninit	util.cpp	/^void pfeedid_list::uninit()$/;"	f	class:pfeedid_list
+units	storage_proto.h	/^    uint16_t units;      \/\/batch num for one response$/;"	m	struct:response_pkg
+units	storage_proto.h	/^    uint16_t units;      \/\/batch operation num for one request ( >=1 )$/;"	m	struct:request_pkg
+unlikely	stat_analysis.cpp	151;"	d	file:
+unlikely	stat_analysis.cpp	34;"	d	file:
+unlikely	stat_analysis.cpp	36;"	d	file:
+update	feeds_store.cpp	/^int feeds_store::update(char *send_buf, const size_t buflen, int *res_pkg_len,$/;"	f	class:feeds_store
+update	pfeeds_database.cpp	/^int pfeeds_database::update(i_mysql_iface *db, pfeedid_t *fid, pfeed_pkg_t *pkg)$/;"	f	class:pfeeds_database
+update2	feeds_database.cpp	/^int feeds_database::update2(i_mysql_iface *db, const feedid_t* oldfid, const feedid_t* newfid,$/;"	f	class:feeds_database
+update2	feeds_store.cpp	/^int feeds_store::update2(char *send_buf, const size_t buflen, int *res_pkg_len,$/;"	f	class:feeds_store
+update2_items	storage_proto.h	/^        update2_pkg_t           update2_items[0];$/;"	m	union:request_pkg::__anon2
+update2_pkg	storage_proto.h	/^typedef struct update2_pkg {    \/\/update old feed to (new feedid, data), used in feed merge$/;"	s
+update2_pkg_t	storage_proto.h	/^}__attribute__((packed)) update2_pkg_t; \/* ----------  end of struct update_pkg  ---------- *\/$/;"	t	typeref:struct:update2_pkg
+update_items	storage_proto.h	/^        update_pkg_t            update_items[0];$/;"	m	union:request_pkg::__anon2
+update_p	feeds_store.cpp	/^int feeds_store::update_p(char *send_buf, const size_t buflen, int *res_pkg_len, const int units, update_p_pkg_t *pkg)$/;"	f	class:feeds_store
+update_p_items	storage_proto.h	/^        update_p_pkg_t          update_p_items[0];$/;"	m	union:request_pkg::__anon2
+update_p_pkg_t	storage_proto_pass.h	/^}__attribute__((packed)) update_p_pkg_t;$/;"	t	typeref:struct:update_passive_feedpkg_t
+update_passive_feedpkg_t	storage_proto_pass.h	/^typedef struct update_passive_feedpkg_t {$/;"	s
+update_pkg	storage_proto.h	/^typedef struct update_pkg {$/;"	s
+update_pkg_t	storage_proto.h	/^}__attribute__((packed)) update_pkg_t; \/* ----------  end of struct update_pkg  ---------- *\/$/;"	t	typeref:struct:update_pkg
+use_barrier	util.h	/^    bool use_barrier;$/;"	m	struct:bench_config
+username	config.h	/^    char                username[STR_MAX_LEN];$/;"	m	struct:db_info
+verify_time	util.h	/^inline void verify_time(uint32_t *timestamp)$/;"	f
+worker_num	util.h	/^    u_int worker_num;$/;"	m	struct:bench_config
+write_common_log	stat_analysis.cpp	/^void write_common_log(const char* fmt, ...)$/;"	f
+yday	stat_analysis.cpp	/^	int	yday;$/;"	m	struct:fd_t	file:
+~c_mysql_iface	handle_mysql/c_mysql_iface.cpp	/^c_mysql_iface::~c_mysql_iface()$/;"	f	class:c_mysql_iface
+~i_ini_file	i_ini_file.h	/^    virtual ~i_ini_file() {};$/;"	f	struct:i_ini_file

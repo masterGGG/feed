@@ -1,0 +1,19 @@
+/*************************************************************************/
+/ simple discription for storage server
+/*************************************************************************/
+
+storage service used to handle feed/passive feed operation:
+    insert
+    update
+    delete
+    get feeds package(max allowed 100 feedid once get)
+    get feeds index (max allowed 100 userid once get)
+
+
+storage server have cache feed in memcached server
+in memcahed server:
+    one feed storage as:
+    feedid_string => feed_data
+    feedid_string ::= hex represented of all fields of feed id (feed/passive feed)
+
+storagectl is a utility for control storage server : start stop status reload

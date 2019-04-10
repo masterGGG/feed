@@ -1,0 +1,34 @@
+[2019-04-08 14:32:38] 725xxx get_newsfeed: last_time: Array
+(
+    [0] => 1227401112
+)
+
+[2019-04-08 14:32:38] 754xxx get_newsfeed: last_time: 1554705158.2028 now:1554705158.2028
+[2019-04-08 14:32:41] 725xxx get_newsfeed: last_time: Array
+(
+    [0] => 1227401112
+)
+
+[2019-04-08 14:32:41] 754xxx get_newsfeed: last_time: 1554705161.6534 now:1554705161.6534
+[2019-04-08 14:32:42] 725xxx get_newsfeed: last_time: Array
+(
+    [0] => 1227401112
+)
+
+[2019-04-08 14:32:42] 754xxx get_newsfeed: last_time: 1554705162.789 now:1554705162.789
+[2019-04-08 14:33:15] 725xxx get_newsfeed: last_time: Array
+(
+    [0] => 1227401112
+)
+
+[2019-04-08 14:33:15] 754xxx get_newsfeed: last_time: 1554705162 now:1554705195.1993
+[2019-04-08 14:33:15] 763xxx +count: 18 feedid:Array
+(
+)
+
+[2019-04-08 14:33:26] 725xxx get_newsfeed: last_time: Array
+(
+    [0] => 1227401112
+)
+
+[2019-04-08 14:33:26] 754xxx get_newsfeed: last_time: 1554705195 now:1554705206.3826

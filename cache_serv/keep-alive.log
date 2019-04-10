@@ -1,0 +1,99 @@
+cache_server stopped abnormally, try to start it.
+./stop.sh: line 12: warning: command substitution: ignored null byte in input
+[31m                       CACHE_SERVER is not running[0m
+restart cache_server at Tue Apr  2 17:48:06 CST 2019
+./start.sh: line 34: warning: command substitution: ignored null byte in input
+CACHE_SERVER: version: 1.0.0 build time: Jan  2 2019 15:50:32
+Set log dir ../log, per file size 0.976562 MB                         [1m[32m[ ok ][m
+CACHE_SERVER: work_proc                                               [1m[32m[ ok ][m
+CACHE_SERVER: net_proc                                                [1m[32m[ ok ][m
+CACHE_SERVER: monitor_proc                                            [1m[32m[ ok ][m
+Set log dir ../log, per file size 0.976562 MB                         [1m[32m[ ok ][m
+cache_server stopped abnormally, try to start it.
+./stop.sh: line 12: warning: command substitution: ignored null byte in input
+pid: 710[31m                       CACHE_SERVER is not running[0m
+restart cache_server at Tue Apr  2 17:49:06 CST 2019
+./start.sh: line 34: warning: command substitution: ignored null byte in input
+CACHE_SERVER: version: 1.0.0 build time: Jan  2 2019 15:50:32
+Set log dir ../log, per file size 0.976562 MB                         [1m[32m[ ok ][m
+CACHE_SERVER: work_proc                                               [1m[32m[ ok ][m
+CACHE_SERVER: net_proc                                                [1m[32m[ ok ][m
+CACHE_SERVER: monitor_proc                                            [1m[32m[ ok ][m
+Set log dir ../log, per file size 0.976562 MB                         [1m[32m[ ok ][m
+cache_server stopped abnormally, try to start it.
+./stop.sh: line 12: warning: command substitution: ignored null byte in input
+[31m                       CACHE_SERVER is not running[0m
+restart cache_server at Tue Apr  2 17:52:07 CST 2019
+./start.sh: line 34: warning: command substitution: ignored null byte in input
+CACHE_SERVER: version: 1.0.0 build time: Jan  2 2019 15:50:32
+Set log dir ../log, per file size 0.976562 MB                         [1m[32m[ ok ][m
+CACHE_SERVER: work_proc                                               [1m[32m[ ok ][m
+CACHE_SERVER: net_proc                                                [1m[32m[ ok ][m
+CACHE_SERVER: monitor_proc                                            [1m[32m[ ok ][m
+Set log dir ../log, per file size 0.976562 MB                         [1m[32m[ ok ][m
+cache_server stopped abnormally, try to start it.
+./stop.sh: line 12: warning: command substitution: ignored null byte in input
+[31m                       CACHE_SERVER is not running[0m
+restart cache_server at Tue Apr  2 17:53:06 CST 2019
+./start.sh: line 34: warning: command substitution: ignored null byte in input
+CACHE_SERVER: version: 1.0.0 build time: Jan  2 2019 15:50:32
+Set log dir ../log, per file size 0.976562 MB                         [1m[32m[ ok ][m
+CACHE_SERVER: work_proc                                               [1m[32m[ ok ][m
+CACHE_SERVER: net_proc                                                [1m[32m[ ok ][m
+CACHE_SERVER: monitor_proc                                            [1m[32m[ ok ][m
+Set log dir ../log, per file size 0.976562 MB                         [1m[32m[ ok ][m
+cache_server stopped abnormally, try to start it.
+./stop.sh: line 12: warning: command substitution: ignored null byte in input
+[31m                       CACHE_SERVER is not running[0m
+restart cache_server at Tue Apr  2 17:55:06 CST 2019
+./start.sh: line 34: warning: command substitution: ignored null byte in input
+CACHE_SERVER: version: 1.0.0 build time: Jan  2 2019 15:50:32
+Set log dir ../log, per file size 0.976562 MB                         [1m[32m[ ok ][m
+CACHE_SERVER: work_proc                                               [1m[32m[ ok ][m
+CACHE_SERVER: net_proc                                                [1m[32m[ ok ][m
+CACHE_SERVER: monitor_proc                                            [1m[32m[ ok ][m
+Set log dir ../log, per file size 0.976562 MB                         [1m[32m[ ok ][m
+cache_server stopped abnormally, try to start it.
+./stop.sh: line 12: warning: command substitution: ignored null byte in input
+[31m                       CACHE_SERVER is not running[0m
+restart cache_server at Tue Apr  2 17:58:06 CST 2019
+./start.sh: line 34: warning: command substitution: ignored null byte in input
+CACHE_SERVER: version: 1.0.0 build time: Jan  2 2019 15:50:32
+Set log dir ../log, per file size 0.976562 MB                         [1m[32m[ ok ][m
+CACHE_SERVER: work_proc                                               [1m[32m[ ok ][m
+CACHE_SERVER: net_proc                                                [1m[32m[ ok ][m
+CACHE_SERVER: monitor_proc                                            [1m[32m[ ok ][m
+Set log dir ../log, per file size 0.976562 MB                         [1m[32m[ ok ][m
+cache_server stopped abnormally, try to start it.
+./stop.sh: line 12: warning: command substitution: ignored null byte in input
+[31m                       CACHE_SERVER is not running[0m
+restart cache_server at Tue Apr  2 18:01:06 CST 2019
+./start.sh: line 34: warning: command substitution: ignored null byte in input
+CACHE_SERVER: version: 1.0.0 build time: Jan  2 2019 15:50:32
+Set log dir ../log, per file size 0.976562 MB                         [1m[32m[ ok ][m
+CACHE_SERVER: work_proc                                               [1m[32m[ ok ][m
+CACHE_SERVER: net_proc                                                [1m[32m[ ok ][m
+CACHE_SERVER: monitor_proc                                            [1m[32m[ ok ][m
+Set log dir ../log, per file size 0.976562 MB                         [1m[32m[ ok ][m
+cache_server stopped abnormally, try to start it.
+./stop.sh: line 12: warning: command substitution: ignored null byte in input
+[31m                       CACHE_SERVER is not running[0m
+restart cache_server at Tue Apr  2 18:02:06 CST 2019
+./start.sh: line 34: warning: command substitution: ignored null byte in input
+CACHE_SERVER: version: 1.0.0 build time: Jan  2 2019 15:50:32
+Set log dir ../log, per file size 0.976562 MB                         [1m[32m[ ok ][m
+CACHE_SERVER: work_proc                                               [1m[32m[ ok ][m
+CACHE_SERVER: net_proc                                                [1m[32m[ ok ][m
+CACHE_SERVER: monitor_proc                                            [1m[32m[ ok ][m
+Set log dir ../log, per file size 0.976562 MB                         [1m[32m[ ok ][m
+cache_server stopped abnormally, try to start it.
+./stop.sh: line 12: warning: command substitution: ignored null byte in input
+[31m                       CACHE_SERVER is not running[0m
+restart cache_server at Tue Apr  2 18:09:06 CST 2019
+./start.sh: line 34: warning: command substitution: ignored null byte in input
+CACHE_SERVER: version: 1.0.0 build time: Jan  2 2019 15:50:32
+Set log dir ../log, per file size 0.976562 MB                         [1m[32m[ ok ][m
+CACHE_SERVER: work_proc                                               [1m[32m[ ok ][m
+CACHE_SERVER: net_proc                                                [1m[32m[ ok ][m
+CACHE_SERVER: monitor_proc                                            [1m[32m[ ok ][m
+Set log dir ../log, per file size 0.976562 MB                         [1m[32m[ ok ][m
