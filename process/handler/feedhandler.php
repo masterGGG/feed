@@ -961,11 +961,11 @@ function news_comment($feed, &$comfeed, &$completefeed, &$passive_feed)
     $src["reply_id"] = $feed["user_id"];
     $json_src_data = json_encode($src_data);
     //通知被评论者，谁评论了我(被动feed)
-    if ($src_data["comment_id"] != $feed["user_id"])
+    if ($src_data["comment_mid"] != $feed["user_id"])
         $passive_feed[] = produce_passive_feed($feed, $feed['user_id'], $src_data['comment_mid'], $json_src_data);
     
     //通知博主，有新评论(被动feed)
-    if ($src_data["comment_id"] != $src_data["author_id"] && $src_data["author_id"] != $feed["user_id"])
+    if ($src_data["comment_mid"] != $src_data["author_id"] && $src_data["author_id"] != $feed["user_id"])
         $passive_feed[] = produce_passive_feed($feed, $feed['user_id'], $src_data['author_id'], $json_src_data);
 
     $completefeed['data'] = json_encode($src_data);
