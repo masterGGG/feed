@@ -28,21 +28,21 @@ define('HIT_NOTHING_MSGID', 0x0D000203);
 define('FEEDID_LEN', 22);
 
 // outbox-server相关配置
-define('OUTBOX_ADDR', '10.1.1.197:43321');
+define('OUTBOX_ADDR', '0.0.0.0:43321');
 define('OUTBOX_OPCODE', 0xFFF4);
 define('MAX_OUTBOX_REQUEST_COUNT', 100);
 define('OUTBOX_RESPONSE_HEAD_LEN', 6);
 
 // storage-server相关配置
-define('STORAGE_ADDR', '10.1.1.197:2222');
+define('STORAGE_ADDR', '0.0.0.0:2222');
 define('STORAGE_OPCODE', 10);
 
-define('ACTIVE_TIME_ADDR', '10.1.1.197:12004');
-define('PASSIVE_TIME_ADDR', '10.1.1.197:12005');
+define('ACTIVE_TIME_ADDR', '0.0.0.0:12004');
+define('PASSIVE_TIME_ADDR', '0.0.0.0:12005');
 
 define('ANALYSIS', false);
 
 define('TIMEOUT', 5);
 
 // relation-server相关配置
-define('RELATION_ADDR', '127.0.0.1:21145');
+define('RELATION_ADDR', '0.0.0.0:21145');

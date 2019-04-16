@@ -683,7 +683,7 @@ function feedhandle($feed, $input_arr, &$output_arr)
     }
     
     $output_arr = array(); 
-    if (!array_key_exists($feed["cmd_id"], $g_sys_conf["feed"]["ispassive"]))    //不需要生成主动feed流
+    if (!array_key_exists($feed["cmd_id"], $g_sys_conf["feed"]["ispassive"]))    //需要生成主动feed流
     {
         if (array_key_exists($feed["cmd_id"], $g_sys_conf["feed"]["user_defined_id"]))
         {
@@ -808,6 +808,8 @@ function feedhandle($feed, $input_arr, &$output_arr)
         }
     } 
         
+    DEBUG && log::write("XXXX [".__LINE__."] storage".print_r($completefeed, true),"debug");
+    DEBUG && log::write("XXXX [".__LINE__."] outbox".print_r($output_arr, true),"debug");
     //分发到feed_server上去的**************** 
     //*****************************************
     
@@ -881,13 +883,17 @@ function news_article($feed, &$comfeed, &$completefeed, &$passive_feed)
     //3. 解析首张图片的长度并根据长度获取url
     $parse = unpack("Clen", $feed["data"]);
     $src_data["pic"] = substr($feed["data"], 1, $parse["len"]);
-    /*
     $feed["data"] = substr($feed["data"], 1 + $parse["len"]);
+    $tag = unpack("Ltags", $feed["data"]);
+    $src_data["tags"] = $tag["tags"];
+    /*
     
     //4. 解析帖子简介
     $parse = unpack("Clen", $feed["data"]);
     $src_data["text"] = substr($feed["data"], 1, $parse["len"]);
     */
+    $completefeed["magic1"] = $tag["tags"];
+    $completefeed["magic2"] = 0; 
     $completefeed["data"] = json_encode($src_data);
     return 0;
 }

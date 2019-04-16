@@ -37,7 +37,7 @@ function feedid_to_binary($feedid)
 
 function binary_to_feedid($binary)
 {
-    $feedid = unpack("Luser_id/Scmd_id/Lapp_id/Ltimestamp", $binary);
+    $feedid = unpack("Luser_id/Scmd_id/Lapp_id/Ltimestamp/Ltags", $binary);
     $feedid['magic'] = base64_encode(substr($binary, 14, 8));
     return $feedid;
 }
@@ -179,12 +179,14 @@ function passive_feedid_cmp($feedid_1, $feedid_2)
 $g_arr_app_id;
 $g_arr_cmd_id;
 $g_uid;
+$g_tags_id;
 
 function feedid_filter($feedid) 
 {
     global $g_arr_app_id;
     global $g_arr_cmd_id;
     global $g_uid;
+    global $g_tags_id;
     
     if ($g_arr_app_id !== array()) {
         if (FALSE == in_array($feedid['app_id'], $g_arr_app_id))
@@ -218,6 +220,17 @@ function feedid_filter($feedid)
         $allow_num_seer = 1;
         $allow_num_hua = 1;
         $allow_num_mole = 1;
+    }
+
+    if ($feedid['cmd_id'] == 7003) {
+        if ($g_tags_id != 0) {
+            $tags = $feedid['tags'];
+
+            if ($tags == ($tags & $g_tags_id))
+                return TRUE;
+            else
+                return FALSE;
+        }
     }
 
     if ($feedid['cmd_id'] == 7022 && $feedid['app_id'] == 10002) {
@@ -715,7 +728,7 @@ function get_passive_newsfeed($uid, $offset, $count, $timestamp)
     return json_encode($arr_result);
 }
 
-function get_newsfeed_of_latest($arr_uid, $arr_app_id, $arr_cmd_id, $offset, $count, $timestamp) {
+function get_newsfeed_of_latest($arr_uid, $arr_app_id, $arr_cmd_id, $offset, $count, $timestamp, $my_tags) {
     $my_id = $arr_uid[0];
     $arr_feedid = get_feedid($arr_uid, TRUE);
     if ($arr_feedid === FALSE) {
@@ -724,10 +737,10 @@ function get_newsfeed_of_latest($arr_uid, $arr_app_id, $arr_cmd_id, $offset, $co
     }
 //    do_log('error', __LINE__.'xxx get_newsfeed: last_time: '.print_r($arr_uid, true));
 
-    return get_newsfeed_common($my_id, $arr_feedid, $arr_app_id, $arr_cmd_id, $offset, $count);
+    return get_newsfeed_common($my_id, $arr_feedid, $arr_app_id, $arr_cmd_id, $offset, $count, $my_tags);
 }
 
-function get_newsfeed($arr_uid, $arr_app_id, $arr_cmd_id, $offset, $count, $timestamp) {
+function get_newsfeed($arr_uid, $arr_app_id, $arr_cmd_id, $offset, $count, $timestamp, $my_tags) {
     //get mine & my friends' feed id
     $my_id = $arr_uid[0];
     // 从outbox-server获取所有的feedid
@@ -737,10 +750,10 @@ function get_newsfeed($arr_uid, $arr_app_id, $arr_cmd_id, $offset, $count, $time
         return FALSE;
     }
     //get_newsfeed_filter_feedid();
-    return get_newsfeed_common($my_id, $arr_feedid, $arr_app_id, $arr_cmd_id, $offset, $count);
+    return get_newsfeed_common($my_id, $arr_feedid, $arr_app_id, $arr_cmd_id, $offset, $count, $my_tags);
 }
 
-function get_newsfeed_common($my_id, $arr_feedid, $arr_app_id, $arr_cmd_id, $offset, $count)
+function get_newsfeed_common($my_id, $arr_feedid, $arr_app_id, $arr_cmd_id, $offset, $count, $my_tags)
 {
    //获得最后拉取的时间戳
     $up_time = gettimeofday(true); 
@@ -765,9 +778,11 @@ function get_newsfeed_common($my_id, $arr_feedid, $arr_app_id, $arr_cmd_id, $off
     global $g_arr_app_id;
     global $g_arr_cmd_id;
     global $g_uid;
+    global $g_tags_id;
     $g_arr_app_id = $arr_app_id;
     $g_arr_cmd_id = $arr_cmd_id;
     $g_uid = $my_id; 
+    $g_tags_id = $my_tags;
     $arr_feedid = array_filter($arr_feedid, 'feedid_filter');
     
     // 对过滤后的feedid进行排序
@@ -810,6 +825,9 @@ function get_newsfeed_common($my_id, $arr_feedid, $arr_app_id, $arr_cmd_id, $off
     $arr_join_friend = array();
     
     // 判断是否需要合并
+    foreach ($arr_feeds as $key_0 => &$feed_0) {
+        unset($feed_0['tags']);
+    }
     foreach ($arr_feeds as $key_0 => &$feed_0) {
         if (isset($feed_0['fold'])) {
             continue;

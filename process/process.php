@@ -378,9 +378,6 @@ function children_process()
         return -1;
     }
 
-    if ($redis_server_socket != false)
-        log::write("init_connect to redis server ".RELATION_IP.":".RELATION_PORT, "error");
-
     $task = unpack("Slen/Stask_id",$taskpack);
     while(!$g_stop)
     {

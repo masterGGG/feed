@@ -29,6 +29,7 @@ if ($action == 'normal')
         $uid    = '';                                                 
         $app_id = '';                                             
         $cmd_id = '';                                             
+        $tags_id = 0;                                             
         $offset = 0;
         $count  = 0;
         $timestamp = 0;
@@ -50,6 +51,9 @@ if ($action == 'normal')
         }
         if (isset($_REQUEST['timestamp']) && $_REQUEST['timestamp'] != '') {
             $timestamp = $_REQUEST['timestamp'];
+        }
+        if (isset($_REQUEST['tags_id']) && $_REQUEST['tags_id'] != '') {
+            $tags_id = $_REQUEST['tags_id'];
         }
         
 
@@ -78,7 +82,7 @@ if ($action == 'normal')
             $arr_cmd_id = explode(',', $cmd_id);
         }
 
-        $rv = get_newsfeed($arr_uid, $arr_app_id, $arr_cmd_id, $offset, $count, $timestamp);
+        $rv = get_newsfeed($arr_uid, $arr_app_id, $arr_cmd_id, $offset, $count, $timestamp, $tags_id);
 
         if ($rv === FALSE) {
             echo json_encode(array('result' => -1));
@@ -140,6 +144,7 @@ if ($action == 'normal')
         $offset = 0;
         $count  = 0;
         $timestamp = 0;
+        $tags_id = 0;
 
         if (isset($_REQUEST['uid']) && $_REQUEST['uid'] != '') {
             $uid = $_REQUEST['uid'];
@@ -165,6 +170,9 @@ if ($action == 'normal')
         if (isset($_REQUEST['timestamp']) && $_REQUEST['timestamp'] != '') {
             $timestamp = $_REQUEST['timestamp'];
         }
+        if (isset($_REQUEST['tags_id']) && $_REQUEST['tags_id'] != '') {
+            $tags_id = $_REQUEST['tags_id'];
+        }
 
         $arr_uid = explode(',', $uid);
         if ($app_id === '')
@@ -183,7 +191,7 @@ if ($action == 'normal')
         {
             $arr_cmd_id = explode(',', $cmd_id);
         }
-        $rv = get_newsfeed_of_latest($arr_uid, $arr_app_id, $arr_cmd_id, $offset, $count, $timestamp);
+        $rv = get_newsfeed_of_latest($arr_uid, $arr_app_id, $arr_cmd_id, $offset, $count, $timestamp, $tags_id);
         if ($rv === FALSE) {
             echo json_encode(array('result' => -1));
         }

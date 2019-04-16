@@ -14,21 +14,21 @@ if (!defined('LOG_FILE_SIZE')) define('LOG_FILE_SIZE', 1048576 * 5); // 5M
 if (!defined('PROCESS_NUM')) define('PROCESS_NUM', '1');
 
 // cache server 的地址
-if (!defined('CACHE_IP')) define('CACHE_IP', '10.1.1.197');
+if (!defined('CACHE_IP')) define('CACHE_IP', '0.0.0.0');
 if (!defined('CACHE_PORT')) define('CACHE_PORT', '58810');
 
-if (!defined('FEED_IP')) define('FEED_IP', '10.1.1.197');
+if (!defined('FEED_IP')) define('FEED_IP', '0.0.0.0');
 if (!defined('FEED_PORT')) define('FEED_PORT', '58802');
 
 define('RELATION_IP', '0.0.0.0');
 define('RELATION_PORT', '21145');
 
-define('STORAGE_IP', '10.1.1.197');
+define('STORAGE_IP', '0.0.0.0');
 define('STORAGE_PORT', '2222');
 
 define('TIMEOUT', 5);
 
-define('OUTBOX_IP', '10.1.1.197');
+define('OUTBOX_IP', '0.0.0.0');
 define('OUTBOX_PORT', '43321');
 
 define('DEBUG', true);
@@ -67,6 +67,7 @@ $g_sys_conf["feed"]["iscombine"] = array(
 );
 
 $g_sys_conf["feed"]["user_defined_id"] = array(
+    NEWS_ARTICLE      => true,
 );
 
 //被动feed流注册
