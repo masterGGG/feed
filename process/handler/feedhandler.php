@@ -618,7 +618,8 @@ function feeddelete($pack, $input_arr, &$output_arr)
     }
     return 0;
 }
-
+$g_redis_server_socket;
+$g_tag_server_socket;
 // $feed 一条feed的内容
 // array("len","cmd_id","user_id","version","timestamp","app_id","data")
 // $input_arr("feed_socket"=>val1,"feed_reconnect_flag"=>val2,"storage_server_socket" => val3):feed_socket为同步feed的服务器连接socket，feed_reconnect_flag为feed服务器重连标志,storage_server_socket为存储服务器的socket
@@ -631,7 +632,10 @@ function feedhandle($feed, $input_arr, &$output_arr)
     $feed_socket = $input_arr['feed_socket'];
     $feed_reconnect_flag = $input_arr['feed_reconnect_flag'];
     $storage_server_socket = $input_arr['storage_server_socket'];
-    $redis_server_socket = $input_arr['redis_server_socket'];
+    global $g_redis_server_socket;
+    $g_redis_server_socket = $input_arr['redis_server_socket'];
+    global $g_tag_server_socket;
+    $g_tag_server_socket = $input_arr['tag_server_socket'];
 
     if (!array_key_exists($feed["cmd_id"], $g_sys_conf["feed"]["operator"]))
     {
@@ -776,7 +780,7 @@ function feedhandle($feed, $input_arr, &$output_arr)
                             ));
             }
         }
-        $ret = operate_update_feed_id_to_db($redis_server_socket, $feed["user_id"], $feed["timestamp"]);
+        $ret = operate_update_feed_id_to_db($g_redis_server_socket, $feed["user_id"], $feed["timestamp"]);
         if ($ret != 0)
         {
             log::write(__FUNCTION__."[".__LINE__."]"."update feed mimiid to redis_server fail".print_r($feed, true), "error");
@@ -869,32 +873,61 @@ function news_article($feed, &$comfeed, &$completefeed, &$passive_feed)
    
     $src_data = unpack("Larticle_id", $feed["data"]);
     $feed["data"] = substr($feed["data"], 4);
-    /*
-    //1. 解析icon Url的长度并根据长度解析出url
-    $parse = unpack("Clen", $feed["data"]);
-    $src_data["icon"] = substr($feed["data"], 1, $parse["len"]);
-    $feed["data"] = substr($feed["data"], 1 + $parse["len"]);
-    
-    //2. 先解析昵称长度，再根据昵称长度获取昵称
-    $parse = unpack("Clen", $feed["data"]);
-    $src_data["nickName"] = substr($feed["data"], 1, $parse["len"]);
-    $feed["data"] = substr($feed["data"], 1 + $parse["len"]);
-    */
     //3. 解析首张图片的长度并根据长度获取url
     $parse = unpack("Clen", $feed["data"]);
     $src_data["pic"] = substr($feed["data"], 1, $parse["len"]);
     $feed["data"] = substr($feed["data"], 1 + $parse["len"]);
-    $tag = unpack("Ltags", $feed["data"]);
-    $src_data["tags"] = $tag["tags"];
-    /*
+    $rv = unpack("Ltag_cnt", $feed["data"]);
+    $feed["data"] = substr($feed["data"], 4);
+    $tag = array();
+     //      log::write("[".__LINE__.": tag cnt ".$rv['tag_cnt'], "error");
+    for ($i = 0; $i < $rv['tag_cnt']; $i++) {
+        $cur = unpack('Ltag', substr($feed["data"], 4 * $i));
+        $tag[] = $cur['tag'];
+    }
+    $src_data["tags"] = $tag;
     
-    //4. 解析帖子简介
-    $parse = unpack("Clen", $feed["data"]);
-    $src_data["text"] = substr($feed["data"], 1, $parse["len"]);
-    */
-    $completefeed["magic1"] = $tag["tags"];
-    $completefeed["magic2"] = 0; 
+   //        log::write("[".__LINE__.": tag ".print_r($tag, true), "error");
+    $completefeed["magic1"] = rand();
+    $completefeed["magic2"] = 0;
     $completefeed["data"] = json_encode($src_data);
+
+    //将帖子添加到指定归类的集合中
+    global $g_tag_server_socket;
+    if ($g_tag_server_socket == false) {
+        if (init_connect_and_nonblock(TAG_CACHE_IP, TAG_CACHE_PORT, $g_tag_server_socket))
+       {   
+           log::write("init_connect tag_server fail reason: connect to relation_server", "error");
+            eturn -1;
+       }
+        log::write("init_connect tag_server fail reason: connect to relation_server", "error");
+    }
+    $new_feedid = base64_encode(pack("LSLLLL", $feed['user_id'], $feed["cmd_id"], $feed["app_id"], $feed["timestamp"], $completefeed["magic1"], $completefeed["magic2"]));
+    $relation_rqst = pack("LLsLLLLL", 18 + 12 + strlen($new_feedid)+strlen($feed["data"]), 0, 0xA103, 0, $src_data['author_id'],  $feed["timestamp"], $rv['tag_cnt'], strlen($new_feedid)).$new_feedid.$feed["data"];
+    /*
+       $relation_rqst = pack("LLsLLLLL", 18 + 12 + strlen($new_feedid)+strlen($feed["data"]), 0, 0xA103, 0, $src_data['author_id'],  $feed["timestamp"], $rv['tag_cnt'], strlen($new_feedid)).$new_feedid;
+    for ($i = 0; $i < $rv['tag_cnt']; $i++) {
+        $relation_rqst = $relation_rqst.pack('L', $tag[$i]['tag']);
+    }
+    */
+    
+    if (send_data_and_nonblock($g_tag_server_socket, $relation_rqst, TIMEOUT)) {
+        log::write(__LINE__.'get_fans_id: relation_client->send_rqst', 'error');
+        return -1;
+    }
+
+    $relation_resp = "";
+    if (recv_data_and_nonblock($g_tag_server_socket, 18, $relation_resp, TIMEOUT))
+    {
+        log::write(__LINE__."recv data to tag cache server fail", "error");
+        return -1;
+    }
+    $rv = unpack('Llen/Lseq/scmd_id/Lcode/Lmimi', $relation_resp);
+    if ($rv['code'] != 0) {
+        log::write(__LINE__.'tag cache server interal fail', 'error');
+        return -1;
+    }
+    
     return 0;
 }
 
@@ -910,49 +943,7 @@ function news_liker($feed, &$comfeed, &$completefeed, &$passive_feed)
     $json_src_data = json_encode($src_data);
     // 通知博主有人点赞了我的帖子
     $passive_feed[] = produce_passive_feed($feed, $feed['user_id'], $src_data['author_id'], $json_src_data);
-    // 通知博主的粉丝有人点赞了好友的帖子
-    if (init_connect_and_nonblock(RELATION_IP, RELATION_PORT, $relation_socket))
-    {
-        log::write("init_connect relation_server fail reason: connect to relation_server", "error");
-        return -1;
-    }
-
-    $relation_rqst = pack("LLsLL", 18, 0, 0xB104, 0, $src_data['author_id']);
-    if (send_data_and_nonblock($relation_socket, $relation_rqst, TIMEOUT)) {
-        log::write('get_fans_id: relation_client->send_rqst', 'error');
-        socket_close($relation_socket);
-        return -1;
-    }
-
-    $relation_resp = "";
-    if (recv_data_and_nonblock($relation_socket, 18, $relation_resp, TIMEOUT))
-    {
-        log::write("recv data to relation_server fail", "error");
-        socket_close($relation_socket);
-        return -1;
-    }
-    $rv = unpack('Llen/Lseq/scmd_id/Lcode/Lmimi', $relation_resp);
-    if ($rv['code'] != 0) {
-        log::write('relation server interal fail', 'error');
-        socket_close($relation_socket);
-        return -1;
-    }
-
-    if (recv_data_and_nonblock($relation_socket, $rv['len'], $relation_resp, TIMEOUT))
-    {
-        log::write("recv data to relation_server fail", "error");
-        socket_close($relation_socket);
-        return -1;
-    }
-    $rv = unpack('Llen/Lseq/scmd_id/Lcode/Lmimi/Lunits', $relation_resp);
-    $id_list = substr($relation_resp, 18 + 4);
-    for ($i = 0; $i < $rv['units']; ++$i) {
-        $fan = unpack('Lid/Ltime', $id_list);
-        $id_list = substr($id_list, 8);
-        if ($fan['id'] === $feed['user_id'])
-            continue;
-        $passive_feed[] = produce_passive_feed($feed, $feed['user_id'], $fan['id'], $json_src_data);
-    }    
+    
     $completefeed['data'] = json_encode($src_data);
     return 0;
 }
