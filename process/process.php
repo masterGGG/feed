@@ -2,7 +2,10 @@
 <?php
 
 require dirname(__FILE__) . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR .  'setup.inc.php';
-
+require dirname(__FILE__) . DIRECTORY_SEPARATOR . 'Mifan' . DIRECTORY_SEPARATOR .  'queryFeedidFromMine.php';
+require dirname(__FILE__) . DIRECTORY_SEPARATOR . 'Mifan' . DIRECTORY_SEPARATOR .  'feedidToFriend.php';
+require dirname(__FILE__) . DIRECTORY_SEPARATOR . 'Mifan' . DIRECTORY_SEPARATOR .  'feedidFromMine.php';
+require dirname(__FILE__) . DIRECTORY_SEPARATOR . 'Mifan' . DIRECTORY_SEPARATOR .  'dropFeedidFromTag.php';
 declare(ticks=1);
 
 $g_pid_arr = array();
@@ -377,6 +380,11 @@ function children_process()
         log::write("init_connect redis_server fail reason: connect to redis_server", "error");
         return -1;
     }
+    if (init_connect_and_nonblock(TAG_CACHE_IP, TAG_CACHE_PORT, $tag_server_socket))
+    {
+        log::write("init_connect redis_server fail reason: connect to redis_server", "error");
+        return -1;
+    }
 
     $task = unpack("Slen/Stask_id",$taskpack);
     while(!$g_stop)
@@ -500,7 +508,8 @@ function children_process()
                 //"feed_socket" => $feed_socket, 
                 //"feed_reconnect_flag" => $feed_reconnect_flag,                
                 "storage_server_socket" => $storage_server_socket,
-                "redis_server_socket" => $redis_server_socket
+                "redis_server_socket" => $redis_server_socket,
+                "tag_server_socket" => $tag_server_socket
             );
             $output_arr = array(); 
             if ($ret = feedhandle($feed, $input_arr, $output_arr))
@@ -552,7 +561,16 @@ ini_set("error_log", "log/mysys.log");
 ini_set('memory_limit', '1024M');
 error_reporting(E_ALL & ~E_NOTICE);
 date_default_timezone_set("Asia/Shanghai");
-
+/*
+$fpid = fopen("./pid", "wb");
+if ($fpid) {
+    fwrite($fpid, posix_getpid());
+    fclose($fpid);
+}
+else {                                                  
+    die("file ".$g_pid_file." open failed.\n");
+}                                                   
+*/
 process_control();
 
 ?>
