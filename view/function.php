@@ -37,7 +37,7 @@ function feedid_to_binary($feedid)
 
 function binary_to_feedid($binary)
 {
-    $feedid = unpack("Luser_id/Scmd_id/Lapp_id/Ltimestamp/Ltags", $binary);
+    $feedid = unpack("Luser_id/Scmd_id/Lapp_id/Ltimestamp", $binary);
     $feedid['magic'] = base64_encode(substr($binary, 14, 8));
     return $feedid;
 }
@@ -777,7 +777,7 @@ function get_newsfeed_by_tags($my_id, $arr_app_id, $arr_cmd_id, $count, $begin_t
     $total_count = count($arr_feedid);
     $arr_feedid = array_slice($arr_feedid, $offset);
     $have_next = 0;
-    if ($count !== 0 && $total_count > $offset + $count) {
+    if ($count !== 0 && $total_count == $count) {
         $have_next = 1;
     }    
     // 从storage-server获取feed内容
@@ -795,10 +795,6 @@ function get_newsfeed_by_tags($my_id, $arr_app_id, $arr_cmd_id, $count, $begin_t
     $last_feed = FALSE;
     $arr_join_friend = array();
     
-    // 判断是否需要合并
-    foreach ($arr_feeds as $key_0 => &$feed_0) {
-        unset($feed_0['tags']);
-    }
     foreach ($arr_feeds as $key_0 => &$feed_0) {
         if (isset($feed_0['fold'])) {
             continue;
@@ -907,10 +903,6 @@ function get_newsfeed_common($my_id, $arr_feedid, $arr_app_id, $arr_cmd_id, $off
     $last_feed = FALSE;
     $arr_join_friend = array();
     
-    // 判断是否需要合并
-    foreach ($arr_feeds as $key_0 => &$feed_0) {
-        unset($feed_0['tags']);
-    }
     foreach ($arr_feeds as $key_0 => &$feed_0) {
         if (isset($feed_0['fold'])) {
             continue;
@@ -1211,4 +1203,80 @@ function get_update_mid(&$arr_uid) { //,$count) {
         $id_list = substr($id_list, 4);
     }
     return TRUE;
+}
+
+
+require_once('Mifan/feedidFromMine.php');
+require_once('Mifan/queryFeedidFromMine.php');
+/**
+ * @brief get_pull_feedlist 获取自己的朋友圈列表
+ *
+ * @param $uid
+ * @param $begintime
+ * @param $endtime
+ * @param $cnt
+ *
+ * @return 
+ */
+function get_pull_feedlist($mid,  $begintime, $endtime, $cnt) {
+    $arr_feedid = array();
+    $arr_tag_cache_addr = explode(':', constant('TAG_CACHE_ADDR'));
+    $feed_client = new netclient($arr_tag_cache_addr[0], $arr_tag_cache_addr[1]); 
+    if ($feed_client->open_conn(1) === FALSE) {
+        do_log('error', '['.__LINE__.']:get_feedid: feed_client->open_conn');
+        return FALSE;
+    }
+
+do_log('error', '['.__LINE__.']: mimi:'.$mid);
+    $rqst_protobuf = new \Mifan\feedidFromMine();
+    $rqst_protobuf->setBeginTime($begintime);
+do_log('error', '['.__LINE__.']: begintime:'.$rqst_protobuf->getBeginTime());
+    $rqst_protobuf->setEndTime($endtime);
+do_log('error', '['.__LINE__.']: endtime:'.$rqst_protobuf->getEndTime());
+    $rqst_protobuf->setCnt($cnt);
+do_log('error', '['.__LINE__.']: count:'.$rqst_protobuf->getCnt());
+    $rqst_body = $rqst_protobuf->serializeToString();
+    $rqst = pack("LLSLL", 18 + strlen($rqst_body), 0, 0xA106, 0, $mid).$rqst_body;
+do_log('error', '['.__LINE__.']: body len:'.strlen($rqst_body).' content:<'.$rqst_body.'>');
+   
+    if (($outbox_resp = $feed_client->send_rqst($rqst, TIMEOUT)) === FALSE) {
+            do_log('error', 'get_feedid: tag_server_client->send_rqst');
+            return FALSE;
+    }
+    $rv = unpack('Llen/Lseq/Scmd/Lresult/Luser_id', $outbox_resp);
+    if ($rv["result"] != 0) {
+            do_log('error', 'get_feedid: tag_server_client->send_rqst code :'.$rv["result"]);
+            return FALSE;
+    }
+    
+    if ($feed_client->close_conn() === FALSE) {
+        do_log('error', 'get_feedid: outbox_client->close_conn');
+        return FALSE;
+    }
+do_log('error', '['.__LINE__.']: resp body len:'.$rv['len']);
+    $resp_protobuf = new \Mifan\queryFeedidFromMine();
+    $resp_protobuf->ParseFromString(substr($outbox_resp, 18));
+    $feedid_encode_arr = $resp_protobuf->getFeedid();
+    $arr_feedid = array();
+do_log('error', '['.__LINE__.']: feedid encode:'.print_r($feedid_encode_arr, true));
+    foreach ($feedid_encode_arr as $fid) {
+        $arr_feedid[] = binary_to_feedid(base64_decode($fid));
+    }
+do_log('error', '['.__LINE__.']: feedid decode:'.print_r($arr_feedid, true));
+
+    // 从storage-server获取feed内容
+    $arr_feeds = array();
+    if (count($arr_feedid) > 0) {
+        $arr_feeds = get_feeds($arr_feedid);
+        if ($arr_feeds === FALSE) {
+            return FALSE;
+        }
+    }
+
+    $have_next = $cnt == count($arr_feeds) ? 1 : 0;
+    $arr_result = array();
+    $arr_result['current_page'] = $arr_feeds;
+    $arr_result['have_next'] = $have_next;
+
+    return json_encode($arr_result);
 }

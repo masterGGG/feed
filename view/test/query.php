@@ -8,7 +8,7 @@
  ini_set('memory_limit', '2048M');
 
 set_time_limit(0);
-
+//sleep(5);
 function Post($url, $post = null)  
 {  
     $context = array();  
@@ -29,15 +29,19 @@ function Post($url, $post = null)
 
 $data = array  
 (  
-//'type' => 'active',
+//'type' => 'tag',
+'type' => 'active',
 //'type' => 'passive',
-'type' => 'latest',
+//'type' => 'latest',
 'action' => 'normal',
 'offset' => -1,
-'count' => 5,
+'start_time' => 1,
+'end_time' => 1955656634,
+'count' => 50,
+'tags_id' => 1,
 //'uid'=>'382854116');
-//'uid'=>'1227401113');
-'uid'=>'1227401112');
+'uid'=>'188888888');
+//'uid'=>'1227401112');
 
 var_dump(Post('http://10.1.1.197:10086/news_feed.php', $data));
 //var_dump(Post('http://10.1.1.197:8080/news_feed.php', $data));
