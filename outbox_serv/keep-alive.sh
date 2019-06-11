@@ -12,6 +12,7 @@ if [ $? -ne 0 ];then
     echo "restart ${appname} at $(date)"
     ./${appname}.sh start
 fi
+
 find . -name "core*" | xargs rm -vf 
 
 exit 0
