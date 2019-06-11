@@ -48,6 +48,20 @@ public:
      * @return >=0 => feeds index num , <0 => error code
      */
     static int get_indexs(char *resbuf, const int buflen, int *reslen, const int units, indexn_p_pkg_t *pkg);
+    /**
+     * @brief get_feedid_by_cmdid 通过发送发mimi号,接收方mimi号和协议号查找对应的feedid
+     *
+     * @param resbuf 返回包地址，用于feedid填充
+     * @param buflen
+     * @param reslen
+     * @param units
+     * @param target_id
+     * @param mimi
+     * @param cmd_id
+     *
+     * @return >=0 => feedid , <0 => error code
+     */
+    static int get_feedid_by_cmdid(char *resbuf, const int buflen, int &reslen, const int units, get_p_feedid_by_cmdid_pkg_t *pkg);
 };
 
 #endif  /*__PFEEDS_DATABASE_H__*/

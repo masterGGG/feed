@@ -76,4 +76,21 @@ typedef struct get_n_passive_indexs_pkg {
                                 //denote fetch n feeds, default is 30 (n==0, mean fetch 30 feeds)
 }__attribute__((packed)) indexn_p_pkg_t;
 
+/* 2019-05-09 新增根据用户米米号和协议号查询feedid的接口 */
+#define     REQ_OP_PASS_GET_KEY_BY_CMDID    27
+
+typedef struct get_passive_feedid_by_cmdid_pkg {
+    uint16_t flag;              //denote filter way of (cmd_id, app_id), have same meaning in following package
+                                /* one bit represent one feature, support bitwise or sematic
+                                * 0x1 => use cmd_id , the last bit
+                                * 0x2 => use app_id , the next to last bit
+                                * 0x4 => response with feed data, the third bit from the end
+                                * 0x8 => search limit 1
+                                */
+   uint32_t mimi;               //发起者的米米号
+   uint16_t cmd_id;              //协议号
+   uint32_t app_id;
+   uint32_t target_id;           //接收被动feed的米米号
+}__attribute__((packed)) get_p_feedid_by_cmdid_pkg_t; 
+
 #endif  /*__STORAGE_PROTO_PASS_H__*/

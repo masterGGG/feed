@@ -141,6 +141,7 @@ typedef struct request_pkg {
         get_p_pkg_t             get_p_items[0];
         indexn_p_pkg_t          indexns_p[0];
         get_p_key_pkg_t         get_p_key_items[0];
+        get_p_feedid_by_cmdid_pkg_t get_pfeedid_items[0];
     };
 }__attribute__((packed)) request_pkg_t;
 

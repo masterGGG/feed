@@ -419,3 +419,91 @@ DEBUG_SQL(sql_buf);
         return -1;
     }
 }
+
+int pfeeds_database::get_feedid_by_cmdid(char *resbuf, const int buflen, int &reslen, const int units, get_p_feedid_by_cmdid_pkg_t *pkg)
+{
+    if (resbuf == NULL || units < 0 || units > MAX_ALLOW_UNITS) {
+        ERROR_LOG("null value, or units not allowed %d for get_indexs", units);
+        return -1;
+    }
+
+    int total_cnt = 0;
+    char *buf_idx = resbuf;
+    uint32_t dis_id = pkg->target_id;
+    
+    bool use_cmd_id = pkg->flag & 0x1;
+    bool use_app_id = pkg->flag & 0x2;
+    bool with_data  = pkg->flag & 0x4;
+    bool use_limit  = pkg->flag & 0x8;
+    const char * data_fld = with_data ? ",data " : " ";
+
+    int sql_cnt = snprintf(sql_buf, max_buf_size, "select app_id,timestamp,magic,p_magic,active_time %s"
+                "from db_newsfeed_%d.t_pass_newsfeed_%d "
+                "where target_id=%u and user_id=%u", 
+                data_fld, get_dbid(dis_id), get_tid(dis_id), pkg->target_id, pkg->mimi);
+
+    char *new_buf = nullptr;
+    if (use_cmd_id == true) {
+        new_buf = sql_buf + sql_cnt;
+        sql_cnt +=snprintf(new_buf, max_buf_size - sql_cnt, " and cmd_id = %u", pkg->cmd_id);
+    }
+    if (use_app_id == true) {
+        new_buf = sql_buf + sql_cnt;
+        sql_cnt +=snprintf(new_buf, max_buf_size - sql_cnt, " and app_id = %u", pkg->app_id);
+    }
+    if (use_limit == true) {
+        new_buf = sql_buf + sql_cnt;
+        sql_cnt += snprintf(new_buf, max_buf_size - sql_cnt, " order by timestamp desc limit 1");
+    }
+    DEBUG_SQL(sql_buf);
+        
+    i_mysql_iface *db = gconfig::get_db_conn(dis_id);
+    if (db == NULL) {
+        ERROR_LOG("[get passive feedid] fail to get database connection for mimi: %u", dis_id);
+        return -1;
+    }
+    
+    MYSQL_ROW row;
+    int effect_rows = db->select_first_row(&row, "%s", sql_buf);
+    if (effect_rows < 0) {
+        ERROR_LOG("[get passive feedid] database failure, sql:%s, err str: %s", sql_buf, db->get_last_errstr());
+        return -1;
+    }
+    else if (effect_rows == 0) {
+        WARN_LOG("get 0 pfeedid, sql: %s", sql_buf);
+        return total_cnt;    
+    }
+        
+    char *endptr = NULL;
+    for (int rowid = 0; rowid < effect_rows; rowid++) {
+        pfeed_pkg_t *p_pfeed = (pfeed_pkg_t *)buf_idx;
+        p_pfeed->fid.src_fid.mimi = pkg->mimi;
+        p_pfeed->fid.src_fid.cmd_id = pkg->cmd_id;
+        p_pfeed->fid.src_fid.app_id = strtoul(row[0], &endptr, 10);
+        p_pfeed->fid.src_fid.timestamp = strtoul(row[1], &endptr, 10);
+        p_pfeed->fid.src_fid.magic = (uint64_t)strtoull(row[2], &endptr, 10);
+        p_pfeed->fid.sender_id = pkg->mimi;
+        p_pfeed->fid.target_id = pkg->target_id;
+        p_pfeed->fid.p_magic = strtoul(row[3], &endptr, 10);
+        p_pfeed->active_time = strtoul(row[4], &endptr, 10);
+    
+        if (with_data == false) {
+            p_pfeed->len = P_FEED_HEAD_SZ;
+        } else {
+            size_t vlen = strlen(row[5]); 
+            p_pfeed->len = P_FEED_HEAD_SZ+vlen;
+            memcpy(p_pfeed->data, row[5], vlen);
+            buf_idx += p_pfeed->len;
+            if (buf_idx - resbuf > buflen) {
+                ERROR_LOG("[get pfeed package] response package too long %ld bytes", buf_idx - resbuf);
+                return -1;
+            }
+        }
+        total_cnt ++;         
+        row = db->select_next_row(false);
+    } //end of once fetch
+    
+
+    reslen = buf_idx - resbuf;
+    return total_cnt;
+}

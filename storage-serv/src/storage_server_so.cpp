@@ -251,6 +251,13 @@ extern "C" int handle_process(const char *p_recv, int recv_len,
                 STAT_END2TIME("get_p_key_pkgs");
                 break;
             }
+        case REQ_OP_PASS_GET_KEY_BY_CMDID:  // 27 => 根据用户米米号加协议号查找对应的feedid
+            {
+                STAT_START();
+                op_ret = feeds_store::get_p_feedid_by_cmdid_pkgs(op_buf, sizeof(op_buf), &sendlen, r_units, recv->get_pfeedid_items);
+                STAT_END2TIME("get_pfeed_by_cmdid_pkgs");
+                break;
+            }
         default:           //error: can not handle op type
             {
                 STAT_START();

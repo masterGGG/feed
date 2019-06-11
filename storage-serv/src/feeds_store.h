@@ -107,6 +107,9 @@ class feeds_store
 
         static int get_p_key_pkgs(char *send_buf, const size_t buflen, int *res_pkg_len, 
                 const int units, get_p_key_pkg_t *pkg);
+
+        static int get_p_feedid_by_cmdid_pkgs(char *send_buf, const size_t buflen, int *res_pkg_len, 
+                const int units, get_p_feedid_by_cmdid_pkg_t *pkg);
         /************************** <end of> passive feed operation interface *************************/
 
     protected:
