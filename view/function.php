@@ -587,12 +587,12 @@ function set_timestamp($uid, $time, $type)
     return true;
 }
 
-function get_notice($arr_uid, $item)
+function get_notice($arr_uid, $item, $arr_cmd)
 {
     $type = explode(',',$item);
     foreach($type as $val)
     {
-        if ($val == 'haoyou')
+        if ($val == 'active')
         {
             $arr_feedid = get_feedid($arr_uid, FALSE);
             if ($arr_feedid === FALSE) {
@@ -627,7 +627,7 @@ function get_notice($arr_uid, $item)
             $rv['haoyou'] = $num;
             $rv['haoyou_timestamp'] = $current_time;
         }
-        else if ($val == 'yuwo')
+        else if ($val == 'passive')
         {
             $arr_feedid = get_passive_feedid($arr_uid[0]);
             if ($arr_feedid === FALSE) {
@@ -635,32 +635,42 @@ function get_notice($arr_uid, $item)
                 return FALSE;
             }
 
+            $rv['num'] = 0;
             $current_time = get_timestamp($arr_uid[0], 'yuwo');      
             if ($current_time === NULL)
-            {
-                return false;
+                $current_time = 0;
+            $rv['timestamp'] = $current_time;
+
+            if (count($arr_feedid) == 0) { 
+                return json_encode($rv);
             }
 
-             // 对feedid进行排序
-            usort($arr_feedid, 'passive_feedid_cmp');
-
-            $uid = array();
-            $num = 0;
-            foreach($arr_feedid as $val)
-            {
-                if ($val['update_timestamp'] > $current_time)
-                {
-                    if (!in_array($val['user_id'],$uid))
-                    {
-                        $uid[] = $val['user_id'];
+            if (empty($arr_cmd)) {
+                foreach($arr_feedid as $val) {
+                    if ($val['timestamp'] > $current_time)  {
+                        $rv['num']++;
                     }
-                    $num++;
-                    
-                }   
+                }
+            } else {
+                foreach ($arr_cmd as $cmd_id) {
+                    $rv[$cmd_id] = 0;
+                    $rv[$cmd_id.'_uid'] = array();
+                }
+    
+                foreach($arr_feedid as $val) {
+                    if ($val['timestamp'] > $current_time)  {
+                        if (array_key_exists($val['cmd_id'], $rv)) {
+                            if (!in_array($val['user_id'],$rv[$val['cmd_id'].'_uid']))
+                            {
+                                $rv[$val['cmd_id'].'_uid'][] = $val['user_id'];
+                            }
+                            $rv[$val['cmd_id']]++;
+                            $rv['num']++;
+                        }
+                    } else 
+                        break;
+                }
             }
-            $rv['yuwo_uid'] = $uid;
-            $rv['yuwo'] = $num;
-            $rv['yuwo_timestamp'] = $current_time;
         }
     }
 
@@ -699,11 +709,13 @@ function get_passive_newsfeed($uid, $offset, $count, $timestamp)
         $last_time = get_timestamp($uid, 'yuwo');      
         if ($last_time === NULL) 
             $last_time = $up_time; 
+        
         foreach($arr_feedid as $val) {
             if ($val['timestamp'] <= $last_time) 
                 break;
             $ncount++;
         }
+
         $arr_feedid = array_slice($arr_feedid, $offset, $ncount);
         //do_log('debug', "lastTime:".$last_time." eraase count:".$ncount." reset count:".count($arr_feedid));
     }

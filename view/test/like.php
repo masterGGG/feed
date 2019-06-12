@@ -27,8 +27,8 @@ for ($i = 1; $i != 10; ++$i) {
     $feedid->timestamp = time();
     $feedid_binary = $feedid->to_binary();
 
-    $aid = 639;
-    $amid = 914496998;
+    $aid = 600;
+    $amid = 1227401110;
 
     $f_arr_1 = pack('S',25).$feedid_binary.pack('LLL', 7004, $aid, $amid);
 

@@ -336,21 +336,32 @@ else if ($action == 'class')
 else if ($action == 'notice')
 {
     $uid = '';
-    $item = '';
+    $type = '';
+    $cmd_id = '';
     if (isset($_REQUEST['uid']) && $_REQUEST['uid'] != '') {
         $uid = $_REQUEST['uid'];
     }
-    if (isset($_REQUEST['item']) && $_REQUEST['item'] != '') {
-        $item = $_REQUEST['item'];
+    if (isset($_REQUEST['type']) && $_REQUEST['type'] != '') {
+        $type = $_REQUEST['type'];
+    }
+            
+    if (isset($_REQUEST['cmd_id']) && $_REQUEST['cmd_id'] != '') 
+        $cmd_id = $_REQUEST['cmd_id'];
+
+    if ($cmd_id === '') {
+        $arr_cmd_id = array();
+    } else {
+        $arr_cmd_id = explode(',', $cmd_id);
     }
     
-    if ($uid == '' || $item == '')
+    if ($uid == '' || $type == '')
     {
         echo json_encode(array('result' => -1));
+        do_log('error', "ERROR: uid: $uid cmd_id: $cmd_id type: $type");
         exit();
     }
     $arr_uid = explode(',', $uid);
-    $rv = get_notice($arr_uid, $item);
+    $rv = get_notice($arr_uid, $type, $arr_cmd_id);
 
     if ($rv === FALSE) {
         echo json_encode(array('result' => -1));

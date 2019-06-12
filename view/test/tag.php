@@ -26,14 +26,17 @@ function Post($url, $post = null)
 
     return file_get_contents($url, false, stream_context_create($context));  
 }  
-
+//1558335199 1557477000
 $data = array  
 (  
-'type' => 'passive',
-'action' => 'notice',
-'cmd_id' => '22004,22005',
-'uid'=>'1227401111');
-//'uid'=>'1227401110');
+'type' => 'tag',
+'action' => 'normal',
+'start_time' => 1557032350,
+'end_time' => 1659792350,
+'count' => 61,
+'tags_id' => 2,
+'uid'=>'1227401110');
+//'uid'=>'914496998');
 
 var_dump(Post('http://10.1.1.197:10086/news_feed.php', $data));
 

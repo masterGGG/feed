@@ -30,12 +30,16 @@ function Post($url, $post = null)
 $data = array  
 (  
 'type' => 'passive',
-'action' => 'notice',
-'cmd_id' => '22004,22005',
-'uid'=>'1227401111');
-//'uid'=>'1227401110');
+'action' => 'normal',
+'offset' => -1,
+'count' => 50,
+'app_id' => 1,
+'uid'=>'1227401110');
+//'uid'=>'188888888');
+//'uid'=>'914496998');
 
 var_dump(Post('http://10.1.1.197:10086/news_feed.php', $data));
+//var_dump(Post('http://10.1.1.197:8080/news_feed.php', $data));
 
 
 

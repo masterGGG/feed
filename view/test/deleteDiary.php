@@ -33,35 +33,27 @@ if ($client->open_conn(1) === FALSE) {
     return FALSE;
 }
 
-$article = array(
-    array("mimi"=>1227401110, "icon"=>"spring.jpg", 'name'=>'春天', 'text'=>'播种','pic'=>'a.png'),
-    array("mimi"=>1227401111, "icon"=>"summer.png", 'name'=>'夏天', 'text'=>'避暑','pic'=>'b.png'),
-    array("mimi"=>1227401112, "icon"=>"autumn.gif", 'name'=>'秋天', 'text'=>'收获','pic'=>'c.gif'),
-    array("mimi"=>1227401113, "icon"=>"winter.jpg", 'name'=>'冬天', 'text'=>'吃饺子','pic'=>'d.jpg')
-);
-for ($i = 0; $i != 5; ++$i) {
     $feedid = new feedid();
-    $feedid->mimi = 1227401110 + $i;
-    $feedid->cmd_id = 7003;
+    $feedid->mimi = 1227401110; //188888888;
+    $feedid->cmd_id = 1;
     $feedid->version = 1;
-    $feedid->timestamp = time();
+    $feedid->timestamp = 1560221101;
     $feedid_binary = $feedid->to_binary();
 
-    $aid = 610 + $i;
-    $pic = $article[$i]['icon'];
-    $len = 2 + 2 + 4 + 1 + 4 + 4  + 4  + 1 + strlen($pic) + 4 + 4*3;
+    $aid = 610;
+    $len = 23;
     
-    $f_arr_1 = pack('S',$len).$feedid_binary.pack('LLc', 1, $aid, strlen($pic)).$pic.pack('LLLL', 3, $i, $i+1, 2+$i);
-    $f_unpack_ret = unpack('Slen/Scmd/Lmid/Cversion/Ltime/Lapp_id/La_id/cilen',$f_arr_1);
+    $f_arr_1 = pack('S',$len).$feedid_binary.pack('LSL', 1, 7003, $aid);
+    $f_unpack_ret = unpack('Slen/Scmd/Lmid/Cversion/Ltime/Lapp_id/Scmd_id/Larticle_id',$f_arr_1);
 
     var_dump($f_unpack_ret);
+    var_dump(strlen($f_arr_1));
     $rqst_msg = $f_arr_1;
     $resp_msg = FALSE;
    if (($resp_msg = $client->send_rqst($rqst_msg, 5)) === FALSE) {
         do_log('error', 'ERROR=> client->send_rqst');
         return FALSE;
     }
-}
 
 if ($client->close_conn() === FALSE) {
     do_log('error', 'ERROR=> cliet->close_conn');
