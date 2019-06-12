@@ -795,7 +795,7 @@ function feedhandle($feed, $input_arr, &$output_arr)
                             ));
             }
         }
-        $ret = operate_update_feed_id_to_db($g_redis_server_socket, $feed["user_id"], $feed["timestamp"]);
+        $ret = operate_update_feed_id_to_db($g_tag_server_socket, $feed["user_id"], $feed["timestamp"]);
         if ($ret != 0)
         {
             log::write(__FUNCTION__."[".__LINE__."]"."update feed mimiid to redis_server fail".print_r($feed, true), "error");
@@ -1026,12 +1026,16 @@ function news_article_add_to_friend($feedid, $mimi, $time) {
 }
 function news_liker($feed, &$comfeed, &$completefeed, &$passive_feed)
 {
+    $src_data = unpack("Larticle_id/Lauthor_id", $feed["data"]);
+    if ($src_data['author_id'] == $feed['user_id']) {
+        log::write("Do not support liker myself".print_r($feed, true), "warn");
+        return 0;
+    }
     $completefeed["user_id"] = $feed["user_id"];
     
     $completefeed["cmd_id"] = $feed["cmd_id"];
     $completefeed["timestamp"] = $feed["timestamp"];
     
-    $src_data = unpack("Larticle_id/Lauthor_id", $feed["data"]);
     $src_data['liked_id'] = $feed["user_id"];
     $json_src_data = json_encode($src_data);
     // 通知博主有人点赞了我的帖子
