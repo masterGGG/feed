@@ -21,20 +21,20 @@ if ($client->open_conn(1) === FALSE) {
 
 for ($i = 1; $i != 10; ++$i) {
     $feedid = new feedid();
-    $feedid->mimi = 38743981 + $i;
+    $feedid->mimi = 40743981 + $i;
     $feedid->cmd_id = 7004;
     $feedid->version = 1;
     $feedid->timestamp = time();
     $feedid_binary = $feedid->to_binary();
 
-    $aid = 600;
-    $amid = 1227401110;
+    $aid = 611;
+    $amid = 1112;
 
     $f_arr_1 = pack('S',25).$feedid_binary.pack('LLL', 7004, $aid, $amid);
 
-    print("total buffer:{$f_arr_1}\n");
+    //print("total buffer:{$f_arr_1}\n");
     $f_unpack_ret = unpack('Slen/Scmd/Lmid/Cversion/Ltime/Lappid/Larticle_id/Lauthor_id',$f_arr_1);
-    var_dump($f_unpack_ret);
+    //var_dump($f_unpack_ret);
     $rqst_msg = $f_arr_1;
     $resp_msg = FALSE;
     if (($resp_msg = $client->send_rqst($rqst_msg, 5)) === FALSE) {

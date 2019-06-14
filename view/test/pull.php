@@ -8,7 +8,6 @@
  ini_set('memory_limit', '2048M');
 
 set_time_limit(0);
-//sleep(5);
 function Post($url, $post = null)  
 {  
     $context = array();  
@@ -27,13 +26,14 @@ function Post($url, $post = null)
     return file_get_contents($url, false, stream_context_create($context));  
 }  
 
+echo gettimeofday();
 $data = array  
 (  
-'type' => 'passive',
-'action' => 'notice',
-//'cmd_id' => '22004,22005',
-//'uid'=>'1227401111');
-'uid'=>'1112');
+'action' => 'pull',
+'start_time' => 0,
+'end_time' => 1855656634,
+'count' => 5,
+'uid'=>'1227401113');
 
 var_dump(Post('http://10.1.1.197:10086/news_feed.php', $data));
 

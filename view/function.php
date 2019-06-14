@@ -79,6 +79,11 @@ function get_passive_feedid($uid)
             return FALSE;
         }
 
+    if ($outbox_client->close_conn() === FALSE) {
+        do_log('error', 'get_feedid: outbox_client->close_conn');
+        return FALSE;
+    }
+
 
         $rv = unpack('Llen/Sresult', $outbox_resp);
         if ($rv['result'] != 0) {
@@ -93,12 +98,41 @@ function get_passive_feedid($uid)
             $arr_feedid[] = $feedid;
         }
 
-    if ($outbox_client->close_conn() === FALSE) {
-        do_log('error', 'get_feedid: outbox_client->close_conn');
+    return $arr_feedid;
+}
+
+//TODO 支持按协议号清空对应的统计数据
+function reset_statistic_pfeed($uid) {
+    //去重
+    $stat_serv = explode(':', constant('TAG_CACHE_ADDR'));
+    $stat_client = new netclient($stat_serv[0], $stat_serv[1]);
+    if ($stat_client->open_conn(1) === FALSE) {
+        do_log('error', 'Connnect to statistic server failed'.print_r($stat_serv, true));
+        return FALSE;
+    }
+        
+    $protobuf = new \Mifan\pCommonStat();
+    $body = $protobuf->serializeToString();
+            
+    $rqst = pack('L2SL2', 18 + strlen($body), 0, 0xA203, 0, $uid).$body;
+    $resp = FALSE;
+    if (($resp = $stat_client->send_rqst($rqst, TIMEOUT)) == FALSE) {
+        do_log('error', 'Send request to statistic server failed'.print_r($stat_serv, true));
         return FALSE;
     }
 
-    return $arr_feedid;
+    if ($stat_client->close_conn() === FALSE) {
+        do_log('error', 'Statictis close_conn failed');
+        return FALSE;
+    }
+
+    $result = unpack('Llen/Lseq/Scmd_id/Lresult/Lmid', $resp);
+    if ($result['result'] != 0) {
+        do_log('error', 'Statistic server query failed'.print_r($result, true));
+        return FALSE;
+    }
+
+    return TRUE;
 }
 
 function get_feedid_by_tags($mid, $tag, $begin_time, $end_time, $cnt)
@@ -587,6 +621,9 @@ function set_timestamp($uid, $time, $type)
     return true;
 }
 
+require_once('Mifan/pCommonStat.php');
+require_once('Mifan/pQueryStat.php');
+require_once('Mifan/pQueryStat_detail.php');
 function get_notice($arr_uid, $item, $arr_cmd)
 {
     $type = explode(',',$item);
@@ -629,46 +666,48 @@ function get_notice($arr_uid, $item, $arr_cmd)
         }
         else if ($val == 'passive')
         {
-            $arr_feedid = get_passive_feedid($arr_uid[0]);
-            if ($arr_feedid === FALSE) {
-                do_log('error', 'get_newsfeed: get_feedid');
+            $stat_serv = explode(':', constant('TAG_CACHE_ADDR'));
+            $stat_client = new netclient($stat_serv[0], $stat_serv[1]);
+            if ($stat_client->open_conn(1) === FALSE) {
+                do_log('error', 'Connnect to statistic server failed'.print_r($stat_serv, true));
+                return FALSE;
+            }
+            $rv['num'] = 0;
+            $protobuf = new \Mifan\pCommonStat();
+            foreach ($arr_cmd as $cmd_id) {
+                $protobuf->appendCmd($cmd_id);
+                $rv[$cmd_id] = 0;
+                $rv[$cmd_id.'_uid'] = array();
+            }
+
+            $body = $protobuf->serializeToString();
+            $rqst = pack('L2SL2', 18 + strlen($body), 0, 0xA202, 0, $arr_uid[0]).$body;
+
+            $resp = FALSE;
+            if (($resp = $stat_client->send_rqst($rqst, TIMEOUT)) == FALSE) {
+                do_log('error', 'Send request to statistic server failed'.print_r($stat_serv, true));
                 return FALSE;
             }
 
-            $rv['num'] = 0;
-            $current_time = get_timestamp($arr_uid[0], 'yuwo');      
-            if ($current_time === NULL)
-                $current_time = 0;
-            $rv['timestamp'] = $current_time;
-
-            if (count($arr_feedid) == 0) { 
-                return json_encode($rv);
+            if ($stat_client->close_conn() === FALSE) {
+                do_log('error', 'Statictis close_conn failed');
+                return FALSE;
             }
 
-            if (empty($arr_cmd)) {
-                foreach($arr_feedid as $val) {
-                    if ($val['timestamp'] > $current_time)  {
-                        $rv['num']++;
-                    }
-                }
-            } else {
-                foreach ($arr_cmd as $cmd_id) {
-                    $rv[$cmd_id] = 0;
-                    $rv[$cmd_id.'_uid'] = array();
-                }
-    
-                foreach($arr_feedid as $val) {
-                    if ($val['timestamp'] > $current_time)  {
-                        if (array_key_exists($val['cmd_id'], $rv)) {
-                            if (!in_array($val['user_id'],$rv[$val['cmd_id'].'_uid']))
-                            {
-                                $rv[$val['cmd_id'].'_uid'][] = $val['user_id'];
-                            }
-                            $rv[$val['cmd_id']]++;
-                            $rv['num']++;
-                        }
-                    } else 
-                        break;
+            $result = unpack('Llen/Lseq/Scmd_id/Lresult/Lmid', $resp);
+            if ($result['result'] != 0) {
+                do_log('error', 'Statistic server query failed'.print_r($result, true));
+                return FALSE;
+            }
+
+            $resp_protobuf = new \Mifan\pQueryStat();
+            $resp_protobuf->ParseFromString(substr($resp, 18));
+            $rv['num'] = $resp_protobuf->getCnt();
+            for ($i = 0; $i != $resp_protobuf->getListCount(); ++$i) {
+                $detail = $resp_protobuf->getListAt($i);
+                $rv[$detail->getCmd()] = $detail->getCnt();
+                for ($j = 0; $j != $detail->getMimiCount(); ++$j) {
+                    $rv[$detail->getCmd().'_uid'][] = $detail->getMimiAt($j);
                 }
             }
         }
@@ -733,6 +772,8 @@ function get_passive_newsfeed($uid, $offset, $count, $timestamp)
     else {
         $arr_feedid = array_slice($arr_feedid, 0, $count);
     }
+    
+    reset_statistic_pfeed($uid); 
     // 对feedid进行排序
     if ($offset <= 0) 
         set_timestamp($uid, $up_time, 'yuwo');
@@ -1292,3 +1333,4 @@ do_log('error', '['.__LINE__.']: feedid decode:'.print_r($arr_feedid, true));
 
     return json_encode($arr_result);
 }
+

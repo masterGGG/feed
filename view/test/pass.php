@@ -33,10 +33,7 @@ $data = array
 'action' => 'normal',
 'offset' => -1,
 'count' => 50,
-'app_id' => 1,
-'uid'=>'1227401110');
-//'uid'=>'188888888');
-//'uid'=>'914496998');
+'uid'=>'1112');
 
 var_dump(Post('http://10.1.1.197:10086/news_feed.php', $data));
 //var_dump(Post('http://10.1.1.197:8080/news_feed.php', $data));
