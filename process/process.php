@@ -6,6 +6,7 @@ require dirname(__FILE__) . DIRECTORY_SEPARATOR . 'Mifan' . DIRECTORY_SEPARATOR 
 require dirname(__FILE__) . DIRECTORY_SEPARATOR . 'Mifan' . DIRECTORY_SEPARATOR .  'feedidToFriend.php';
 require dirname(__FILE__) . DIRECTORY_SEPARATOR . 'Mifan' . DIRECTORY_SEPARATOR .  'feedidFromMine.php';
 require dirname(__FILE__) . DIRECTORY_SEPARATOR . 'Mifan' . DIRECTORY_SEPARATOR .  'dropFeedidFromTag.php';
+require dirname(__FILE__) . DIRECTORY_SEPARATOR . 'Mifan' . DIRECTORY_SEPARATOR .  'pUpdateStat.php';
 declare(ticks=1);
 
 $g_pid_arr = array();

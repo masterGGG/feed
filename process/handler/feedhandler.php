@@ -1024,6 +1024,44 @@ function news_article_add_to_friend($feedid, $mimi, $time) {
     
     return 0;
 }
+function update_pfeeds_statistic($passive_feed) {
+//    DEBUG && log::write('['.__LINE__.']: passive:'.print_r($passive_feed, true), "error");
+    
+    global $g_tag_server_socket;
+    if ($g_tag_server_socket == false) {
+        if (init_connect_and_nonblock(TAG_CACHE_IP, TAG_CACHE_PORT, $g_tag_server_socket)) {
+            log::write("[".__LINE__."]:init_connect friend_server fail reason: connect to tag_server", "error");
+            return -1;
+        }
+    }
+
+    $protobuf = new \Mifan\pUpdateStat();
+    $protobuf->setCmd($passive_feed[0]['cmd_id']);
+    foreach ($passive_feed as $pfeed) { 
+        $protobuf->appendMimi($pfeed['target_uid']);
+    }
+    //DEBUG && log::write('['.__LINE__.']: cmd:'.$protobuf->getCmd(), "error");
+    $body = $protobuf->serializeToString();
+    $rqst = pack('L2SL2', 18 + strlen($body), 0, 0xA201, 0, $passive_feed[0]['user_id']).$body;
+    if (send_data_and_nonblock($g_tag_server_socket, $rqst, TIMEOUT)) {
+        log::write(__LINE__.'get_fans_id: relation_client->send_rqst', 'error');
+        return -1;
+    }
+    
+    $resp = "";
+    if (recv_data_and_nonblock($g_tag_server_socket, 18, $resp, TIMEOUT)) {
+        log::write(__LINE__."recv data to tag cache server fail", "error");
+        return -1;
+    }
+    $rv = unpack('Llen/Lseq/scmd_id/Lcode/Lmimi', $resp);
+//    DEBUG && log::write('['.__LINE__.']: get response from cache server'.print_r($rv, true), "error");
+    if ($rv['code'] != 0) {
+        log::write(__LINE__.'tag cache server interal fail :'.$rv['code'], 'error');
+        return -1;
+    }
+    return 0;
+}
+
 function news_liker($feed, &$comfeed, &$completefeed, &$passive_feed)
 {
     $src_data = unpack("Larticle_id/Lauthor_id", $feed["data"]);
@@ -1042,6 +1080,7 @@ function news_liker($feed, &$comfeed, &$completefeed, &$passive_feed)
     $passive_feed[] = produce_passive_feed($feed, $feed['user_id'], $src_data['author_id'], $json_src_data);
     
     $completefeed['data'] = json_encode($src_data);
+    update_pfeeds_statistic($passive_feed);
     return 0;
 }
 function news_comment($feed, &$comfeed, &$completefeed, &$passive_feed)
@@ -1063,6 +1102,7 @@ function news_comment($feed, &$comfeed, &$completefeed, &$passive_feed)
         $passive_feed[] = produce_passive_feed($feed, $feed['user_id'], $src_data['author_id'], $json_src_data);
 
     $completefeed['data'] = json_encode($src_data);
+    update_pfeeds_statistic($passive_feed);
     return 0;
 }
 /*10
