@@ -37,7 +37,7 @@ function feedid_to_binary($feedid)
 
 function binary_to_feedid($binary)
 {
-    $feedid = unpack("Luser_id/Scmd_id/Lapp_id/Ltimestamp", $binary);
+    $feedid = unpack("Luser_id/Scmd_id/Lapp_id/Ltimestamp/L2m", $binary);
     $feedid['magic'] = base64_encode(substr($binary, 14, 8));
     return $feedid;
 }
@@ -56,6 +56,47 @@ function binary_to_passive_feed_index($binary)
     return $feedid;
 }
 
+function get_pass_feedid_from_stor($uid, $count, $timestamp) {
+    $arr_feedid = array();
+    $arr_storage_addr = explode(':', constant('STORAGE_ADDR'));
+    $storage_client = new netclient($arr_storage_addr[0], $arr_storage_addr[1]); 
+    if ($storage_client->open_conn(1) === FALSE) {
+        do_log('error', 'ERROR: storage_client->open_conn');
+        return FALSE;
+    }
+
+    $storage_rqst_len = 4 + 2 + 2 + 4*3;
+    $storage_rqst = pack('LS2L3', $storage_rqst_len, 25, 1, $uid, $timestamp, $count);
+    
+    if (($storage_resp = $storage_client->send_rqst($storage_rqst, TIMEOUT)) === FALSE) {
+        do_log('error', __FUNCTION__ . 'ERROR: storage_client->send_rqst');
+        return FALSE;
+    }
+
+    $rv_0 = unpack('Llen/Sret/Sunits', $storage_resp);
+    if ($rv_0['ret'] != 0) {
+        do_log('error', __FUNCTION__ ."----".__LINE__ ."ERROR: len: {$rv_0['len']} result: {$rv_0['ret']}");
+        return FALSE;
+    }
+        do_log('error', __FUNCTION__ ."----".__LINE__ ."ERROR: len: {$rv_0['len']} result: {$rv_0['ret']}");
+    $storage_resp = substr($storage_resp, 4 + 2 + 2);
+    
+    for ($i = 0; $i != $rv_0['units']; ++$i) {
+        $row = unpack("Llen/Luser_id/Scmd_id/Lapp_id/Ltimestamp/L2magic/Lsender_uid/Ltarget_uid/Lpassive_magic/Lupdate_timestamp", $storage_resp);
+
+        $row['magic'] = base64_encode(substr($storage_resp, 18, 8));
+        $arr_feedid[] = $row;
+        $storage_resp = substr($storage_resp, 42);
+    }
+
+    if ($storage_client->close_conn() === FALSE) {
+        do_log('error', 'ERROR: storage_client->close_conn');
+        return FALSE;
+    }
+
+    return $arr_feedid;
+}
+        
 function get_passive_feedid($uid)
 {
     $arr_feedid = array();
@@ -725,8 +766,9 @@ function get_notice($arr_uid, $item, $arr_cmd)
 
 function get_passive_newsfeed($uid, $offset, $count, $timestamp)
 {
-    // 从outbox-server获取所有的feedid
-    $arr_feedid = get_passive_feedid($uid);
+    if ($offset < MAX_PASS_CNT) {
+        // 从outbox-server获取所有的feedid
+        $arr_feedid = get_passive_feedid($uid);
     if ($arr_feedid === FALSE) {
         do_log('error', 'get_newsfeed: get_feedid');
         return FALSE;
@@ -777,6 +819,11 @@ function get_passive_newsfeed($uid, $offset, $count, $timestamp)
     // 对feedid进行排序
     if ($offset <= 0) 
         set_timestamp($uid, $up_time, 'yuwo');
+} else { 
+    $arr_feedid = get_pass_feedid_from_stor($uid, $count, $timestamp);
+    do_log('error', 'got feedid from stor:'.print_r($arr_feedid, true));
+    $total_count = count($arr_feedid);
+}
 
     $have_next = 0;
     if ($count !== 0 && $total_count > $count) {
@@ -813,7 +860,7 @@ function get_newsfeed_by_tags($my_id, $arr_app_id, $arr_cmd_id, $count, $begin_t
         do_log('error', 'get_newsfeed: get_feedid');
         return FALSE;
     }
-    //do_log('error', __LINE__.'xxx get_newsfeed: last_time: '.print_r($arr_feedid, true));
+    do_log('error', __LINE__.'xxx get_newsfeed: last_time: '.print_r($arr_feedid, true));
 
     // 根据arr_app_id、arr_cmd_id及业务逻辑对feedid进行过滤
     global $g_arr_app_id;
@@ -840,6 +887,7 @@ function get_newsfeed_by_tags($my_id, $arr_app_id, $arr_cmd_id, $count, $begin_t
         if ($arr_feeds === FALSE) {
             return FALSE;
         }
+        //do_log('error', __LINE__.'get_newsfeed: get_feedid from storage'.print_r($arr_feeds, true));
     }
 
     usort($arr_feeds, 'feedid_cmp');
@@ -871,7 +919,7 @@ function get_newsfeed_of_latest($arr_uid, $arr_app_id, $arr_cmd_id, $offset, $co
     }
 //    do_log('error', __LINE__.'xxx get_newsfeed: last_time: '.print_r($arr_uid, true));
 
-    return get_newsfeed_common($my_id, $arr_feedid, $arr_app_id, $arr_cmd_id, $offset, $count);
+    return get_newsfeed_common($my_id, $arr_feedid, $arr_app_id, $arr_cmd_id, $offset, $count, TRUE);
 }
 
 function get_newsfeed($arr_uid, $arr_app_id, $arr_cmd_id, $offset, $count, $timestamp) {
@@ -884,10 +932,10 @@ function get_newsfeed($arr_uid, $arr_app_id, $arr_cmd_id, $offset, $count, $time
         return FALSE;
     }
     //get_newsfeed_filter_feedid();
-    return get_newsfeed_common($my_id, $arr_feedid, $arr_app_id, $arr_cmd_id, $offset, $count);
+    return get_newsfeed_common($my_id, $arr_feedid, $arr_app_id, $arr_cmd_id, $offset, $count, FALSE);
 }
 
-function get_newsfeed_common($my_id, $arr_feedid, $arr_app_id, $arr_cmd_id, $offset, $count)
+function get_newsfeed_common($my_id, $arr_feedid, $arr_app_id, $arr_cmd_id, $offset, $count, $is_latest)
 {
    //获得最后拉取的时间戳
     $up_time = gettimeofday(true); 
@@ -955,12 +1003,17 @@ function get_newsfeed_common($my_id, $arr_feedid, $arr_app_id, $arr_cmd_id, $off
     $i = 0;
     $last_feed = FALSE;
     $arr_join_friend = array();
-    
+   
+    $article_list = array();
     foreach ($arr_feeds as $key_0 => &$feed_0) {
+        if ($is_latest)
+            $article_list[] = $feed_0['data']['article_id'];
         if (isset($feed_0['fold'])) {
             continue;
         }
     }
+    if ($is_latest)
+        do_log('error', 'Latest Request<mimi:'.$my_id.',offset:'.$offset.',conut:'.$count.'> - Response<'.json_encode($article_list).'> ');
 
     $arr_result = array();
     $arr_result['current_page'] = $arr_feeds;
