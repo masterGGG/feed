@@ -37,7 +37,7 @@ function feedid_to_binary($feedid)
 
 function binary_to_feedid($binary)
 {
-    $feedid = unpack("Luser_id/Scmd_id/Lapp_id/Ltimestamp/L2m", $binary);
+    $feedid = unpack("Luser_id/Scmd_id/Lapp_id/Ltimestamp", $binary);
     $feedid['magic'] = base64_encode(substr($binary, 14, 8));
     return $feedid;
 }
@@ -78,7 +78,7 @@ function get_pass_feedid_from_stor($uid, $count, $timestamp) {
         do_log('error', __FUNCTION__ ."----".__LINE__ ."ERROR: len: {$rv_0['len']} result: {$rv_0['ret']}");
         return FALSE;
     }
-        do_log('error', __FUNCTION__ ."----".__LINE__ ."ERROR: len: {$rv_0['len']} result: {$rv_0['ret']}");
+//        do_log('error', __FUNCTION__ ."----".__LINE__ ."ERROR: len: {$rv_0['len']} result: {$rv_0['ret']}");
     $storage_resp = substr($storage_resp, 4 + 2 + 2);
     
     for ($i = 0; $i != $rv_0['units']; ++$i) {
@@ -96,7 +96,6 @@ function get_pass_feedid_from_stor($uid, $count, $timestamp) {
 
     return $arr_feedid;
 }
-        
 function get_passive_feedid($uid)
 {
     $arr_feedid = array();
@@ -125,7 +124,6 @@ function get_passive_feedid($uid)
         return FALSE;
     }
 
-
         $rv = unpack('Llen/Sresult', $outbox_resp);
         if ($rv['result'] != 0) {
             do_log('error', "get_feedid: len: {$rv['len']} result: {$rv['result']}");
@@ -138,6 +136,7 @@ function get_passive_feedid($uid)
             $feedid = binary_to_passive_feed_index($binary);
             $arr_feedid[] = $feedid;
         }
+
 
     return $arr_feedid;
 }
@@ -214,7 +213,7 @@ function get_feedid_by_tags($mid, $tag, $begin_time, $end_time, $cnt)
     return $arr_feedid;
 }
 
-function get_feedid($arr_uid, $is_latest)
+function get_feedid(&$arr_uid, $is_latest)
 {
     $arr_feedid = array();
 
@@ -311,6 +310,18 @@ function feedid_filter($feedid)
             return FALSE;
         }
     }
+    /*
+    if ($feedid['cmd_id'] == 7003) {
+        DEBUG && do_log('debug',"XXXX [".__LINE__."]".$g_tags_id." outbox".print_r($feedid, true));
+        if ($g_tags_id != 0) {
+            $tags = $feedid['tags'];
+
+            if ($tags == ($tags & $g_tags_id))
+                return TRUE;
+            else
+                return FALSE;
+        }
+    }*/
     
     // 根据业务逻辑过滤
     static $last_user_id = 0;                                 // TODO
@@ -767,8 +778,8 @@ function get_notice($arr_uid, $item, $arr_cmd)
 function get_passive_newsfeed($uid, $offset, $count, $timestamp)
 {
     if ($offset < MAX_PASS_CNT) {
-        // 从outbox-server获取所有的feedid
-        $arr_feedid = get_passive_feedid($uid);
+    // 从outbox-server获取所有的feedid
+    $arr_feedid = get_passive_feedid($uid);
     if ($arr_feedid === FALSE) {
         do_log('error', 'get_newsfeed: get_feedid');
         return FALSE;
@@ -790,13 +801,11 @@ function get_passive_newsfeed($uid, $offset, $count, $timestamp)
         $last_time = get_timestamp($uid, 'yuwo');      
         if ($last_time === NULL) 
             $last_time = $up_time; 
-        
         foreach($arr_feedid as $val) {
             if ($val['timestamp'] <= $last_time) 
                 break;
             $ncount++;
         }
-
         $arr_feedid = array_slice($arr_feedid, $offset, $ncount);
         //do_log('debug', "lastTime:".$last_time." eraase count:".$ncount." reset count:".count($arr_feedid));
     }
@@ -812,21 +821,26 @@ function get_passive_newsfeed($uid, $offset, $count, $timestamp)
         }
     }
     else {
+    reset_statistic_pfeed($uid); 
+//        do_log('debug', "Query pass feed:mimi<".$uid.'>');
         $arr_feedid = array_slice($arr_feedid, 0, $count);
     }
-    
-    reset_statistic_pfeed($uid); 
+    //reset_statistic_pfeed($uid); 
     // 对feedid进行排序
     if ($offset <= 0) 
         set_timestamp($uid, $up_time, 'yuwo');
 } else { 
     $arr_feedid = get_pass_feedid_from_stor($uid, $count, $timestamp);
-    do_log('error', 'got feedid from stor:'.print_r($arr_feedid, true));
-    $total_count = count($arr_feedid);
+ //   do_log('error', 'got feedid from stor:'.print_r($arr_feedid, true));
+    if ($arr_feedid != FALSE)
+        $total_count = count($arr_feedid);
+    else
+        $total_count = 0;
+//    do_log('debug', "Query pass feed:mimi<".$uid.'> from storage count:'.$total_count);
 }
 
     $have_next = 0;
-    if ($count !== 0 && $total_count > $count) {
+    if ($count !== 0 && $total_count >= $count) {
         $have_next = 1;
     }    
 
@@ -860,7 +874,7 @@ function get_newsfeed_by_tags($my_id, $arr_app_id, $arr_cmd_id, $count, $begin_t
         do_log('error', 'get_newsfeed: get_feedid');
         return FALSE;
     }
-    do_log('error', __LINE__.'xxx get_newsfeed: last_time: '.print_r($arr_feedid, true));
+    //do_log('error', __LINE__.'tag:'.$my_tag.'count:'.$count.' get_newsfeed: last_time:');
 
     // 根据arr_app_id、arr_cmd_id及业务逻辑对feedid进行过滤
     global $g_arr_app_id;
@@ -887,7 +901,6 @@ function get_newsfeed_by_tags($my_id, $arr_app_id, $arr_cmd_id, $count, $begin_t
         if ($arr_feeds === FALSE) {
             return FALSE;
         }
-        //do_log('error', __LINE__.'get_newsfeed: get_feedid from storage'.print_r($arr_feeds, true));
     }
 
     usort($arr_feeds, 'feedid_cmp');
@@ -917,9 +930,9 @@ function get_newsfeed_of_latest($arr_uid, $arr_app_id, $arr_cmd_id, $offset, $co
         do_log('error', 'get_newsfeed: get_feedid');
         return FALSE;
     }
-//    do_log('error', __LINE__.'xxx get_newsfeed: last_time: '.print_r($arr_uid, true));
+    //do_log('error', __LINE__.'xxx get_newsfeed: last_time: '.$timestamp);
 
-    return get_newsfeed_common($my_id, $arr_feedid, $arr_app_id, $arr_cmd_id, $offset, $count, TRUE);
+    return get_newsfeed_common($my_id, $arr_feedid, $arr_app_id, $arr_cmd_id, $offset, $count, $timestamp, TRUE);
 }
 
 function get_newsfeed($arr_uid, $arr_app_id, $arr_cmd_id, $offset, $count, $timestamp) {
@@ -932,10 +945,10 @@ function get_newsfeed($arr_uid, $arr_app_id, $arr_cmd_id, $offset, $count, $time
         return FALSE;
     }
     //get_newsfeed_filter_feedid();
-    return get_newsfeed_common($my_id, $arr_feedid, $arr_app_id, $arr_cmd_id, $offset, $count, FALSE);
+    return get_newsfeed_common($my_id, $arr_feedid, $arr_app_id, $arr_cmd_id, $offset, $count, $timestamp, FALSE);
 }
 
-function get_newsfeed_common($my_id, $arr_feedid, $arr_app_id, $arr_cmd_id, $offset, $count, $is_latest)
+function get_newsfeed_common($my_id, $arr_feedid, $arr_app_id, $arr_cmd_id, $offset, $count, $timestamp, $is_latest)
 {
    //获得最后拉取的时间戳
     $up_time = gettimeofday(true); 
@@ -954,7 +967,13 @@ function get_newsfeed_common($my_id, $arr_feedid, $arr_app_id, $arr_cmd_id, $off
             if ($arr_feedid[$i]['timestamp'] <= $last_time) 
                 unset($arr_feedid[$i]);
         }
-    }
+    } else if ($offset > 0) { 
+        $news_count = count($arr_feedid);
+        for($i = 0; $i < $news_count; ++$i) {
+            if ($arr_feedid[$i]['timestamp'] >= $timestamp )
+                unset($arr_feedid[$i]);
+        }    
+    }   
 
     // 根据arr_app_id、arr_cmd_id及业务逻辑对feedid进行过滤
     global $g_arr_app_id;
@@ -1003,18 +1022,18 @@ function get_newsfeed_common($my_id, $arr_feedid, $arr_app_id, $arr_cmd_id, $off
     $i = 0;
     $last_feed = FALSE;
     $arr_join_friend = array();
-   
+    // 判断是否需要合并
     $article_list = array();
     foreach ($arr_feeds as $key_0 => &$feed_0) {
-        if ($is_latest)
+        if ($is_latest) {
             $article_list[] = $feed_0['data']['article_id'];
+        }
         if (isset($feed_0['fold'])) {
             continue;
         }
     }
     if ($is_latest)
         do_log('error', 'Latest Request<mimi:'.$my_id.',offset:'.$offset.',conut:'.$count.'> - Response<'.json_encode($article_list).'> ');
-
     $arr_result = array();
     $arr_result['current_page'] = $arr_feeds;
     $arr_result['have_next'] = $have_next;
@@ -1286,7 +1305,7 @@ function get_update_mid(&$arr_uid) { //,$count) {
     }
     
     $timestamp = gettimeofday(true);
-    $relation_rqst = pack("LLsLLLLL", 18+4+4+4, 10086, 0xA102, 0, $arr_uid[0], 0, $timestamp, 10); //$count);
+    $relation_rqst = pack("LLsLLLLL", 18+4+4+4, 10086, 0xA102, 0, $arr_uid[0], 0, $timestamp, 100); //$count)
     $relation_resp = FALSE;
     
     if (($relation_resp = $redis_cli->send_rqst($relation_rqst,TIMEOUT)) === FALSE) {
@@ -1386,4 +1405,3 @@ do_log('error', '['.__LINE__.']: feedid decode:'.print_r($arr_feedid, true));
 
     return json_encode($arr_result);
 }
-
