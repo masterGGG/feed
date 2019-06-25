@@ -1,44 +1,44 @@
 <?php
 function data_log($feed)
 {
-        clearstatcache();
-        $str_log_file = './log/data'.posix_getpid().'.log';
-        $str_log = pack("SSLCLL",$feed["len"],$feed["cmd_id"],$feed["user_id"],$feed["version"],$feed["timestamp"],$feed["app_id"]);
-        $str_log .= $feed["data"];
-        $handle = fopen($str_log_file, 'ab');
-        if ($handle) {
-                fwrite($handle,$str_log);
-                fclose($handle) ;
-                return true;
-        }
+//        clearstatcache();
+//        $str_log_file = './log/data'.posix_getpid().'.log';
+//        $str_log = pack("SSLCLL",$feed["len"],$feed["cmd_id"],$feed["user_id"],$feed["version"],$feed["timestamp"],$feed["app_id"]);
+//        $str_log .= $feed["data"];
+//        $handle = fopen($str_log_file, 'ab');
+//        if ($handle) {
+//                fwrite($handle,$str_log);
+//                fclose($handle) ;
+//                return true;
+//        }
         return false;
 }
 
 function data_log_pre($feed,$pre)
 {
-        clearstatcache();
-        $str_log_file = './log/'.$pre.'_data'.posix_getpid().'.log';
-        $str_log = pack("SSLCLL",$feed["len"],$feed["cmd_id"],$feed["user_id"],$feed["version"],$feed["timestamp"],$feed['app_id']);
-        $str_log .= $feed["data"];
-        $handle = fopen($str_log_file, 'ab');
-        if ($handle) {
-                fwrite($handle,$str_log);
-                fclose($handle) ;
-                return true;
-        }
+//        clearstatcache();
+//        $str_log_file = './log/'.$pre.'_data'.posix_getpid().'.log';
+//        $str_log = pack("SSLCLL",$feed["len"],$feed["cmd_id"],$feed["user_id"],$feed["version"],$feed["timestamp"],$feed['app_id']);
+//        $str_log .= $feed["data"];
+//        $handle = fopen($str_log_file, 'ab');
+//        if ($handle) {
+//                fwrite($handle,$str_log);
+//                fclose($handle) ;
+//                return true;
+//        }
         return false;
 }
 
 function data_log_binary($pack, $pre)
 {
-        clearstatcache();
-        $str_log_file = './log/'.$pre.'_data'.posix_getpid().'.log';
-        $handle = fopen($str_log_file, 'ab');
-        if ($handle) {
-                fwrite($handle,$pack);
-                fclose($handle) ;
-                return true;
-        }
+//        clearstatcache();
+//        $str_log_file = './log/'.$pre.'_data'.posix_getpid().'.log';
+//        $handle = fopen($str_log_file, 'ab');
+//        if ($handle) {
+//                fwrite($handle,$pack);
+//                fclose($handle) ;
+//                return true;
+//        }
         return false;
 }
 
@@ -47,29 +47,28 @@ function is_feed_valid($feed)
     global $g_sys_conf;
     if (!array_key_exists($feed["cmd_id"], $g_sys_conf["feed"]["operator"]))
     {
-        log::write("the feed's cmd_id[{$feed["cmd_id"]}] doesn't Configure in operator array","warn");
+        log::write("[".__LINE__."]".__FUNCTION__."he feed's cmd_id[{$feed["cmd_id"]}] doesn't Configure in operator array","warn");
         return -1; 
     }
     if (!array_key_exists($feed["cmd_id"], $g_sys_conf["feed"]["valid_len"]))
     {
-        log::write("the feed's cmd_id[{$feed["cmd_id"]}] doesn't Configure in valid_len array","warn");
+        log::write("[".__LINE__."]".__FUNCTION__."he feed's cmd_id[{$feed["cmd_id"]}] doesn't Configure in valid_len array","warn");
         return -1; 
     }
     if ($g_sys_conf["feed"]["valid_len"][$feed["cmd_id"]] != $feed["len"] && $g_sys_conf['feed']['valid_len'][$feed['cmd_id']] != 0)
     {
-        log::write("the feed's len is unvalid cmd_id {$feed['cmd_id']}:{$feed["len"]}, correct len is {$g_sys_conf["feed"]["valid_len"][$feed["cmd_id"]]}","warn");
-        data_log_pre($feed,'unvalid_'.date('Ymd'));
+        log::write("[".__LINE__."]".__FUNCTION__."he feed's len is unvalid cmd_id {$feed['cmd_id']}:{$feed["len"]}, correct len is {$g_sys_conf["feed"]["valid_len"][$feed["cmd_id"]]}","warn");
+        //data_log_pre($feed,'unvalid_'.date('Ymd'));
         return -1; 
     }
-
-    /*
-    $now_time = time();
-    if ($feed['timestamp'] >= $now_time || $feed['timestamp'] < $now_time -3600 -60)
-    {
-        log::write("the feed's time must in one hour. feed timestamp:{$feed['timestamp']} now timestamp + 3600:{$now_time}", 'warn');
-        return -1;
-    }
-*/
+//
+//    $now_time = time();
+//    if ($feed['timestamp'] >= $now_time || $feed['timestamp'] < $now_time -3600 -60)
+//    {
+//        log::write("[".__LINE__."]".__FUNCTION__."he feed's time > now + 3600, it is impossible. feed timestamp:{$feed['timestamp']} now timestamp + 3600:{$now_time}", 'warn');
+//        return -1;
+//    }
+//
     return 0; 
 }
 
@@ -78,7 +77,7 @@ function passive_feed_handler($storage_server_socket, $feed, $is_dest, &$retval)
     global $g_sys_conf;
     if ($feed['sender_uid'] == $feed['target_uid'])
     {
-        log::write("sender_uid == target_uid",'warn');
+        log::write("[".__LINE__."]".__FUNCTION__."ender_uid == target_uid",'warn');
         return -2;
     }
 
@@ -203,7 +202,7 @@ function passive_feed_handler($storage_server_socket, $feed, $is_dest, &$retval)
             }
             else
             {
-                log::write("feed['flag'] is unvalid", "warn");
+                log::write("[".__LINE__."]".__FUNCTION__."eed['flag'] is unvalid", "warn");
                 return -2;
             }
             break;
@@ -222,12 +221,12 @@ function passive_feed_handler($storage_server_socket, $feed, $is_dest, &$retval)
                     }
                     else if ($ret == 1)
                     {
-                        log::write(__FUNCTION__ ."get feed none", "warn");
+                        log::write("[".__LINE__."]".__FUNCTION__."get feed none", "warn");
                         return -2;
                     }
                     else
                     {
-                        log::write(__FUNCTION__ .'get feed fail ', "error");
+                        log::write("[".__LINE__."]".__FUNCTION__."get feed fail ", "error");
                         return -1;
                     }
                     
@@ -269,20 +268,20 @@ function passive_feed_handler($storage_server_socket, $feed, $is_dest, &$retval)
                 }
                 else
                 {
-                    log::write('unvalid cmd_id', 'warn');
+                    log::write("[".__LINE__."]".__FUNCTION__."nvalid cmd_id", 'warn');
                     return -2;
                 }
             }
             else
             {
-                log::write('unvalid cmd_id', 'warn');
+                log::write("[".__LINE__."]".__FUNCTION__."nvalid cmd_id", 'warn');
                 return -2;
             }
         }
     }
     else
     {
-        log::write(__FUNCTION__ .'get feed fail ', "error");
+        log::write("[".__LINE__."]".__FUNCTION__."et feed fail ", "error");
         return -1;
     }
 
@@ -305,12 +304,12 @@ function passive_feed_handler($storage_server_socket, $feed, $is_dest, &$retval)
     $ret = operate_passive_feed_to_db($storage_server_socket, $key, $feed_content); 
     if ($ret == 1)
     {
-        log::write("operate_feed_to_db update id duplicate dont happen", "warn");
+        log::write("[".__LINE__."]".__FUNCTION__."perate_feed_to_db update id duplicate dont happen", "warn");
         return -2;
     }
     else if ($ret != 0)
     {
-        log::write(__FUNCTION__."[".__LINE__."]"."update to storage_server fail", "error");
+        log::write("[".__LINE__."]".__FUNCTION__."pdate to storage_server fail", "error");
         return -1;
     }
     
@@ -349,7 +348,7 @@ function feed_update_sync($pack, $input_arr, &$output_arr)
     {
         if (32 != strlen($pack))
         {
-            log::write(__FUNCTION__ .'pack len is unvalid '.strlen($pack), 'warn');
+            log::write("[".__LINE__."]".__FUNCTION__."ack len is unvalid ".strlen($pack), 'warn');
             return -2;
         }
         $storage_server_socket = $input_arr['storage_server_socket'];
@@ -357,7 +356,7 @@ function feed_update_sync($pack, $input_arr, &$output_arr)
 
         if (!in_array($feed['cmd_id'], $allow_ce))
         {
-            log::write(__FUNCTION__ .'the cmd_id cannot evaluate '. $feed['cmd_id'], 'warn');
+            log::write("[".__LINE__."]".__FUNCTION__."he cmd_id cannot evaluate ". $feed['cmd_id'], 'warn');
             return -2;
         }
 
@@ -374,27 +373,27 @@ function feed_update_sync($pack, $input_arr, &$output_arr)
         }
         else if ($ret == 1)
         {
-            log::write(__FUNCTION__ ."get feed none", "warn");
+            log::write("[".__LINE__."]".__FUNCTION__."et feed none", "warn");
             return -2;
         }
         else
         {
-            log::write(__FUNCTION__ .'get feed fail ', "error");
-            //data_log_binary($pack, __FUNCTION__);
+            log::write("[".__LINE__."]".__FUNCTION__."et feed fail ", "error");
+            //data_log_binary($pack, ;
             return -1;
         }
 
         $ret = operate_feed_to_db($storage_server_socket, $feed, $feed_content); 
         if ($ret == 1)
         {
-            log::write(__FUNCTION__."[".__LINE__."]"."operate_feed_to_db update id duplicate dont happen", "warn");
+            log::write("[".__LINE__."]".__FUNCTION__."perate_feed_to_db update id duplicate dont happen", "warn");
             //data_log_binary($pack,"feed_update_sync_warn");
             return -2;
         }
         else if ($ret != 0)
         {
-            log::write(__FUNCTION__."[".__LINE__."]"."update to storage_server fail", "error");
-            //data_log_binary($pack, __FUNCTION__);
+            log::write("[".__LINE__."]".__FUNCTION__."pdate to storage_server fail", "error");
+            //data_log_binary($pack, ;
             return -1;
         }
         return 0;
@@ -404,7 +403,7 @@ function feed_update_sync($pack, $input_arr, &$output_arr)
         $cmd_arr_only_passive = array(7023,7024);
         if (912 != strlen($pack))
         {
-            log::write(__FUNCTION__."[".__LINE__."]".'pack len is unvalid '.strlen($pack), 'warn');
+            log::write("[".__LINE__."]".__FUNCTION__."pack len is unvalid ".strlen($pack), 'warn');
             return -2;
         }
         $storage_server_socket = $input_arr['storage_server_socket'];
@@ -412,7 +411,7 @@ function feed_update_sync($pack, $input_arr, &$output_arr)
 
         if (!in_array($feed['cmd_id'], $allow_ce))
         {
-            log::write(__FUNCTION__."[".__LINE__."]" .'the cmd_id cannot comment '. $feed['cmd_id'], 'warn');
+            log::write("[".__LINE__."]".__FUNCTION__."the cmd_id cannot comment ". $feed['cmd_id'], 'warn');
             return -2;
         }
         
@@ -456,14 +455,14 @@ function feed_update_sync($pack, $input_arr, &$output_arr)
             $ret = operate_feed_to_db($storage_server_socket, $feed, $feed_content); 
             if ($ret == 1)
             {
-                log::write(__FUNCTION__."[".__LINE__."]"."operate_feed_to_db update id duplicate dont happen", "warn");
+                log::write("[".__LINE__."]".__FUNCTION__."perate_feed_to_db update id duplicate dont happen", "warn");
                 //data_log_binary($pack,"feed_update_sync_warn");
                 return -2;
             }
             else if ($ret != 0)
             {
-                log::write(__FUNCTION__."[".__LINE__."]"."update to storage_server fail", "error");
-                //data_log_binary($pack, __FUNCTION__);
+                log::write("[".__LINE__."]".__FUNCTION__."pdate to storage_server fail", "error");
+                //data_log_binary($pack, ;
                 return -1;
             }
         }
@@ -471,13 +470,13 @@ function feed_update_sync($pack, $input_arr, &$output_arr)
         {
             if (!in_array($feed['cmd_id'], $cmd_arr_only_passive))
             {
-                log::write(__FUNCTION__ ."get feed none", "warn");
+                log::write("[".__LINE__."]".__FUNCTION__."get feed none", "warn");
             }
         }
         else
         {
-            log::write(__FUNCTION__ .'get feed fail ', "error");
-            //data_log_binary($pack, __FUNCTION__);
+            log::write("[".__LINE__."]".__FUNCTION__."get feed fail ", "error");
+            //data_log_binary($pack, ;
             return -1;
         }
 
@@ -487,14 +486,14 @@ function feed_update_sync($pack, $input_arr, &$output_arr)
         $ret = passive_feed_handler($storage_server_socket, $feed, true, $ret_val);
         if ($ret == -2)
         {
-            log::write(__FUNCTION__."[".__LINE__."]"."passive_feed_handler desc parameter problem", "warn");
+            log::write("[".__LINE__."]".__FUNCTION__."assive_feed_handler desc parameter problem", "warn");
             //data_log_binary($pack,"feed_update_sync_warn");
             return -2;
         }
         else if ($ret != 0)
         {
-            log::write(__FUNCTION__."[".__LINE__."]".'passive_feed_handler process fail ', "error");
-            //data_log_binary($pack, __FUNCTION__);
+            log::write("[".__LINE__."]".__FUNCTION__."passive_feed_handler process fail ", "error");
+            //data_log_binary($pack, ;
             return -1;
         }
 
@@ -502,14 +501,14 @@ function feed_update_sync($pack, $input_arr, &$output_arr)
         $ret = passive_feed_handler($storage_server_socket, $feed, false, $ret_val1);
         if ($ret == -2)
         {
-            log::write(__FUNCTION__."[".__LINE__."]"."passive_feed_handler my parameter problem", "warn");
+            log::write("[".__LINE__."]".__FUNCTION__."assive_feed_handler my parameter problem", "warn");
             //data_log_binary($pack,"feed_update_sync_warn");
             return -2;
         }
         else if ($ret != 0)
         {
-            log::write(__FUNCTION__."[".__LINE__."]".'passive_feed_handler process fail ', "error");
-            data_log_binary($pack, __FUNCTION__);
+            log::write("[".__LINE__."]".__FUNCTION__."passive_feed_handler process fail ", "error");
+            //data_log_binary($pack,;
             return -1;
         }
 
@@ -527,7 +526,7 @@ function feed_update_sync($pack, $input_arr, &$output_arr)
     }
     else
     {
-        log::write(__FUNCTION__ . " cmd_id is unvalid ". $feed['opt_id'], "warn");
+        log::write("[".__LINE__."]".__FUNCTION__." cmd_id is unvalid ". $feed['opt_id'], "warn");
         return -2;
     }
     return 0;
@@ -583,8 +582,8 @@ function feeddelete($pack, $input_arr, &$output_arr)
         {
             if (false == delete_feed($storage_server_socket, $feed))
             {
-                log::write(__FUNCTION__."[".__LINE__."]"."delete feed fail from storage_server", "error");
-                data_log_binary($pack, __FUNCTION__);
+                log::write("[".__LINE__."]".__FUNCTION__."elete feed fail from storage_server", "error");
+                //data_log_binary($pack, ;
                 return -1;
             }
         }
@@ -597,7 +596,7 @@ function feeddelete($pack, $input_arr, &$output_arr)
     {
         if (strlen($pack) != 67 )
         {
-            log::write('pack len is unvalid '.strlen($pack), 'warn');
+            log::write("[".__LINE__."]".__FUNCTION__."ack len is unvalid ".strlen($pack), 'warn');
             return -2;
         }
 
@@ -608,7 +607,7 @@ function feeddelete($pack, $input_arr, &$output_arr)
         $verify = md5($str);
         if ($verify != $feed['verify'])
         {
-            log::write("The packet doesn't pass verify","warn");
+            log::write("[".__LINE__."]".__FUNCTION__."he packet doesn't pass verify","warn");
             return -2;
         }
 
@@ -616,8 +615,8 @@ function feeddelete($pack, $input_arr, &$output_arr)
 
             if (false == delete_passive_feed($storage_server_socket, $feed))
             {
-                log::write(__FUNCTION__."[".__LINE__."]"."delete feed fail from storage_server", "error");
-                data_log_binary($pack, __FUNCTION__);
+                log::write("[".__LINE__."]".__FUNCTION__."elete feed fail from storage_server", "error");
+                //data_log_binary($pack, ;
                 return -1;
             }
 
@@ -628,13 +627,15 @@ function feeddelete($pack, $input_arr, &$output_arr)
     }
     else
     {
-        log::write(__FUNCTION__ . " cmd_id is unvalid ". $feed['opt_id'], "warn");
+        log::write("[".__LINE__."]".__FUNCTION__." cmd_id is unvalid ". $feed['opt_id'], "warn");
         return -2;
     }
     return 0;
 }
+
 $g_redis_server_socket;
 $g_tag_server_socket;
+$g_storage_server_socket;
 // $feed 一条feed的内容
 // array("len","cmd_id","user_id","version","timestamp","app_id","data")
 // $input_arr("feed_socket"=>val1,"feed_reconnect_flag"=>val2,"storage_server_socket" => val3):feed_socket为同步feed的服务器连接socket，feed_reconnect_flag为feed服务器重连标志,storage_server_socket为存储服务器的socket
@@ -647,6 +648,8 @@ function feedhandle($feed, $input_arr, &$output_arr)
     $feed_socket = $input_arr['feed_socket'];
     $feed_reconnect_flag = $input_arr['feed_reconnect_flag'];
     $storage_server_socket = $input_arr['storage_server_socket'];
+    global $g_storage_server_socket;
+    $g_storage_server_socket = $storage_server_socket;
     global $g_redis_server_socket;
     $g_redis_server_socket = $input_arr['redis_server_socket'];
     global $g_tag_server_socket;
@@ -654,7 +657,7 @@ function feedhandle($feed, $input_arr, &$output_arr)
 
     if (!array_key_exists($feed["cmd_id"], $g_sys_conf["feed"]["operator"]))
     {
-        log::write("the feed's cmd_id[{$feed["cmd_id"]}] doesn't Configure","warn");
+        log::write("[".__LINE__."]".__FUNCTION__."he feed's cmd_id[{$feed["cmd_id"]}] doesn't Configure","warn");
         return -2; 
     }
  
@@ -662,8 +665,8 @@ function feedhandle($feed, $input_arr, &$output_arr)
     {
             if (false == get_comfeed($storage_server_socket, $feed["user_id"], $feed["cmd_id"], $feed["timestamp"], $feed['app_id'], $comfeed))
             {
-                log::write("get_comfeed get combine feed fail from storage server", "error");
-                data_log($feed);
+                log::write("[".__LINE__."]".__FUNCTION__."et_comfeed get combine feed fail from storage server", "error");
+                //data_log_pre($feed, ;
                 return -1; 
             }
     }     
@@ -683,26 +686,26 @@ function feedhandle($feed, $input_arr, &$output_arr)
     {
         if (-1 == $ret)
         {
-            log::write(__LINE__.":feed operator error:".print_r($feed, true), "error");
-            data_log($feed);
+            log::write("[".__LINE__."]".__FUNCTION__."eed operator error:".print_r($feed, true), "error");
+            //data_log_pre($feed, ;
             return -1;
         }
         else if(-2 == $ret)
         {
-            log::write("feed operator http request get data is null or feed data is invalid error:".print_r($feed, true), "warn");
-            data_log_pre($feed,"get_null");
+            log::write("[".__LINE__."]".__FUNCTION__."eed operator http request get data is null or feed data is invalid error:".print_r($feed, true), "warn");
+            //data_log_pre($feed,"get_null");
             return -2;
         }
         else
         {
-            log::write("feed operator return unvalid value[{$ret}]".print_r($feed, true), "error");
-            data_log($feed);
+            log::write("[".__LINE__."]".__FUNCTION__."eed operator return unvalid value[{$ret}]".print_r($feed, true), "error");
+            //data_log_pre($feed, ;
             return -1;
         }
     }
     
     $output_arr = array(); 
-    if (!array_key_exists($feed["cmd_id"], $g_sys_conf["feed"]["ispassive"]))    //需要生成主动feed流
+    if (!array_key_exists($feed["cmd_id"], $g_sys_conf["feed"]["ispassive"]))    //不需要生成主动feed流
     {
         if (array_key_exists($feed["cmd_id"], $g_sys_conf["feed"]["user_defined_id"]))
         {
@@ -712,13 +715,13 @@ function feedhandle($feed, $input_arr, &$output_arr)
                 if ($ret == 1)
                 {
                     log::write("operate_feed_to_db update user defined id duplicate error:".print_r($feed, true), "warn");
-                    data_log_pre($feed,"user_defined_id_duplicate");
+                    //data_log_pre($feed,"user_defined_id_duplicate");
                     return -2;
                 } 
                 else if ($ret != 0)
                 {
-                    log::write(__FUNCTION__."[".__LINE__."]"."update completefeed to storage_server fail", "error");
-                    //data_log($feed);
+                    log::write(__FUNCTION__."".__LINE__."]"."update completefeed to storage_server fail", "error");
+                    ////data_log($feed);
                     return -1;
                 }
                 array_push($output_arr, array(
@@ -732,13 +735,14 @@ function feedhandle($feed, $input_arr, &$output_arr)
                 $ret = operate_feed_to_db($storage_server_socket, $comfeed, $completefeed); 
                 if ($ret == 1)
                 {
-                    data_log_pre($feed,"user_defined_id_duplicate");
+                    log::write("operate_feed_to_db insert user defined id duplicate error:".print_r($feed, true), "warn");
+                    //data_log_pre($feed,"user_defined_id_duplicate");
                     return -2;
                 }
                 else if ($ret != 0)
                 {
-                    log::write(__FUNCTION__."[".__LINE__."]"."insert completefeed to storage_server fail", "error");
-                    data_log($feed);
+                    log::write(__FUNCTION__."".__LINE__."]"."insert completefeed to storage_server fail", "error");
+                    //data_log($feed);
                     return -1;
                 }
                 array_push($output_arr,array(
@@ -762,8 +766,8 @@ function feedhandle($feed, $input_arr, &$output_arr)
                 }
                 if (0 != $ret)
                 {
-                    log::write(__FUNCTION__."[".__LINE__."]"."update completefeed to storage_server fail", "error");
-                    data_log($feed);
+                    log::write(__FUNCTION__."".__LINE__."]"."update completefeed to storage_server fail", "error");
+                    //data_log($feed);
                     return -1;
                 } 
                 array_push($output_arr,array(
@@ -784,8 +788,8 @@ function feedhandle($feed, $input_arr, &$output_arr)
                 }
                 if ($ret != 0)
                 {
-                    log::write(__FUNCTION__."[".__LINE__."]"."insert completefeed to storage_server fail", "error");
-                    data_log($feed);
+                    log::write(__FUNCTION__."".__LINE__."]"."insert completefeed to storage_server fail", "error");
+                    //data_log($feed);
                     return -1;
                 }
                 array_push($output_arr,array(
@@ -801,7 +805,9 @@ function feedhandle($feed, $input_arr, &$output_arr)
             log::write(__FUNCTION__."[".__LINE__."]"."update feed mimiid to redis_server fail".print_r($feed, true), "error");
             return -1;
         }
-    } 
+  
+    }
+ 
     if (isset($passive_feed))
     {
         foreach($passive_feed as $val)
@@ -817,7 +823,7 @@ function feedhandle($feed, $input_arr, &$output_arr)
             }
             if ($ret != 0)
             {
-                log::write(__FUNCTION__."[".__LINE__."]"."update to storage_server fail" . print_r($val, true), "error");
+                log::write("[".__LINE__."]".__FUNCTION__."pdate to storage_server fail" . print_r($val, true), "error");
                 return -1;
             }
             $output_arr[] = array(
@@ -857,9 +863,9 @@ function http_post($arr_para,$server_url)
     $ret = file_get_contents($query_url);
     if ($ret == false)
     {
-       log::write($query_url, "error"); 
+       log::write("[".__LINE__."]".__FUNCTION__.$query_url, "error"); 
     }
-    DEBUG && log::write("url:".$query_url."content:".$ret,"debug");
+    //DEBUG && log::write("[".__LINE__."]".__FUNCTION__."rl:".$query_url."content:".$ret,"debug");
     return $ret;
 }
 
@@ -879,75 +885,6 @@ function is_valid(&$result_arr)
     return false;
 }
 
-function news_article($feed, &$comfeed, &$completefeed, &$passive_feed)
-{ 
-    $completefeed["user_id"] = $feed["user_id"];
-    
-    $completefeed["cmd_id"] = $feed["cmd_id"];
-    $completefeed["timestamp"] = $feed["timestamp"];
-   
-    $src_data = unpack("Larticle_id", $feed["data"]);
-    $feed["data"] = substr($feed["data"], 4);
-    //3. 解析首张图片的长度并根据长度获取url
-    $parse = unpack("Clen", $feed["data"]);
-    $src_data["pic"] = substr($feed["data"], 1, $parse["len"]);
-    $feed["data"] = substr($feed["data"], 1 + $parse["len"]);
-    $rv = unpack("Ltag_cnt", $feed["data"]);
-    $feed["data"] = substr($feed["data"], 4);
-    $tag = array();
-    for ($i = 0; $i < $rv['tag_cnt']; $i++) {
-        $cur = unpack('Ltag', substr($feed["data"], 4 * $i));
-        $tag[] = $cur['tag'];
-    }
-    $src_data["tags"] = $tag;
-    
-    $completefeed["magic1"] = rand();
-    $completefeed["magic2"] = 0;
-    $completefeed["data"] = json_encode($src_data);
-
-    //将帖子添加到指定归类的集合中
-    global $g_tag_server_socket;
-    if ($g_tag_server_socket == false) {
-        if (init_connect_and_nonblock(TAG_CACHE_IP, TAG_CACHE_PORT, $g_tag_server_socket))
-       {   
-           log::write("init_connect tag_server fail reason: connect to relation_server", "error");
-            return -1;
-       }
-        log::write("init_connect tag_server fail reason: connect to relation_server", "error");
-    }
-    $new_feedid = base64_encode(pack("LSLLLL", $feed['user_id'], $feed["cmd_id"], $feed["app_id"], $feed["timestamp"], $completefeed["magic1"], $completefeed["magic2"]));
-
-    $relation_rqst = pack("LLsLLLLL", 18 + 12 + strlen($new_feedid)+strlen($feed["data"]), 0, 0xA103, 0, $src_data['author_id'],  $feed["timestamp"], $rv['tag_cnt'], strlen($new_feedid)).$new_feedid.$feed["data"];
-    /*
-       $relation_rqst = pack("LLsLLLLL", 18 + 12 + strlen($new_feedid)+strlen($feed["data"]), 0, 0xA103, 0, $src_data['author_id'],  $feed["timestamp"], $rv['tag_cnt'], strlen($new_feedid)).$new_feedid;
-    for ($i = 0; $i < $rv['tag_cnt']; $i++) {
-        $relation_rqst = $relation_rqst.pack('L', $tag[$i]['tag']);
-    }
-    */
-    
-    if (send_data_and_nonblock($g_tag_server_socket, $relation_rqst, TIMEOUT)) {
-        log::write(__LINE__.'get_fans_id: relation_client->send_rqst', 'error');
-        return -1;
-    }
-
-    $relation_resp = "";
-    if (recv_data_and_nonblock($g_tag_server_socket, 18, $relation_resp, TIMEOUT))
-    {
-        log::write(__LINE__."recv data to tag cache server fail", "error");
-        return -1;
-    }
-    $rv = unpack('Llen/Lseq/scmd_id/Lcode/Lmimi', $relation_resp);
-    if ($rv['code'] != 0) {
-        log::write(__LINE__.'tag cache server interal fail', 'error');
-        return -1;
-    }
-    
-    return 0;
-    if(news_article_add_to_friend($new_feedid, $feed["user_id"], $feed["timestamp"]))
-        return -1;
-
-    return 0;
-}
 function get_friend_id(&$arr_uid, $mimi) {
     global $g_redis_server_socket;
     if ($g_redis_server_socket == false) {
@@ -974,17 +911,163 @@ function get_friend_id(&$arr_uid, $mimi) {
         return -1;
     }
     
-    DEBUG && log::write("[".__LINE__."]: friend server recv len:".strlen($resp_head), "error");
+//    DEBUG && log::write("[".__LINE__."]: friend server recv len:".strlen($resp_head), "error");
     $resp_body = substr($resp_head, 18);
     $rv = unpack("Lunits", $resp_body);
     
-    DEBUG && log::write("[".__LINE__."]: friend server cnt:".$rv['units'], "error");
+//    DEBUG && log::write("[".__LINE__."]: friend server cnt:".$rv['units'], "error");
     $id_list = substr($resp_body, 4);
     for ($i = 0; $i < $rv['units']; ++$i) {
         $fan = unpack('Lid/Ltime', $id_list);
         array_push($arr_uid, $fan['id']);
         $id_list = substr($id_list, 8);
     }
+    return 0;
+}
+
+function __init_completefeed_magic(&$completefeed) {
+    $completefeed["magic1"] = rand();
+    $completefeed["magic2"] = 0;
+}
+function __init_completefeed_common($feed, &$completefeed) {
+    $completefeed["user_id"] = $feed["user_id"];
+    $completefeed["cmd_id"] = $feed["cmd_id"];
+    $completefeed["timestamp"] = $feed["timestamp"];
+}
+function __init_completefeed($feed, &$completefeed) {
+    __init_completefeed_common($feed, $completefeed);
+    __init_completefeed_magic($completefeed);
+}
+
+function __parse_article_info(&$feed, &$src_data) {
+    $src_data = unpack("Larticle_id", $feed["data"]);
+    $feed["data"] = substr($feed["data"], 4);
+    //解析首张图片的长度并根据长度获取url
+    $parse = unpack("Clen", $feed["data"]);
+    $src_data["pic"] = substr($feed["data"], 1, $parse["len"]);
+    $feed["data"] = substr($feed["data"], 1 + $parse["len"]);
+    $rv = unpack("Ltag_cnt", $feed["data"]);
+    $feed["data"] = substr($feed["data"], 4);
+    $tag = array();
+    for ($i = 0; $i < $rv['tag_cnt']; $i++) {
+        $cur = unpack('Ltag', substr($feed["data"], 4 * $i));
+        $tag[] = $cur['tag'];
+    }
+    $src_data["tags"] = $tag;
+    //用于向tagList插入数据时的数据打包参数
+    $feed['tag_cnt'] = $rv['tag_cnt'];
+    $feed['tag_data'] = substr($feed['data'], 0, 4 * $rv['tag_cnt']);
+    $feed["data"] = substr($feed['data'], 4 * $rv['tag_cnt']);
+
+    $pic_cnt = unpack('Cpic_cnt/Ctext_len', substr($feed['data'], 0, 2));
+    $src_data['pic_cnt'] = $pic_cnt['pic_cnt'];
+    $src_data['text'] = substr($feed['data'], 2, $pic_cnt['text_len']);
+    //用于解析用户信息部分
+    $feed["data"] = substr($feed['data'], 2 + $pic_cnt['text_len']);
+//    DEBUG && log::write("XXXX [".__LINE__."] verify:".print_r($src_data, true),"debug");
+}
+function __is_bite_set($check, $pos) {
+    return $check & (1 << $pos);
+//    if ($check & (1 << $pos))
+//        return TRUE;
+//    return FALSE;
+}
+function __parse_user_role($role, &$src_data) {
+    //$src_data['verify'] = array();
+    if (__is_bite_set($role, 0)) {
+        $src['media'] = 1;
+    } else 
+        $src['media'] = 0;
+    
+    if (__is_bite_set($role, 1)) {
+        $src['official'] = 1;
+    } else 
+        $src['official'] = 0;
+    
+    if (__is_bite_set($role, 2)) {
+        $src['person_identity'] = 1;
+    } else 
+        $src['person_identity'] = 0;
+    
+    if (__is_bite_set($role, 3)) {
+        $src['hobby'] = 1;
+    } else 
+        $src['hobby'] = 0;
+        
+    $src_data["verify"] = $src;
+//    XDEBUG && log::write("XXXX [".__LINE__."] verify:".print_r($src_data, true),"debug");
+}
+function __parse_user_info($data, &$src_data) {
+    if (strlen($data) < 3) {
+        DEBUG && log::write("[".__LINE__."] Old article protocol not support".strlen($data)."> ","warn");
+        return -1;
+    }
+    $rv = unpack('Cicon_len', $data);
+    if ($rv['icon_len'] > 0)
+        $src_data['icon'] = substr($data, 1, $rv['icon_len']);
+    $data = substr($data, 1 + $rv['icon_len']);
+
+    $rv = unpack('Cnickname_len', $data);
+    if ($rv['nickname_len'] > 0)
+        $src_data['nickname'] = substr($data, 1, $rv['nickname_len']);
+    $data = substr($data, 1 + $rv['nickname_len']);
+
+    $rv = unpack('Crole', $data);
+//    XDEBUG && log::write("XXXX [".__LINE__."] user role:<".$rv['role']."> ","debug");
+//    XDEBUG && log::write("XXXX [".__LINE__."] before verify:".print_r($src_data, true),"debug");
+    __parse_user_role($rv['role'], $src_data);
+}
+function __fill_article_to_tag_list(&$feed, $completefeed) {
+    //将帖子添加到指定归类的集合中
+    global $g_tag_server_socket;
+    if ($g_tag_server_socket == false) {
+        if (init_connect_and_nonblock(TAG_CACHE_IP, TAG_CACHE_PORT, $g_tag_server_socket))
+       {   
+           log::write("init_connect tag_server fail reason: connect to relation_server", "error");
+            return -1;
+       }
+        log::write("init_connect tag_server fail reason: connect to relation_server", "error");
+    }
+    $feed['new_feedid'] = base64_encode(pack("LSLLLL", $feed['user_id'], $feed["cmd_id"], $feed["app_id"], $feed["timestamp"], $completefeed["magic1"], $completefeed["magic2"]));
+//    DEBUG && log::write("XXXX [".__LINE__."] constructor feedid:<".$feed['new_feedid']."> ","debug");
+
+    $relation_rqst = pack("LLsLLLLL", 18 + 12 + strlen($feed['new_feedid'])+strlen($feed["tag_data"]), 0, 0xA103, 0, $feed['user_id'],  $feed["timestamp"], $feed['tag_cnt'], strlen($feed['new_feedid'])).$feed['new_feedid'].$feed["tag_data"];
+    
+    if (send_data_and_nonblock($g_tag_server_socket, $relation_rqst, TIMEOUT)) {
+        log::write(__LINE__.'get_fans_id: relation_client->send_rqst', 'error');
+        return -1;
+    }
+
+    $relation_resp = "";
+    if (recv_data_and_nonblock($g_tag_server_socket, 18, $relation_resp, TIMEOUT))
+    {
+        log::write(__LINE__."recv data to tag cache server fail", "error");
+        return -1;
+    }
+    $rv = unpack('Llen/Lseq/scmd_id/Lcode/Lmimi', $relation_resp);
+    if ($rv['code'] != 0) {
+        log::write(__LINE__.'tag cache server interal fail', 'error');
+        return -1;
+    }
+
+    return 0;
+}
+
+function news_article($feed, &$comfeed, &$completefeed, &$passive_feed)
+{ 
+    __init_completefeed($feed, $completefeed);
+    __parse_article_info($feed, $src_data);
+    __parse_user_info($feed['data'], $src_data);
+    $completefeed["data"] = json_encode($src_data);
+    $code =  __fill_article_to_tag_list($feed, $completefeed);
+
+//    DEBUG && log::write("XXXX [".__LINE__."] constructor feedid:".print_r($completefeed, true),"debug");
+    return $code;
+
+    //推送模式模块
+    if(news_article_add_to_friend($feed['new_feedid'], $feed["user_id"], $feed["timestamp"]))
+        return -1;
+
     return 0;
 }
 
@@ -1016,7 +1099,7 @@ function news_article_add_to_friend($feedid, $mimi, $time) {
         return -1;
     }
     $rv = unpack('Llen/Lseq/scmd_id/Lcode/Lmimi', $feed_cache_resp);
-    DEBUG && log::write('['.__LINE__.']: get response from cache server'.print_r($rv, true), "error");
+//    DEBUG && log::write('['.__LINE__.']: get response from cache server'.print_r($rv, true), "error");
     if ($rv['code'] != 0) {
         log::write(__LINE__.'tag cache server interal fail :'.$rv['code'], 'error');
         return -1;
@@ -1069,26 +1152,26 @@ function news_liker($feed, &$comfeed, &$completefeed, &$passive_feed)
         log::write("Do not support liker myself".print_r($feed, true), "warn");
         return 0;
     }
-    $completefeed["user_id"] = $feed["user_id"];
-    
-    $completefeed["cmd_id"] = $feed["cmd_id"];
-    $completefeed["timestamp"] = $feed["timestamp"];
-    
+   
+    global $g_storage_server_socket;
+    if (check_exist_passive_feed_by_mimi($g_storage_server_socket, $src_data['author_id'], $feed['user_id'], $feed['cmd_id'], $feed['app_id'], $src_data['article_id']) == TRUE) {
+        log::write('<'.$feed['user_id'].'> Reliker article<'.$src_data['article_id'].'> again', "warn");
+        return 0;
+    }
+    log::write('<'.$feed['user_id'].'> Newliker article<'.$src_data['article_id'].'> again', "warn");
     $src_data['liked_id'] = $feed["user_id"];
     $json_src_data = json_encode($src_data);
     // 通知博主有人点赞了我的帖子
     $passive_feed[] = produce_passive_feed($feed, $feed['user_id'], $src_data['author_id'], $json_src_data);
     
+    __init_completefeed_common($feed, $completefeed);
     $completefeed['data'] = json_encode($src_data);
     update_pfeeds_statistic($passive_feed);
     return 0;
 }
 function news_comment($feed, &$comfeed, &$completefeed, &$passive_feed)
 {
-    $completefeed["user_id"] = $feed["user_id"];
-    
-    $completefeed["cmd_id"] = $feed["cmd_id"];
-    $completefeed["timestamp"] = $feed["timestamp"];
+    __init_completefeed_common($feed, $completefeed);
     
     $src_data = unpack("Ltype/Larticle_id/Lauthor_id/Lcomment_mid/Lcomment_id", $feed["data"]);
     $src["reply_id"] = $feed["user_id"];
@@ -1134,13 +1217,13 @@ function delete_article_by_tag($feed, $tags, $storage_server_socket) {
 
     $protobuf = new \Mifan\dropFeedidFromTag();
     $protobuf->setFeedid($feedid);
-    DEBUG && log::write('['.__LINE__.']: feedid r'.$feedid, "error");
+//    DEBUG && log::write('['.__LINE__.']: feedid r'.$feedid, "error");
     foreach ($tags as $tag) {
         $protobuf->appendTag($tag);
-    DEBUG && log::write('['.__LINE__.']: feedid r'.$tag, "error");
+//    DEBUG && log::write('['.__LINE__.']: feedid tag:<'.$tag.'>', "debug");
     }
     $seri_buf = $protobuf->serializeToString();
-    $feed_cache_rqst = pack("LLSLL", 18 + strlen($seri_buf), 0, 0xD103, 0, $mimi).$seri_buf;
+    $feed_cache_rqst = pack("LLSLL", 18 + strlen($seri_buf), 0, 0xD103, 0, $feed['user_id']).$seri_buf;
     if (send_data_and_nonblock($g_tag_server_socket, $feed_cache_rqst, TIMEOUT)) {
         log::write(__LINE__.'get_fans_id: relation_client->send_rqst', 'error');
         return -1;
@@ -1152,7 +1235,7 @@ function delete_article_by_tag($feed, $tags, $storage_server_socket) {
         return -1;
     }
     $rv = unpack('Llen/Lseq/scmd_id/Lcode/Lmimi', $feed_cache_resp);
-    DEBUG && log::write('['.__LINE__.']: get response from cache server'.print_r($rv, true), "error");
+//    DEBUG && log::write('['.__LINE__.']: get response from cache server'.print_r($rv, true), "error");
     if ($rv['code'] != 0) {
         log::write(__LINE__.'tag cache server interal fail :'.$rv['code'], 'error');
         return -1;
@@ -1177,7 +1260,7 @@ function delete_article(&$feed, $rqst, $storage_server_socket) {
 
     $article = unpack('Lid', substr($rqst, 19));
     $feed_list = array();
-    DEBUG && log::write('['.__LINE__.']: article id is : '.$article['id'], "error");
+//    DEBUG && log::write('['.__LINE__.']: article id is : '.$article['id'], "error");
 
     if (false == get_comfeed_time_span($storage_server_socket, 
             $feed['user_id'],
@@ -1198,11 +1281,170 @@ function delete_article(&$feed, $rqst, $storage_server_socket) {
             $feed['magic1'] = $var['magic1'];
             $feed['magic2'] = $var['magic2'];
             $feed['data'] = $var['data'];
-            DEBUG && log::write('['.__LINE__.']: Got feed: '.print_r($feed, true), "error");
+            DEBUG && log::write('['.__LINE__.']: Got feed: '.print_r($feed, true), "debug");
             delete_article_by_tag($feed, $tmp['tags'], $storage_server_socket);
                 
             return 0;
         }
     }
     return -2;
+}
+/*
+function news_article_v1($feed, &$comfeed, &$completefeed, &$passive_feed) {
+    __init_completefeed($feed, $completefeed);
+
+    __parse_article_info($feed, $src_data);
+
+    __parse_user_info($feed['data'], $src_data);
+    $completefeed["data"] = json_encode($src_data);
+
+    DEBUG && log::write("XXXX [".__LINE__."] new article data:".print_r($feed, true),"debug");
+    $code =  __fill_article_to_tag_list($feed, $completefeed);
+
+    return $code;
+
+    //推送模式模块
+    if(news_article_add_to_friend($feed['new_feedid'], $feed["user_id"], $feed["timestamp"]))
+        return -1;
+
+    return 0;
+}
+*/
+
+function __assign_com_feed(&$dst, $feed){
+    //初始化旧数据的feed索引
+    $dst['user_id'] = $feed['user_id'];
+    $dst['cmd_id'] = $feed['cmd_id'];
+    $dst['app_id'] = $feed['app_id'];
+    $dst['timestamp'] = $feed['timestamp'];
+    $dst['magic1'] = $feed['magic1'];
+    $dst['magic2'] = $feed['magic2'];
+}
+            
+//检查tag是否更新，若果更新需要从旧的taglist删除，添加到新的taglist
+function __check_if_need_update_tags($old_tag, $new_tag, $feed) {
+    if ($old_tag === $new_tag) {
+        DEBUG && log::write('['.__LINE__.']: feed tags not change: '.print_r($new_tag, true), "warn");
+        return TRUE;
+    }
+    $need_delete = array();
+    $need_update = array();
+    foreach ($old_tag as $tmp) {
+        if (!in_array($tmp, $new_tag)) 
+            $need_delete[] = $tmp;
+    }
+
+    $tag_cnt = 0;
+    foreach ($new_tag as $tmp) {
+        if (!in_array($tmp, $old_tag))  {
+            $tag_data = $tag_data.pack('L', $tmp);
+            $tag_cnt++;
+        }
+    }
+
+    if (!empty($need_delete)) {
+//        DEBUG && log::write('['.__LINE__.']: feed tags need delete: '.print_r($need_delete, true), "debug");
+        delete_article_by_tag($feed, $need_delete, $storage_server_socket);
+    }
+
+    if ($tag_cnt > 0) {
+//        DEBUG && log::write('['.__LINE__.']: feed tags need update: '.strlen($tag_data), "debug");
+        $feed['tag_data'] = $tag_data;
+        $feed['tag_cnt'] = $tag_cnt;
+        __fill_article_to_tag_list($feed, $feed);
+    }
+}
+
+function modify_article($feed, &$comfeed, &$completefeed, &$passive_feed) {
+    if (strlen($feed['data']) < 9) {
+        log::write('['.__LINE__.'] Can not parse parameters,data len < 9.<'.strlen($feed['data']).'>', 'error');
+        return -2; 
+    }
+
+    //修改feed的协议号为发帖协议号，以便用于帖子查询和更新
+    $feed['cmd_id'] = NEWS_ARTICLE;
+
+    __parse_article_info($feed, $src_data);
+
+    global $g_storage_server_socket;
+    $feed_list = array();
+    if (false == get_comfeed_time_span($g_storage_server_socket, 
+            $feed['user_id'],
+            $feed['cmd_id'],
+            $feed['timestamp'],
+            $feed['timestamp'],
+            $feed['app_id'],
+            $feed_list)) {
+        log::write('['.__LINE__.'] Can not find matched feed :'.print_r($feed, true), 'error');
+        return -1;
+    }
+    foreach ($feed_list as $var) {
+        $tmp = json_decode($var['data'], true);
+//    DEBUG && log::write('['.__LINE__.']: feed data is : '.print_r($var, true), "debug");
+        if ($src_data['article_id'] == $tmp['article_id']) {
+            $feed['magic1'] = $var['magic1'];
+            $feed['magic2'] = $var['magic2'];
+//            DEBUG && log::write('['.__LINE__.']: Got feed: '.print_r($feed, true), "debug");
+
+            __assign_com_feed($comfeed, $feed);
+            __assign_com_feed($completefeed, $feed);
+
+            $src_data['icon'] = $tmp['icon'];
+            $src_data['nickname'] = $tmp['nickname'];
+            $src_data['verify'] = $tmp['verify'];
+            $completefeed['data'] = json_encode($src_data);
+
+//            DEBUG && log::write('['.__LINE__.']: Got comfeed: '.print_r($comfeed, true), "debug");
+//            DEBUG && log::write('['.__LINE__.']: Got completefeed: '.print_r($completefeed, true), "debug");
+            //检查tag是否更新，若果更新需要从旧的taglist删除，添加到新的taglist
+            __check_if_need_update_tags($tmp['tags'], $src_data['tags'], $feed);
+            return 0;
+        }
+    }
+    
+    log::write('['.__LINE__.'] Can not find matched article<'.$src_data['article_id'].'>', 'error');
+    return -2;
+}
+
+function modify_user_info($feed, &$comfeed, &$completefeed, &$passive_feed) {
+    __parse_user_info($feed['data'], $src_data);
+
+//    DEBUG && log::write('['.__LINE__.']: feed: '.print_r($feed, true), "debug");
+//    DEBUG && log::write('['.__LINE__.']: src: '.print_r($src_data, true), "debug");
+    global $g_storage_server_socket;
+
+    //修改feed的协议号为发帖协议号，以便用于帖子查询和更新
+    $feed['cmd_id'] = NEWS_ARTICLE;
+    $feed_list = array();
+    if (false == get_comfeed_time_span($g_storage_server_socket, 
+            $feed['user_id'],
+            $feed['cmd_id'],
+            0,
+            $feed['timestamp'],
+            $feed['app_id'],
+            $feed_list)) {
+        log::write('['.__LINE__.'] Can not find matched feed :'.print_r($feed, true), 'error');
+        return -1;
+    }
+//    DEBUG && log::write('['.__LINE__.']: feed : '.print_r($feed_list, true), "debug");
+    foreach ($feed_list as &$var) {
+        $tmp = json_decode($var['data'], true);
+        if (array_key_exists('icon', $src_data) && $src_data['icon'] != $tmp['icon'])
+            $tmp['icon'] = $src_data['icon'];
+        if (array_key_exists('nickname', $src_data) && $src_data['nickname'] != $tmp['nickname'])
+            $tmp['nickname'] = $src_data['nickname'];
+        if (array_key_exists('verify', $src_data) && $src_data['verify'] != $tmp['verify'])
+            $tmp['verify'] = $src_data['verify'];
+//    DEBUG && log::write('['.__LINE__.']: feed modify data is : '.print_r($tmp, true), "debug");
+        $var['data'] = json_encode($tmp);
+    }
+//    DEBUG && log::write('['.__LINE__.']: feed modify feed is : '.print_r($feed_list, true), "debug");
+    foreach ($feed_list as $var) {
+        $ret = operate_feed_to_db($g_storage_server_socket, $var, $var);
+        if ($ret == 1) {
+            log::write(__FUNCTION__."[".__LINE__."]"."operate_feed_to_db update id duplicate dont happen", "warn");
+        } else if ($ret != 0) {
+            log::write(__FUNCTION__."[".__LINE__."]"."update to storage_server fail", "error");
+        }
+    }
 }

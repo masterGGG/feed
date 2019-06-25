@@ -12,7 +12,7 @@ function send_data($socket, $pack)
             }
             else
             {
-                log::write("socket_write fail: reason: ".socket_strerror(socket_last_error($socket)). "\n", "error");
+                log::write("[".__FILE__."]:[".__LINE__."]"."socket_write fail: reason: ".socket_strerror(socket_last_error($socket)). "\n", "error");
                 return -1;
             }
         }
@@ -36,7 +36,7 @@ function send_data_and_nonblock($socket, $pack, $timeout)
             }
             else
             {
-                log::write("socket_write fail: reason: ".socket_strerror(socket_last_error($socket)), "warn");
+                log::write("[".__FILE__."]:[".__LINE__."]"."socket_write fail: reason: ".socket_strerror(socket_last_error($socket)), "warn");
 		socket_close($socket);
                 return -1;
             }
@@ -49,7 +49,7 @@ function send_data_and_nonblock($socket, $pack, $timeout)
 
         if (time() - $s_time > $timeout)
         {
-            log::write("timeout send_data_nonblock","warn");            
+            log::write("[".__FILE__."]:[".__LINE__."]"."timeout send_data_nonblock","warn");            
             socket_close($socket);
             return -1;
         }
@@ -73,14 +73,14 @@ function recv_data_and_nonblock($socket, $pack_size, &$pack, $timeout)
             }
             else
             {
-                log::write("socket_read fail:reason: ".socket_strerror(socket_last_error($socket)),"warn");
+                log::write("[".__FILE__."]:[".__LINE__."]"."socket_read fail:reason: ".socket_strerror(socket_last_error($socket)),"warn");
                 socket_close($socket);
                 return -1;
             }
         } 
         else if ($recv_data == "")
         {
-            log::write("socket_read zero bytes:reason:".socket_strerror(socket_last_error($socket)), "warn");
+            log::write("[".__FILE__."]:[".__LINE__."]"."socket_read zero bytes:reason:".socket_strerror(socket_last_error($socket)), "warn");
             socket_close($socket);
             return -1;
         }
@@ -92,7 +92,7 @@ function recv_data_and_nonblock($socket, $pack_size, &$pack, $timeout)
 
         if (time() - $s_time > $timeout)
         {
-            log::write("timeout send_data_nonblock","warn");            
+            log::write("[".__FILE__."]:[".__LINE__."]"."timeout send_data_nonblock","warn");            
             socket_close($socket);
             return -1;
         }
@@ -114,13 +114,13 @@ function recv_data($socket, $pack_size, &$pack)
             }
             else
             {
-                log::write("socket_read fail:reason: ".socket_strerror(socket_last_error($socket)),"error");
+                log::write("[".__FILE__."]:[".__LINE__."]"."socket_read fail:reason: ".socket_strerror(socket_last_error($socket)),"error");
                 return -1;
             }
         } 
         if ($recv_data == "")
         {
-            log::write("socket_read zero bytes:reason:".socket_strerror(socket_last_error($socket)), "error");
+            log::write("[".__FILE__."]:[".__LINE__."]"."socket_read zero bytes:reason:".socket_strerror(socket_last_error($socket)), "error");
             return -1;
         }
         $pack .= $recv_data;
@@ -133,13 +133,13 @@ function init_net($ip, $port, &$socket, &$pack)
     $socket = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
     if ($socket === false)
     {
-        log::write("socket_create fail: reason: ".socket_strerror(socket_last_error()),"error"); 
+        log::write("[".__FILE__."]:[".__LINE__."]"."socket_create fail: reason: ".socket_strerror(socket_last_error()),"error"); 
         return -1;
     }
     $result = socket_connect($socket, $ip, $port);
     if ($result === false)
     {
-        log::write("socket_connect() fail:reason: ".socket_strerror(socket_last_error($socket)),"error");
+        log::write("[".__FILE__."]:[".__LINE__."]"."socket_connect() fail:reason: ".socket_strerror(socket_last_error($socket)),"error");
         return -1;
     } 
 
@@ -148,14 +148,14 @@ function init_net($ip, $port, &$socket, &$pack)
 
     if (send_data($socket, $pack))
     {
-        log::write("socket_send fail in init_net: ".socket_strerror(socket_last_error($socket)),"error");
+        log::write("[".__FILE__."]:[".__LINE__."]"."socket_send fail in init_net: ".socket_strerror(socket_last_error($socket)),"error");
         return -1;
     }
 
     $pack = "";
     if (recv_data($socket, 4, $pack))
     {
-        log::write("socket_recv fail in init_net: ".socket_strerror(socket_last_error($socket)),"error");
+        log::write("[".__FILE__."]:[".__LINE__."]"."socket_recv fail in init_net: ".socket_strerror(socket_last_error($socket)),"error");
         return -1;
     }
 
@@ -167,14 +167,14 @@ function init_connect_and_nonblock($ip, $port, &$socket)
     $socket = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
     if ($socket === false)
     {
-        log::write("socket_create fail: reason: ".socket_strerror(socket_last_error()),"warn"); 
+        log::write("[".__FILE__."]:[".__LINE__."]"."socket_create fail: reason: ".socket_strerror(socket_last_error()),"warn"); 
         socket_close($socket);
         return -1;
     }
     $result = socket_connect($socket, $ip, $port);
     if ($result === false)
     {
-        log::write("socket_connect() fail:reason: ".socket_strerror(socket_last_error($socket)),"warn");
+        log::write("[".__FILE__."]:[".__LINE__."]"."socket_connect() fail:reason: ".socket_strerror(socket_last_error($socket)),"warn");
         socket_close($socket);
         return -1;
     } 
@@ -187,13 +187,13 @@ function init_connect($ip, $port, &$socket)
     $socket = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
     if ($socket === false)
     {
-        log::write("socket_create fail: reason: ".socket_strerror(socket_last_error()),"error"); 
+        log::write("[".__FILE__."]:[".__LINE__."]"."socket_create fail: reason: ".socket_strerror(socket_last_error()),"error"); 
         return -1;
     }
     $result = socket_connect($socket, $ip, $port);
     if ($result === false)
     {
-        log::write("socket_connect() fail:reason: ".socket_strerror(socket_last_error($socket)),"error");
+        log::write("[".__FILE__."]:[".__LINE__."]"."socket_connect() fail:reason: ".socket_strerror(socket_last_error($socket)),"error");
         return -1;
     } 
     return 0;
@@ -203,7 +203,7 @@ function get_feed_according_time($storage_server_socket, $mimi_id, $cmd_id, $tim
 {
     if (!isset($mimi_id,$cmd_id,$timestamp,$app_id)) 
     {
-        log::write(__FUNCTION__." para unset mimi_id:{$mimi_id} cmd_id:{$cmd_id} timestamp:{$timestamp} app_id:{$app_id}","error");
+        log::write("[".__FILE__."]:[".__LINE__."]".__FUNCTION__." para unset mimi_id:{$mimi_id} cmd_id:{$cmd_id} timestamp:{$timestamp} app_id:{$app_id}","error");
         return false;
     }
     
@@ -223,25 +223,25 @@ function get_feed_according_time($storage_server_socket, $mimi_id, $cmd_id, $tim
     $para = array_merge($request_pack_format, $request_pack_content);
     $request_pack = call_user_func_array('pack',array_values($para));
 
-    //DEBUG && log::write(print_r($request_pack_content, true), "debug");
+    DEBUG && log::write("[".__FILE__."]:[".__LINE__."]".print_r($request_pack_content, true), "debug");
 
     if (send_data_and_nonblock($storage_server_socket, $request_pack, TIMEOUT))
     {
-        log::write("send data to storage_server fail", "error");
+        log::write("[".__FILE__."]:[".__LINE__."]"."send data to storage_server fail", "error");
         //socket_close($storage_server_socket);
         return false;
     }
     $response_pack = "";
     if (recv_data_and_nonblock($storage_server_socket, 4, $response_pack, TIMEOUT))
     {
-        log::write("recv data to storage_server fail", "error");
+        log::write("[".__FILE__."]:[".__LINE__."]"."recv data to storage_server fail", "error");
         //socket_close($storage_server_socket);
         return false;
     }
     $temp = unpack("Llen", $response_pack);
     if (recv_data_and_nonblock($storage_server_socket, $temp['len'], $response_pack, TIMEOUT))
     {
-        log::write("recv data to storage_server fail", "error");
+        log::write("[".__FILE__."]:[".__LINE__."]"."recv data to storage_server fail", "error");
         //socket_close($storage_server_socket);
         return false;
     }
@@ -249,7 +249,7 @@ function get_feed_according_time($storage_server_socket, $mimi_id, $cmd_id, $tim
     $response_pack_content = unpack("Llen/Sret/Sunits", $response_pack); 
     if ($response_pack_content['ret'] != 0)
     {
-            log::write("get_feed_according_time function request storage error ret:{$response_pack_content['ret']}","error");
+            log::write("[".__FILE__."]:[".__LINE__."]"."get_feed_according_time function request storage error ret:{$response_pack_content['ret']}","error");
             return false;     
     }
     
@@ -283,7 +283,7 @@ function get_comfeed($storage_server_socket, $mimi_id, $cmd_id, $timestamp, $app
 {
     if (!isset($mimi_id,$cmd_id,$timestamp,$app_id)) 
     {
-        log::write("get_comfeed para unset mimi_id:{$mimi_id} cmd_id:{$cmd_id} timestamp:{$timestamp} app_id:{$app_id}","error");
+        log::write("[".__FILE__."]:[".__LINE__."]"."get_comfeed para unset mimi_id:{$mimi_id} cmd_id:{$cmd_id} timestamp:{$timestamp} app_id:{$app_id}","error");
         return false;
     }
     
@@ -302,25 +302,25 @@ function get_comfeed($storage_server_socket, $mimi_id, $cmd_id, $timestamp, $app
     $para = array_merge($request_pack_format, $request_pack_content);
     $request_pack = call_user_func_array('pack',array_values($para));
 
-    //DEBUG && log::write(print_r($request_pack_content, true), "debug");
+    //DEBUG && log::write("[".__FILE__."]:[".__LINE__."]".print_r($request_pack_content, true), "debug");
 
     if (send_data_and_nonblock($storage_server_socket, $request_pack, TIMEOUT))
     {
-        log::write("send data to storage_server fail", "error");
+        log::write("[".__FILE__."]:[".__LINE__."]"."send data to storage_server fail", "error");
         //socket_close($storage_server_socket);
         return false;
     }
     $response_pack = "";
     if (recv_data_and_nonblock($storage_server_socket, 4, $response_pack, TIMEOUT))
     {
-        log::write("recv data to storage_server fail", "error");
+        log::write("[".__FILE__."]:[".__LINE__."]"."recv data to storage_server fail", "error");
         //socket_close($storage_server_socket);
         return false;
     }
     $temp = unpack("Llen", $response_pack);
     if (recv_data_and_nonblock($storage_server_socket, $temp['len'], $response_pack, TIMEOUT))
     {
-        log::write("recv data to storage_server fail", "error");
+        log::write("[".__FILE__."]:[".__LINE__."]"."recv data to storage_server fail", "error");
         //socket_close($storage_server_socket);
         return false;
     }
@@ -328,7 +328,7 @@ function get_comfeed($storage_server_socket, $mimi_id, $cmd_id, $timestamp, $app
     $response_pack_content = unpack("Llen/Sret/Sunits", $response_pack); 
     if ($response_pack_content['ret'] != 0)
     {
-            log::write("get_comfeed function request storage error ret:{$response_pack_content['ret']}","error");
+            log::write("[".__FILE__."]:[".__LINE__."]"."get_comfeed function request storage error ret:{$response_pack_content['ret']}","error");
             return false;     
     }
     
@@ -361,7 +361,7 @@ function get_comfeed_for_news_reply($storage_server_socket, $mimi_id, $cmd_id, $
 {
     if (!isset($mimi_id,$cmd_id,$timestamp,$app_id, $reply_key["target_appid"],$reply_key["target_uid"],$reply_key["target_id"])) 
     {
-        log::write("get_comfeed_for_news_reply para unset mimi_id:{$mimi_id} cmd_id:{$cmd_id} timestamp:{$timestamp} app_id:{$app_id} reply_key[target_appid,target_uid,target_id]".print_r($reply_key,true) ,"error");
+        log::write("[".__FILE__."]:[".__LINE__."]"."get_comfeed_for_news_reply para unset mimi_id:{$mimi_id} cmd_id:{$cmd_id} timestamp:{$timestamp} app_id:{$app_id} reply_key[target_appid,target_uid,target_id]".print_r($reply_key,true) ,"error");
         return false;
     }
 
@@ -380,25 +380,25 @@ function get_comfeed_for_news_reply($storage_server_socket, $mimi_id, $cmd_id, $
     $para = array_merge($request_pack_format, $request_pack_content);
     $request_pack = call_user_func_array('pack',array_values($para));
 
-    //DEBUG && log::write(print_r($request_pack_content, true), "debug");
+    DEBUG && log::write("[".__FILE__."]:[".__LINE__."]".print_r($request_pack_content, true), "debug");
 
     if (send_data_and_nonblock($storage_server_socket, $request_pack, TIMEOUT))
     {
-        log::write("send data to storage_server fail", "error");
+        log::write("[".__FILE__."]:[".__LINE__."]"."send data to storage_server fail", "error");
         //socket_close($storage_server_socket);
         return false;
     }
     $response_pack = "";
     if (recv_data_and_nonblock($storage_server_socket, 4, $response_pack, TIMEOUT))
     {
-        log::write("recv data to storage_server fail", "error");
+        log::write("[".__FILE__."]:[".__LINE__."]"."recv data to storage_server fail", "error");
         //socket_close($storage_server_socket);
         return false;
     }
     $temp = unpack("Llen", $response_pack);
     if (recv_data_and_nonblock($storage_server_socket, $temp['len'], $response_pack, TIMEOUT))
     {
-        log::write("recv data to storage_server fail", "error");
+        log::write("[".__FILE__."]:[".__LINE__."]"."recv data to storage_server fail", "error");
         //socket_close($storage_server_socket);
         return false;
     }
@@ -406,7 +406,7 @@ function get_comfeed_for_news_reply($storage_server_socket, $mimi_id, $cmd_id, $
     $response_pack_content = unpack("Llen/Sret/Sunits", $response_pack); 
     if ($response_pack_content['ret'] != 0)
     {
-        log::write("get_comfeed function request storage error ret:{$response_pack_content['ret']}","error");
+        log::write("[".__FILE__."]:[".__LINE__."]"."get_comfeed function request storage error ret:{$response_pack_content['ret']}","error");
         return false;     
     }
 
@@ -445,7 +445,7 @@ function get_comfeed_time_span($storage_server_socket, $mimi_id, $cmd_id, $start
 {
     if (!isset($mimi_id,$cmd_id,$starttime,$endtime,$app_id)) 
     {
-        log::write("get_comfeed para unset mimi_id:{$mimi_id} cmd_id:{$cmd_id} starttime:{$starttime} endtime:{$endtime} app_id:{$app_id}","error");
+        log::write("[".__FILE__."]:[".__LINE__."]"."get_comfeed para unset mimi_id:{$mimi_id} cmd_id:{$cmd_id} starttime:{$starttime} endtime:{$endtime} app_id:{$app_id}","error");
         return false;
     }
     
@@ -464,25 +464,25 @@ function get_comfeed_time_span($storage_server_socket, $mimi_id, $cmd_id, $start
     $para = array_merge($request_pack_format, $request_pack_content);
     $request_pack = call_user_func_array('pack',array_values($para));
 
-    //DEBUG && log::write(print_r($request_pack_content, true), "debug");
+    DEBUG && log::write("[".__FILE__."]:[".__LINE__."]".print_r($request_pack_content, true), "debug");
 
     if (send_data_and_nonblock($storage_server_socket, $request_pack, TIMEOUT))
     {
-        log::write("send data to storage_server fail", "error");
+        log::write("[".__FILE__."]:[".__LINE__."]"."send data to storage_server fail", "error");
         //socket_close($storage_server_socket);
         return false;
     }
     $response_pack = "";
     if (recv_data_and_nonblock($storage_server_socket, 4, $response_pack, TIMEOUT))
     {
-        log::write("recv data to storage_server fail", "error");
+        log::write("[".__FILE__."]:[".__LINE__."]"."recv data to storage_server fail", "error");
         //socket_close($storage_server_socket);
         return false;
     }
     $temp = unpack("Llen", $response_pack);
     if (recv_data_and_nonblock($storage_server_socket, $temp['len'], $response_pack, TIMEOUT))
     {
-        log::write("recv data to storage_server fail", "error");
+        log::write("[".__FILE__."]:[".__LINE__."]"."recv data to storage_server fail", "error");
         //socket_close($storage_server_socket);
         return false;
     }
@@ -490,7 +490,7 @@ function get_comfeed_time_span($storage_server_socket, $mimi_id, $cmd_id, $start
     $response_pack_content = unpack("Llen/Sret/Sunits", $response_pack); 
     if ($response_pack_content['ret'] != 0)
     {
-            log::write("get_comfeed function request storage error ret:{$response_pack_content['ret']}","error");
+            log::write("[".__FILE__."]:[".__LINE__."]"."get_comfeed function request storage error ret:{$response_pack_content['ret']}","error");
             return false;     
     }
     
@@ -528,7 +528,7 @@ function delete_feed_user_defined($storage_server_socket, $key)
     $magic2 = $key['magic2'];
     if (!isset($mimi_id,$cmd_id,$app_id,$magic1,$magic2)) 
     {
-        log::write("delete_feed para unset mimi_id:{$mimi_id} cmd_id:{$cmd_id} app_id:{$app_id} magic1:{$magic1} magic2:{$magic2}","error");
+        log::write("[".__FILE__."]:[".__LINE__."]"."delete_feed para unset mimi_id:{$mimi_id} cmd_id:{$cmd_id} app_id:{$app_id} magic1:{$magic1} magic2:{$magic2}","error");
         return false;
     }
     
@@ -546,25 +546,25 @@ function delete_feed_user_defined($storage_server_socket, $key)
     $para = array_merge($request_pack_format, $request_pack_content);
     $request_pack = call_user_func_array('pack',array_values($para));
 
-//    DEBUG && log::write(print_r($request_pack_content, true), "debug");
+    DEBUG && log::write("[".__FILE__."]:[".__LINE__."]".print_r($request_pack_content, true), "debug");
 
     if (send_data_and_nonblock($storage_server_socket, $request_pack, TIMEOUT))
     {
-        log::write("send data to storage_server fail", "error");
+        log::write("[".__FILE__."]:[".__LINE__."]"."send data to storage_server fail", "error");
         //socket_close($storage_server_socket);
         return false;
     }
     $response_pack = "";
     if (recv_data_and_nonblock($storage_server_socket, 4, $response_pack, TIMEOUT))
     {
-        log::write("recv data to storage_server fail", "error");
+        log::write("[".__FILE__."]:[".__LINE__."]"."recv data to storage_server fail", "error");
         //socket_close($storage_server_socket);
         return false;
     }
     $temp = unpack("Llen", $response_pack);
     if (recv_data_and_nonblock($storage_server_socket, $temp['len'], $response_pack, TIMEOUT))
     {
-        log::write("recv data to storage_server fail", "error");
+        log::write("[".__FILE__."]:[".__LINE__."]"."recv data to storage_server fail", "error");
         //socket_close($storage_server_socket);
         return false;
     }
@@ -572,7 +572,7 @@ function delete_feed_user_defined($storage_server_socket, $key)
     $response_pack_content = unpack("Llen/Sret/Sunits", $response_pack); 
     if ($response_pack_content['ret'] != 0)
     {
-            log::write("delete_feed function request storage error ret:{$response_pack_content['ret']}","error");
+            log::write("[".__FILE__."]:[".__LINE__."]"."delete_feed function request storage error ret:{$response_pack_content['ret']}","error");
             return false;     
     }
     return true;
@@ -588,7 +588,7 @@ function delete_feed($storage_server_socket, $key)
     $magic2 = $key['magic2'];
     if (!isset($mimi_id,$cmd_id,$app_id,$magic1,$magic2)) 
     {
-        log::write("delete_feed para unset mimi_id:{$mimi_id} cmd_id:{$cmd_id} app_id:{$app_id} magic1:{$magic1} magic2:{$magic2}","error");
+        log::write("[".__FILE__."]:[".__LINE__."]"."delete_feed para unset mimi_id:{$mimi_id} cmd_id:{$cmd_id} app_id:{$app_id} magic1:{$magic1} magic2:{$magic2}","error");
         return false;
     }
     
@@ -607,25 +607,25 @@ function delete_feed($storage_server_socket, $key)
     $para = array_merge($request_pack_format, $request_pack_content);
     $request_pack = call_user_func_array('pack',array_values($para));
 
-//    DEBUG && log::write(print_r($request_pack_content, true), "debug");
+    DEBUG && log::write("[".__FILE__."]:[".__LINE__."]".print_r($request_pack_content, true), "debug");
 
     if (send_data_and_nonblock($storage_server_socket, $request_pack, TIMEOUT))
     {
-        log::write("send data to storage_server fail", "error");
+        log::write("[".__FILE__."]:[".__LINE__."]"."send data to storage_server fail", "error");
         //socket_close($storage_server_socket);
         return false;
     }
     $response_pack = "";
     if (recv_data_and_nonblock($storage_server_socket, 4, $response_pack, TIMEOUT))
     {
-        log::write("recv data to storage_server fail", "error");
+        log::write("[".__FILE__."]:[".__LINE__."]"."recv data to storage_server fail", "error");
         //socket_close($storage_server_socket);
         return false;
     }
     $temp = unpack("Llen", $response_pack);
     if (recv_data_and_nonblock($storage_server_socket, $temp['len'], $response_pack, TIMEOUT))
     {
-        log::write("recv data to storage_server fail", "error");
+        log::write("[".__FILE__."]:[".__LINE__."]"."recv data to storage_server fail", "error");
         //socket_close($storage_server_socket);
         return false;
     }
@@ -633,7 +633,7 @@ function delete_feed($storage_server_socket, $key)
     $response_pack_content = unpack("Llen/Sret/Sunits", $response_pack); 
     if ($response_pack_content['ret'] != 0)
     {
-            log::write("delete_feed function request storage error ret:{$response_pack_content['ret']}","error");
+            log::write("[".__FILE__."]:[".__LINE__."]"."delete_feed function request storage error ret:{$response_pack_content['ret']}","error");
             return false;     
     }
     return true;
@@ -650,7 +650,7 @@ function delete_passive_feed($storage_server_socket, $key)
     $magic2 = $key['magic2'];
     if (!isset($mimi_id,$cmd_id,$app_id,$magic1,$magic2)) 
     {
-        log::write("delete_feed para unset mimi_id:{$mimi_id} cmd_id:{$cmd_id} app_id:{$app_id} magic1:{$magic1} magic2:{$magic2}","error");
+        log::write("[".__FILE__."]:[".__LINE__."]"."delete_feed para unset mimi_id:{$mimi_id} cmd_id:{$cmd_id} app_id:{$app_id} magic1:{$magic1} magic2:{$magic2}","error");
         return false;
     }
     
@@ -672,25 +672,25 @@ function delete_passive_feed($storage_server_socket, $key)
     $para = array_merge($request_pack_format, $request_pack_content);
     $request_pack = call_user_func_array('pack',array_values($para));
 
-//    DEBUG && log::write(print_r($request_pack_content, true), "debug");
+    DEBUG && log::write("[".__FILE__."]:[".__LINE__."]".print_r($request_pack_content, true), "debug");
 
     if (send_data_and_nonblock($storage_server_socket, $request_pack, TIMEOUT))
     {
-        log::write("send data to storage_server fail", "error");
+        log::write("[".__FILE__."]:[".__LINE__."]"."send data to storage_server fail", "error");
         //socket_close($storage_server_socket);
         return false;
     }
     $response_pack = "";
     if (recv_data_and_nonblock($storage_server_socket, 4, $response_pack, TIMEOUT))
     {
-        log::write("recv data to storage_server fail", "error");
+        log::write("[".__FILE__."]:[".__LINE__."]"."recv data to storage_server fail", "error");
         //socket_close($storage_server_socket);
         return false;
     }
     $temp = unpack("Llen", $response_pack);
     if (recv_data_and_nonblock($storage_server_socket, $temp['len'], $response_pack, TIMEOUT))
     {
-        log::write("recv data to storage_server fail", "error");
+        log::write("[".__FILE__."]:[".__LINE__."]"."recv data to storage_server fail", "error");
         //socket_close($storage_server_socket);
         return false;
     }
@@ -698,7 +698,7 @@ function delete_passive_feed($storage_server_socket, $key)
     $response_pack_content = unpack("Llen/Sret/Sunits", $response_pack); 
     if ($response_pack_content['ret'] != 0)
     {
-            log::write("delete_feed function request storage error ret:{$response_pack_content['ret']}","error");
+            log::write("[".__FILE__."]:[".__LINE__."]"."delete_feed function request storage error ret:{$response_pack_content['ret']}","error");
             return false;     
     }
     return true;
@@ -740,25 +740,25 @@ function operate_passive_feed_to_db($storage_server_socket, $key, $feed)
         $para = array_merge($request_pack_format, $request_pack_content);
         $request_pack = call_user_func_array('pack',array_values($para));
 
-//        DEBUG && log::write(print_r($request_pack_content, true), "debug");
+        DEBUG && log::write("[".__FILE__."]:[".__LINE__."]".print_r($request_pack_content, true), "debug");
 
         if (send_data_and_nonblock($storage_server_socket, $request_pack, TIMEOUT))
         {
-            log::write("send data to storage_server fail", "error");
+            log::write("[".__FILE__."]:[".__LINE__."]"."send data to storage_server fail", "error");
             //socket_close($storage_server_socket);
             return -1;
         }
         $response_pack = "";
         if (recv_data_and_nonblock($storage_server_socket, 4, $response_pack, TIMEOUT))
         {
-            log::write("recv data to storage_server fail", "error");
+            log::write("[".__FILE__."]:[".__LINE__."]"."recv data to storage_server fail", "error");
             //socket_close($storage_server_socket);
             return -1;
         }
         $temp = unpack("Llen", $response_pack);
         if (recv_data_and_nonblock($storage_server_socket, $temp['len'], $response_pack, TIMEOUT))
         {
-            log::write("recv data to storage_server fail", "error");
+            log::write("[".__FILE__."]:[".__LINE__."]"."recv data to storage_server fail", "error");
             //socket_close($storage_server_socket);
             return -1;
         }
@@ -772,7 +772,7 @@ function operate_passive_feed_to_db($storage_server_socket, $key, $feed)
 
         if ($response_pack_content['ret'] != 0)
         {
-            log::write("get_comfeed function request storage error ret:{$response_pack_content['ret']}","error");
+            log::write("[".__FILE__."]:[".__LINE__."]"."get_comfeed function request storage error ret:{$response_pack_content['ret']}","error");
             return -1;     
         }
     }
@@ -800,25 +800,25 @@ function operate_passive_feed_to_db($storage_server_socket, $key, $feed)
         $para = array_merge($request_pack_format, $request_pack_content);
         $request_pack = call_user_func_array('pack',array_values($para));
 
-//        DEBUG && log::write(print_r($request_pack_content, true), "debug");
+        //DEBUG && log::write("[".__FILE__."]:[".__LINE__."]".print_r($request_pack_content, true), "debug");
 
         if (send_data_and_nonblock($storage_server_socket, $request_pack, TIMEOUT))
         {
-            log::write("send data to storage_server fail", "error");
+            log::write("[".__FILE__."]:[".__LINE__."]"."send data to storage_server fail", "error");
             //socket_close($storage_server_socket);
             return -1;
         }
         $response_pack = "";
         if (recv_data_and_nonblock($storage_server_socket, 4, $response_pack, TIMEOUT))
         {
-            log::write("recv data to storage_server fail", "error");
+            log::write("[".__FILE__."]:[".__LINE__."]"."recv data to storage_server fail", "error");
             //socket_close($storage_server_socket);
             return -1;
         }
         $temp = unpack("Llen", $response_pack);
         if (recv_data_and_nonblock($storage_server_socket, $temp['len'], $response_pack, TIMEOUT))
         {
-            log::write("recv data to storage_server fail", "error");
+            log::write("[".__FILE__."]:[".__LINE__."]"."recv data to storage_server fail", "error");
             //socket_close($storage_server_socket);
             return -1;
         }
@@ -832,7 +832,7 @@ function operate_passive_feed_to_db($storage_server_socket, $key, $feed)
 
         if ($response_pack_content['ret'] != 0)
         {
-            log::write("get_comfeed function request storage error ret:{$response_pack_content['ret']}","error");
+            log::write("[".__FILE__."]:[".__LINE__."]"."get_comfeed function request storage error ret:{$response_pack_content['ret']}","error");
             return -1;     
         }
 
@@ -845,7 +845,7 @@ function operate_feed_to_db($storage_server_socket, $key, $feed)
 {
     //if (!isset($feed["id"],$feed["img_url"],$feed["user_id"],$feed["nick_name"],$feed["cmd_id"],$feed["timestamp"],$feed["data"])) 
     //{
-    //    log::write("Mysql operate_feed_to_db para unset feed[id,img_url,user_id,nick_name,cmd_id,timestamp,data]:".print_r($feed,true)."","error");
+    //    log::write("[".__FILE__."]:[".__LINE__."]"."Mysql operate_feed_to_db para unset feed[id,img_url,user_id,nick_name,cmd_id,timestamp,data]:".print_r($feed,true)."","error");
     //    return false;
     //}
 
@@ -875,25 +875,25 @@ function operate_feed_to_db($storage_server_socket, $key, $feed)
         $para = array_merge($request_pack_format, $request_pack_content);
         $request_pack = call_user_func_array('pack',array_values($para));
 
-//        DEBUG && log::write(print_r($request_pack_content, true), "debug");
+        //DEBUG && log::write("[".__FILE__."]:[".__LINE__."]".print_r($request_pack_content, true), "debug");
 
         if (send_data_and_nonblock($storage_server_socket, $request_pack, TIMEOUT))
         {
-            log::write("send data to storage_server fail", "error");
+            log::write("[".__FILE__."]:[".__LINE__."]"."send data to storage_server fail", "error");
             //socket_close($storage_server_socket);
             return -1;
         }
         $response_pack = "";
         if (recv_data_and_nonblock($storage_server_socket, 4, $response_pack, TIMEOUT))
         {
-            log::write("recv data to storage_server fail", "error");
+            log::write("[".__FILE__."]:[".__LINE__."]"."recv data to storage_server fail", "error");
             //socket_close($storage_server_socket);
             return -1;
         }
         $temp = unpack("Llen", $response_pack);
         if (recv_data_and_nonblock($storage_server_socket, $temp['len'], $response_pack, TIMEOUT))
         {
-            log::write("recv data to storage_server fail", "error");
+            log::write("[".__FILE__."]:[".__LINE__."]"."recv data to storage_server fail", "error");
             //socket_close($storage_server_socket);
             return -1;
         }
@@ -907,7 +907,7 @@ function operate_feed_to_db($storage_server_socket, $key, $feed)
 
         if ($response_pack_content['ret'] != 0)
         {
-            log::write("get_comfeed function request storage error ret:{$response_pack_content['ret']}","error");
+            log::write("[".__FILE__."]:[".__LINE__."]"."get_comfeed function request storage error ret:{$response_pack_content['ret']}","error");
             return -1;     
         }
     }
@@ -931,25 +931,25 @@ function operate_feed_to_db($storage_server_socket, $key, $feed)
         $para = array_merge($request_pack_format, $request_pack_content);
         $request_pack = call_user_func_array('pack',array_values($para));
 
-//        DEBUG && log::write(print_r($request_pack_content, true), "debug");
+        //DEBUG && log::write("[".__FILE__."]:[".__LINE__."]".print_r($request_pack_content, true), "debug");
 
         if (send_data_and_nonblock($storage_server_socket, $request_pack, TIMEOUT))
         {
-            log::write("send data to storage_server fail", "error");
+            log::write("[".__FILE__."]:[".__LINE__."]"."send data to storage_server fail", "error");
             //socket_close($storage_server_socket);
             return -1;
         }
         $response_pack = "";
         if (recv_data_and_nonblock($storage_server_socket, 4, $response_pack, TIMEOUT))
         {
-            log::write("recv data to storage_server fail", "error");
+            log::write("[".__FILE__."]:[".__LINE__."]"."recv data to storage_server fail", "error");
             //socket_close($storage_server_socket);
             return -1;
         }
         $temp = unpack("Llen", $response_pack);
         if (recv_data_and_nonblock($storage_server_socket, $temp['len'], $response_pack, TIMEOUT))
         {
-            log::write("recv data to storage_server fail", "error");
+            log::write("[".__FILE__."]:[".__LINE__."]"."recv data to storage_server fail", "error");
             //socket_close($storage_server_socket);
             return -1;
         }
@@ -963,7 +963,7 @@ function operate_feed_to_db($storage_server_socket, $key, $feed)
 
         if ($response_pack_content['ret'] != 0)
         {
-            log::write("get_comfeed function request storage error ret:{$response_pack_content['ret']}","error");
+            log::write("[".__FILE__."]:[".__LINE__."]"."get_comfeed function request storage error ret:{$response_pack_content['ret']}","error");
             return -1;     
         }
 
@@ -1008,25 +1008,25 @@ function get_feed($storage_server_socket, $key, &$result)
         $request_pack = call_user_func_array('pack',array_values($para));
     }
 
-//    DEBUG && log::write(print_r($request_pack_content, true), "debug");
+    DEBUG && log::write("[".__FILE__."]:[".__LINE__."]".print_r($request_pack_content, true), "debug");
 
     if (send_data_and_nonblock($storage_server_socket, $request_pack, TIMEOUT))
     {
-        log::write("send data to storage_server fail", "error");
+        log::write("[".__FILE__."]:[".__LINE__."]"."send data to storage_server fail", "error");
         //socket_close($storage_server_socket);
         return -1;
     }
     $response_pack = "";
     if (recv_data_and_nonblock($storage_server_socket, 4, $response_pack, TIMEOUT))
     {
-        log::write("recv data to storage_server fail", "error");
+        log::write("[".__FILE__."]:[".__LINE__."]"."recv data to storage_server fail", "error");
         //socket_close($storage_server_socket);
         return -1;
     }
     $temp = unpack("Llen", $response_pack);
     if (recv_data_and_nonblock($storage_server_socket, $temp['len'], $response_pack, TIMEOUT))
     {
-        log::write("recv data to storage_server fail", "error");
+        log::write("[".__FILE__."]:[".__LINE__."]"."recv data to storage_server fail", "error");
         //socket_close($storage_server_socket);
         return -1;
     }
@@ -1034,7 +1034,7 @@ function get_feed($storage_server_socket, $key, &$result)
     $response_pack_content = unpack("Llen/Sret/Sunits", $response_pack); 
     if ($response_pack_content['ret'] != 0)
     {
-            log::write("get_comfeed function request storage error ret:{$response_pack_content['ret']}","error");
+            log::write("[".__FILE__."]:[".__LINE__."]"."get_comfeed function request storage error ret:{$response_pack_content['ret']}","error");
             return -1;     
     }
     
@@ -1045,7 +1045,7 @@ function get_feed($storage_server_socket, $key, &$result)
     }
     else if ($units != 1)
     {
-        log::write('get record bigger than 1 value:'.$units ." package: ". print_r($request_pack_content, true), 'warn');
+        log::write("[".__FILE__."]:[".__LINE__."]".'get record bigger than 1 value:'.$units ." package: ". print_r($request_pack_content, true), 'warn');
     }
 
     $response = substr($response_pack, 8);
@@ -1082,25 +1082,25 @@ function get_passive_feed($storage_server_socket, $key, &$result)
     $para = array_merge($request_pack_format, $request_pack_content);
     $request_pack = call_user_func_array('pack',array_values($para));
 
-//    DEBUG && log::write(print_r($request_pack_content, true), "debug");
+    DEBUG && log::write("[".__FILE__."]:[".__LINE__."]".print_r($request_pack_content, true), "debug");
 
     if (send_data_and_nonblock($storage_server_socket, $request_pack, TIMEOUT))
     {
-        log::write("send data to storage_server fail", "error");
+        log::write("[".__FILE__."]:[".__LINE__."]"."send data to storage_server fail", "error");
         //socket_close($storage_server_socket);
         return -1;
     }
     $response_pack = "";
     if (recv_data_and_nonblock($storage_server_socket, 4, $response_pack, TIMEOUT))
     {
-        log::write("recv data to storage_server fail", "error");
+        log::write("[".__FILE__."]:[".__LINE__."]"."recv data to storage_server fail", "error");
         //socket_close($storage_server_socket);
         return -1;
     }
     $temp = unpack("Llen", $response_pack);
     if (recv_data_and_nonblock($storage_server_socket, $temp['len'], $response_pack, TIMEOUT))
     {
-        log::write("recv data to storage_server fail", "error");
+        log::write("[".__FILE__."]:[".__LINE__."]"."recv data to storage_server fail", "error");
         //socket_close($storage_server_socket);
         return -1;
     }
@@ -1108,7 +1108,7 @@ function get_passive_feed($storage_server_socket, $key, &$result)
     $response_pack_content = unpack("Llen/Sret/Sunits", $response_pack); 
     if ($response_pack_content['ret'] != 0)
     {
-            log::write("get_comfeed function request storage error ret:{$response_pack_content['ret']}","error");
+            log::write("[".__FILE__."]:[".__LINE__."]"."get_comfeed function request storage error ret:{$response_pack_content['ret']}","error");
             return -1;     
     }
     
@@ -1119,7 +1119,7 @@ function get_passive_feed($storage_server_socket, $key, &$result)
     }
     else if ($units != 1)
     {
-        log::write('get record bigger than 1 value:'.$units ." package: ". print_r($request_pack_content, true), 'warn');
+        log::write("[".__FILE__."]:[".__LINE__."]".'get record bigger than 1 value:'.$units ." package: ". print_r($request_pack_content, true), 'warn');
     }
 
     $response = substr($response_pack, 8);
@@ -1141,6 +1141,9 @@ function get_passive_feed($storage_server_socket, $key, &$result)
 }
 
 function operate_update_feed_id_to_db($redis_server_socket, $user_id, $timestamp) {
+    if ($redis_server_socket == FALSE)
+        return -1;
+
     $request = pack("LLsLLL", 22, 1001, 0xA101, 0, $user_id, $timestamp);
     
     if (send_data_and_nonblock($redis_server_socket, $request, TIMEOUT)) {
@@ -1158,4 +1161,64 @@ function operate_update_feed_id_to_db($redis_server_socket, $user_id, $timestamp
         return -1;
     }
     return 0;
+}
+
+function check_exist_passive_feed_by_mimi($storage_server_socket, $target_id, $sender_id, $cmd_id, $app_id, $article_id) {
+    if ($storage_server_socket === FALSE) {
+        log::write("Can not connect to_server", "error");
+        return FALSE;
+    }
+
+    $rqst_format = array('LS3LSL2');
+    $rqst_content = array(
+        'len' => 24,
+        'op' => 27,
+        'units' => 1,
+        'flag' => 0x7,
+        'sender_id' => $sender_id,
+        'cmd_id' => $cmd_id + 15000,
+        'app_id' => $app_id,
+        'target_id' => $target_id
+    );
+
+    $rqst_para = array_merge($rqst_format, $rqst_content);
+    $rqst_pack = call_user_func_array('pack', array_values($rqst_para));
+    if (send_data_and_nonblock($storage_server_socket, $rqst_pack, TIMEOUT)) {
+        log::write("send data to storage_server fail", "error");
+        return FALSE;
+    }
+    $response_pack = "";
+    if (recv_data_and_nonblock($storage_server_socket, 4, $response_pack, TIMEOUT)) {
+        log::write("recv data header from storage_server fail", "error");
+        return FALSE;
+    }
+    $temp = unpack("Llen", $response_pack);
+    if (recv_data_and_nonblock($storage_server_socket, $temp['len'], $response_pack, TIMEOUT)) {
+        log::write("recv data body from storage_server fail", "error");
+        return FALSE;
+    }
+
+    $response_pack_content = unpack("Llen/Sret/Sunits", $response_pack); 
+    if ($response_pack_content['ret'] != 0) {
+            log::write("get passive feed function request storage error ret:{$response_pack_content['ret']}","error");
+            return FALSE;     
+    }
+    
+    $units = $response_pack_content['units']; 
+    if ($units <= 0) {
+        log::write("get 0 feed from storage server", 'debug');
+        return FALSE;
+    }
+    $response = substr($response_pack, 8);
+        log::write("recv data to storage_server units:".$units, "error");
+    for($i = 0; $i < $units; ++$i) {
+//        $row = unpack("Llen/Lmimi/Scmd_id/Lapp_id/Ltimestamp/L2magic/Lsender_uid/Ltarget_uid/Lpassive_magic/Lupdate_timestamp", $response);
+        $row = unpack('Llen', $response);
+        $data = json_decode(substr($response, 42, $row['len'] - 42), true); 
+        log::write("recv data to storage_server data:".print_r($data, true), "error");
+        if ($data['article_id'] == $article_id)
+            return TRUE;
+        $response = substr($response, $row['len']);
+    }
+    return FALSE;
 }
