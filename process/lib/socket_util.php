@@ -1163,7 +1163,7 @@ function operate_update_feed_id_to_db($redis_server_socket, $user_id, $timestamp
     return 0;
 }
 
-function check_exist_passive_feed_by_mimi($storage_server_socket, $target_id, $sender_id, $cmd_id, $app_id, $article_id) {
+function check_pfeed_unique($storage_server_socket, $target_id, $sender_id, $cmd_id, $app_id) {
     if ($storage_server_socket === FALSE) {
         log::write("Can not connect to_server", "error");
         return FALSE;
@@ -1209,8 +1209,19 @@ function check_exist_passive_feed_by_mimi($storage_server_socket, $target_id, $s
         log::write("get 0 feed from storage server", 'debug');
         return FALSE;
     }
-    $response = substr($response_pack, 8);
-        log::write("recv data to storage_server units:".$units, "error");
+    return substr($response_pack, 6);
+}
+
+function check_liker_pfeed_unique($storage_server_socket, $target_id, $sender_id, $cmd_id, $app_id, $article_id) {
+    $rv =  check_pfeed_unique($storage_server_socket, $target_id, $sender_id, $cmd_id, $app_id);
+
+    if ($rv == FALSE) {
+        log::write('['.__LINE__."]recv no data from storage_server", "error");
+        return FALSE;
+    }
+    $response_pack_content = unpack("Sunits", $rv); 
+    $units = $response_pack_content['units']; 
+    $response = substr($rv, 2); 
     for($i = 0; $i < $units; ++$i) {
 //        $row = unpack("Llen/Lmimi/Scmd_id/Lapp_id/Ltimestamp/L2magic/Lsender_uid/Ltarget_uid/Lpassive_magic/Lupdate_timestamp", $response);
         $row = unpack('Llen', $response);
@@ -1221,4 +1232,13 @@ function check_exist_passive_feed_by_mimi($storage_server_socket, $target_id, $s
         $response = substr($response, $row['len']);
     }
     return FALSE;
+}
+function check_fans_pfeed_unique($storage_server_socket, $target_id, $sender_id, $cmd_id, $app_id, $article_id) {
+    $rv =  check_pfeed_unique($storage_server_socket, $target_id, $sender_id, $cmd_id, $app_id);
+
+    if ($rv == FALSE) {
+        log::write('['.__LINE__."]recv no data from storage_server", "error");
+        return FALSE;
+    }
+    return TRUE;
 }
