@@ -1154,7 +1154,7 @@ function news_liker($feed, &$comfeed, &$completefeed, &$passive_feed)
     }
    
     global $g_storage_server_socket;
-    if (check_exist_passive_feed_by_mimi($g_storage_server_socket, $src_data['author_id'], $feed['user_id'], $feed['cmd_id'], $feed['app_id'], $src_data['article_id']) == TRUE) {
+    if (check_liker_pfeed_unique($g_storage_server_socket, $src_data['author_id'], $feed['user_id'], $feed['cmd_id'], $feed['app_id'], $src_data['article_id']) == TRUE) {
         log::write('<'.$feed['user_id'].'> Reliker article<'.$src_data['article_id'].'> again', "warn");
         return 0;
     }
@@ -1447,4 +1447,29 @@ function modify_user_info($feed, &$comfeed, &$completefeed, &$passive_feed) {
             log::write(__FUNCTION__."[".__LINE__."]"."update to storage_server fail", "error");
         }
     }
+}
+
+function news_fans($feed, &$comfeed, &$completefeed, &$passive_feed) {
+    $following = unpack('Lid', $feed['data']);
+    if ($following['id'] == $feed['user_id']) {
+        log::write("Do not support following myself".print_r($feed, true), "warn");
+        return 0;
+    }
+    
+    global $g_storage_server_socket;
+    if (check_fans_pfeed_unique($g_storage_server_socket, $following['id'], $feed['user_id'], $feed['cmd_id'], $feed['app_id'], -1) == TRUE) {
+        log::write('<'.$feed['user_id'].'> Reliker following<'.$following['id'].'> again', "warn");
+        return 0;
+    }
+    log::write('<'.$feed['user_id'].'> following <'.$following['id'].'> again', "warn");
+    $src_data['fans'] = $feed['user_id'];
+    $json_src_data = json_encode($src_data);
+        log::write("Fans ".print_r($src_data, true), "error");
+    $passive_feed[] = produce_passive_feed($feed, $src_data['fans'], $following['id'], $json_src_data);
+
+    __init_completefeed_common($feed, $completefeed);
+    $completefeed['data'] = $json_src_data;
+        log::write("Fans ".print_r($completefeed_data, true), "error");
+    update_pfeeds_statistic($passive_feed);
+    return 0;
 }

@@ -11,7 +11,7 @@ if (!defined('LOG_PATH')) define('LOG_PATH', ROOT . 'log'. DS );
 if (!defined('LOG_FILE_SIZE')) define('LOG_FILE_SIZE', 1048576 * 5); // 5M
 
 // 进程数量
-if (!defined('PROCESS_NUM')) define('PROCESS_NUM', '1');
+if (!defined('PROCESS_NUM')) define('PROCESS_NUM', '4');
 
 // cache server 的地址
 if (!defined('CACHE_IP')) define('CACHE_IP', '0.0.0.0');
@@ -44,7 +44,8 @@ define('DELETE_SECRET_KEY', 'xiaoba7564'); //删除所需要密钥
 define('NEWS_ARTICLE',                   7003);          // array($target_uid)
 define('NEWS_LIKER',                     7004);          // array($target_uid)
 define('NEWS_COMMENT',                   7005);          // array($target_uid)
-define('NEWS_UNLIKER',                   7006);          // 取消点赞 
+//define('NEWS_UNLIKER',                   7006);          // 取消点赞 
+define('NEWS_FANS',                      7006);          // 关注协议
 
 //修改feed协议
 define('MODIFY_ARTICLE',                 8003);          // 修改文章协议
@@ -55,7 +56,8 @@ $g_sys_conf["feed"]["operator"] = array(
      NEWS_ARTICLE                => 'news_article',
      NEWS_LIKER                  => 'news_liker',
      NEWS_COMMENT                => 'news_comment',
-     NEWS_UNLIKER                => 'news_unliker',
+//     NEWS_UNLIKER                => 'news_unliker',
+     NEWS_FANS                   => 'news_fans',
 
      MODIFY_ARTICLE              => 'modify_article',
      MODIFY_USER_INFO            => 'modify_user_info',
@@ -66,7 +68,8 @@ $g_sys_conf["feed"]["valid_len"] = array(
      NEWS_ARTICLE                => 0,
      NEWS_LIKER                  => 25,
      NEWS_COMMENT                => 37,
-     NEWS_UNLIKER                => 0,
+//     NEWS_UNLIKER                => 0,
+     NEWS_FANS                   => 21,
      MODIFY_ARTICLE              => 0,
      MODIFY_USER_INFO            => 0,
  );
@@ -89,8 +92,9 @@ $g_sys_conf["feed"]["user_defined_id"] = array(
 //被动feed流注册
 $g_sys_conf["feed"]["ispassive"] = array(
     NEWS_LIKER      => true,
-    NEWS_UNLIKER      => true,
+//    NEWS_UNLIKER      => true,
     NEWS_COMMENT    => true,
+    NEWS_FANS       => true,
 );
 
 $g_sys_conf["feed"]["support_delete"] = array(
