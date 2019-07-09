@@ -972,7 +972,6 @@ function get_newsfeed_common($my_id, $arr_feedid, $arr_app_id, $arr_cmd_id, $off
             $last_time = gettimeofday(true); 
     }
 
-    $new_offset = $offset == -1 ? 0 : $offset; 
     if ($offset == 0) {
         $news_count = count($arr_feedid);
         for($i = 0; $i < $news_count; ++$i) {
@@ -1002,9 +1001,7 @@ function get_newsfeed_common($my_id, $arr_feedid, $arr_app_id, $arr_cmd_id, $off
     // 按页切分
     $total_count = count($arr_feedid);
     if ($count !== 0) {
-        $arr_feedid = array_slice($arr_feedid, $new_offset, $count);
-    } else {
-        $arr_feedid = array_slice($arr_feedid, $new_offset);
+        $arr_feedid = array_slice($arr_feedid, 0, $count);
     }
 
     $next_offset = count($arr_feedid);
@@ -1014,7 +1011,7 @@ function get_newsfeed_common($my_id, $arr_feedid, $arr_app_id, $arr_cmd_id, $off
         $next_offset += $offset;
 
     $have_next = 0;
-    if ($count !== 0 && $total_count > $new_offset + $count) {
+    if ($count !== 0 && $total_count > $count) {
         $have_next = 1;
     }    
 
@@ -1317,7 +1314,7 @@ function get_update_mid(&$arr_uid) { //,$count) {
     }
     
     $timestamp = gettimeofday(true);
-    $relation_rqst = pack("LLsLLLLL", 18+4+4+4, 10086, 0xA102, 0, $arr_uid[0], 0, $timestamp, 100); //$count)
+    $relation_rqst = pack("LLsLLLLL", 18+4+4+4, 10086, 0xA102, 0, $arr_uid[0], 0, $timestamp, 100);
     $relation_resp = FALSE;
     
     if (($relation_resp = $redis_cli->send_rqst($relation_rqst,TIMEOUT)) === FALSE) {
@@ -1417,7 +1414,6 @@ do_log('error', '['.__LINE__.']: feedid decode:'.print_r($arr_feedid, true));
 
     return json_encode($arr_result);
 }
-
 //如果拉取偏移量小于outbox中缓存的条数，先从outbox拉取count条，不足count条就返回读到的条数
 function get_homepage_feedid_outbox($uid, $offset, $count, &$arr_feedid) {
     $arr_outbox_addr = explode(':', constant('OUTBOX_ADDR'));
@@ -1526,7 +1522,7 @@ function get_homepage_feed_storage($uid, $offset, $count, $timestamp, &$arr_feed
 function get_homepage_feed($uid, $offset, $count, $timestamp, &$arr_feeds) {
     if ($offset < MAX_OUTBOX_CNT) { 
         get_homepage_feedid_outbox($uid, $offset, $count, $arr_feedid);
-        do_log('error', '['.__FUNCTION__.']['.__LINE__.'] feedid list'.print_r($arr_feedid, true));
+//        do_log('error', '['.__FUNCTION__.']['.__LINE__.'] feedid list'.print_r($arr_feedid, true));
         // 从storage-server获取feed内容
         $arr_feeds = get_feeds($arr_feedid);
         if ($arr_feeds === FALSE) 

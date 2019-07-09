@@ -37,14 +37,26 @@ define('OUTBOX_PORT', '43321');
 define('DEBUG', true);
 
 define('DELETE_SECRET_KEY', 'xiaoba7564'); //删除所需要密钥
+
+/**
+ * 以下为消息队列相关配置
+ */
+define('KAFKA_DEBUG_FILE', '../log/kafka.debug');
+define('KAFKA_ERROR_FILE', '../log/kafka.error');
+define('KAFKA_BROKER_IP', '10.1.1.187');
+define('KAFKA_TOPIC_ACK', 'request.required.acks');
+define('KAFKA_TOPIC_ACK_VALUE', 0);
+
+define('KAFKA_NOTE_ARTICLE_OPTION', 'article:');
+define('KAFKA_NOTE_NEW_ARTICLE', 'mifan-note-new-article');
+define('KAFKA_NOTE_DEL_ARTICLE', 'mifan-note-del-article');
 /**
  * 以下为消息格式，默认都包含发起者 uid 和时间戳：
  */
 // 米饭
 define('NEWS_ARTICLE',                   7003);          // array($target_uid)
-define('NEWS_LIKER',                     7004);          // array($target_uid)
-define('NEWS_COMMENT',                   7005);          // array($target_uid)
-//define('NEWS_UNLIKER',                   7006);          // 取消点赞 
+define('NEWS_LIKER',                   7004);          // array($target_uid)
+define('NEWS_COMMENT',                   7005);
 define('NEWS_FANS',                      7006);          // 关注协议
 
 //修改feed协议
@@ -56,7 +68,6 @@ $g_sys_conf["feed"]["operator"] = array(
      NEWS_ARTICLE                => 'news_article',
      NEWS_LIKER                  => 'news_liker',
      NEWS_COMMENT                => 'news_comment',
-//     NEWS_UNLIKER                => 'news_unliker',
      NEWS_FANS                   => 'news_fans',
 
      MODIFY_ARTICLE              => 'modify_article',
@@ -68,7 +79,6 @@ $g_sys_conf["feed"]["valid_len"] = array(
      NEWS_ARTICLE                => 0,
      NEWS_LIKER                  => 25,
      NEWS_COMMENT                => 37,
-//     NEWS_UNLIKER                => 0,
      NEWS_FANS                   => 21,
      MODIFY_ARTICLE              => 0,
      MODIFY_USER_INFO            => 0,
@@ -76,23 +86,20 @@ $g_sys_conf["feed"]["valid_len"] = array(
 
 //为了和老的协议兼容
 $g_sys_conf['feed']['app_id'] = array(
-//     NEWS_ARTICLE                => 7003,
-//     NEWS_LIKER                  => 7004,
 );
 
 $g_sys_conf["feed"]["iscombine"] = array(
 );
 
 $g_sys_conf["feed"]["user_defined_id"] = array(
-    NEWS_ARTICLE      => true,
+    NEWS_ARTICLE   => true,
     MODIFY_ARTICLE              => true,
     MODIFY_USER_INFO            => true,
 );
 
 //被动feed流注册
 $g_sys_conf["feed"]["ispassive"] = array(
-    NEWS_LIKER      => true,
-//    NEWS_UNLIKER      => true,
+    NEWS_LIKER   => true,
     NEWS_COMMENT    => true,
     NEWS_FANS       => true,
 );

@@ -957,11 +957,11 @@ function __parse_article_info(&$feed, &$src_data) {
     //用于向tagList插入数据时的数据打包参数
     $feed['tag_cnt'] = $rv['tag_cnt'];
     $feed['tag_data'] = substr($feed['data'], 0, 4 * $rv['tag_cnt']);
-    $feed["data"] = substr($feed['data'], 4 * $rv['tag_cnt']);
+    //$feed["data"] = substr($feed['data'], 4 * $rv['tag_cnt']);
 
-    $pic_cnt = unpack('Cpic_cnt/Ctext_len', substr($feed['data'], 0, 2));
-    $src_data['pic_cnt'] = $pic_cnt['pic_cnt'];
-    $src_data['text'] = substr($feed['data'], 2, $pic_cnt['text_len']);
+    //$pic_cnt = unpack('Cpic_cnt/Ctext_len', substr($feed['data'], 0, 2));
+    //$src_data['pic_cnt'] = $pic_cnt['pic_cnt'];
+    //$src_data['text'] = substr($feed['data'], 2, $pic_cnt['text_len']);
     //用于解析用户信息部分
     $feed["data"] = substr($feed['data'], 2 + $pic_cnt['text_len']);
 //    DEBUG && log::write("XXXX [".__LINE__."] verify:".print_r($src_data, true),"debug");
@@ -1057,10 +1057,10 @@ function news_article($feed, &$comfeed, &$completefeed, &$passive_feed)
 { 
     __init_completefeed($feed, $completefeed);
     __parse_article_info($feed, $src_data);
-    __parse_user_info($feed['data'], $src_data);
+//    __parse_user_info($feed['data'], $src_data);
     $completefeed["data"] = json_encode($src_data);
     $code =  __fill_article_to_tag_list($feed, $completefeed);
-
+    notify_kafka_new_article($feed['user_id'], $src_data['article_id'], $feed['new_feedid']);
 //    DEBUG && log::write("XXXX [".__LINE__."] constructor feedid:".print_r($completefeed, true),"debug");
     return $code;
 
@@ -1272,7 +1272,7 @@ function delete_article(&$feed, $rqst, $storage_server_socket) {
         log::write('['.__LINE__.'] Can not find matched feed :'.print_r($feed, true), 'error');
         return -1;
     }
-    
+   
 //    DEBUG && log::write('['.__LINE__.']: match feeds is : '.print_r($feed_list, true), "error");
     foreach ($feed_list as $var) {
         $tmp = json_decode($var['data'], true);
@@ -1283,6 +1283,8 @@ function delete_article(&$feed, $rqst, $storage_server_socket) {
             $feed['data'] = $var['data'];
             DEBUG && log::write('['.__LINE__.']: Got feed: '.print_r($feed, true), "debug");
             delete_article_by_tag($feed, $tmp['tags'], $storage_server_socket);
+            $feedid = base64_encode(pack("LSLLLL", $feed['user_id'], $feed["cmd_id"], $feed["app_id"], $feed["timestamp"], $feed["magic1"], $feed["magic2"]));
+            notify_kafka_del_article($feed['user_id'], $article['id'], $feedid);
                 
             return 0;
         }
@@ -1472,4 +1474,79 @@ function news_fans($feed, &$comfeed, &$completefeed, &$passive_feed) {
         log::write("Fans ".print_r($completefeed_data, true), "error");
     update_pfeeds_statistic($passive_feed);
     return 0;
+}
+
+global $kCnf;
+global $kProducerCnf;
+global $kTopicCnf;
+
+function __notify_gen_message($uid, $articleid, $feedid) {
+    $protobuf_ = new \Mifan\noteArticle();
+    $protobuf_->setUserid($uid);
+    $protobuf_->setArticleid($articleid);
+    $protobuf_->setFeedid($feedid);
+    return $protobuf_->serializeToString();
+}
+function __check_kafka_cnf_exist_and_init(&$kCnf, &$kProducerCnf, &$kTopicCnf) {
+    if (!isset($kCnf)) {
+        log::write('['.__FUNCTION__.']['.__LINE__.'] Kafka ctx never init before, initing...');
+
+        $kCnf = new RdKafka\Conf();
+        $kCnf->setDrMsgCb(function ($kafka, $message) {
+           file_put_contents(KAFKA_DEBUG_FILE, var_export($message, true).PHP_EOL, FILE_APPEND);
+           });
+
+        $kCnf->setErrorCb(function ($kafka, $err, $reason) {
+           file_put_contents(KAFKA_ERROR_FILE, var_export($message, true).PHP_EOL, FILE_APPEND); 
+        });
+    }
+
+    if (!isset($kProducerCnf)) {
+        log::write('['.__FUNCTION__.']['.__LINE__.'] Kafka Producer ctx never init before, initing...');
+        $kProducerCnf = new RdKafka\Producer($kCnf);
+        $kProducerCnf->setLogLevel(LOG_DEBUG);
+        $kProducerCnf->addBrokers(KAFKA_BROKER_IP);
+    }
+    
+    if (!isset($kTopicCnf)) {
+        log::write('['.__FUNCTION__.']['.__LINE__.'] Kafka Topic Configuration never init before, initing...');
+        $kTopicCnf = new RdKafka\TopicConf();
+// -1必须等所有brokers同步完成的确认 1当前服务器确认 0不确认，这里如果是0回调里的offset无返回，如果是1和-1会返回offset
+// 我们可以利用该机制做消息生产的确认，不过还不是100%，因为有可能会中途kafka服务器挂掉
+        $kTopicCnf->set(KAFKA_TOPIC_ACK, KAFKA_TOPIC_ACK_VALUE);
+    }
+}
+
+function notify_kafka_new_article($uid, $articleId, $feedid) {
+    global $kCnf;
+    global $kProducerCnf;
+    global $kTopicCnf;
+
+    __check_kafka_cnf_exist_and_init($kCnf, $kProducerCnf, $kTopicCnf);
+
+    $kTopic = $kProducerCnf->newTopic(KAFKA_NOTE_NEW_ARTICLE, $kTopicCnf);
+    $option = KAFKA_NOTE_ARTICLE_OPTION;
+
+    $serializeBuf = __notify_gen_message($uid, $articleId, $feedid);
+    $info_ = new \Mifan\noteArticle();
+    $info_->ParseFromString($serializeBuf);
+    log::write('['.__FUNCTION__.']['.__LINE__.'] Kafka new article['.$info_->getUserid().' - '.$info_->getArticleid());
+    $kTopic->produce(RD_KAFKA_PARTITION_UA, 0, "article:$serializeBuf", $option);
+}
+
+function notify_kafka_del_article($uid, $articleId) {
+    global $kCnf;
+    global $kProducerCnf;
+    global $kTopicCnf;
+
+    __check_kafka_cnf_exist_and_init($kCnf, $kProducerCnf, $kTopicCnf);
+
+    $kTopic = $kProducerCnf->newTopic(KAFKA_NOTE_DEL_ARTICLE, $kTopicCnf);
+    $option = KAFKA_NOTE_ARTICLE_OPTION;
+
+    $serializeBuf = __notify_gen_message($uid, $articleId);
+    $info_ = new \Mifan\noteArticle();
+    $info_->ParseFromString($serializeBuf);
+    log::write('['.__FUNCTION__.']['.__LINE__.'] Kafka new article['.$info_->getUserid().' - '.$info_->getArticleid());
+    $kTopic->produce(RD_KAFKA_PARTITION_UA, 0, "article:$serializeBuf", $option);
 }

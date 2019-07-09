@@ -7,6 +7,7 @@ require dirname(__FILE__) . DIRECTORY_SEPARATOR . 'Mifan' . DIRECTORY_SEPARATOR 
 require dirname(__FILE__) . DIRECTORY_SEPARATOR . 'Mifan' . DIRECTORY_SEPARATOR .  'feedidFromMine.php';
 require dirname(__FILE__) . DIRECTORY_SEPARATOR . 'Mifan' . DIRECTORY_SEPARATOR .  'dropFeedidFromTag.php';
 require dirname(__FILE__) . DIRECTORY_SEPARATOR . 'Mifan' . DIRECTORY_SEPARATOR .  'pUpdateStat.php';
+require dirname(__FILE__) . DIRECTORY_SEPARATOR . 'Mifan' . DIRECTORY_SEPARATOR .  'noteArticle.php';
 declare(ticks=1);
 
 $g_pid_arr = array();
@@ -90,7 +91,7 @@ function process_control()
         die("file ".$g_pid_file." open failed.\n");
     }                                                   
    
-    log::write("start run"); 
+    log::write("[".__FUNCTION__."]:[".__LINE__."]"."start run"); 
 
     pcntl_signal(SIGINT, "parent_signal_handler", false); 
     pcntl_signal(SIGTERM, "parent_signal_handler", false); 
@@ -128,11 +129,11 @@ function process_control()
             {
                 unset($g_pid_arr[$key]);
                 $children_ret = pcntl_wexitstatus($status);
-                log::write("return code " . $children_ret);
+                log::write("[".__FUNCTION__."]:[".__LINE__."]"."return code ".$children_ret);
                 if ($children_ret == -1)
                 {
                     sleep(2);
-                    log::write("reboot children");
+                    log::write("[".__FUNCTION__."]:[".__LINE__."]"."reboot children");
                     reboot_children_process($key);
                 }
                 else if ($children_ret == 255)
@@ -148,7 +149,7 @@ function process_control()
     flock($fdlock, LOCK_UN);
     fclose($fdlock);
 
-    log::write("program end");
+    log::write("[".__FUNCTION__."]:[".__LINE__."]"."program end");
     exit(0);
 }
 
@@ -158,7 +159,7 @@ function reboot_children_process($key)
         $pid = pcntl_fork();
         if ($pid == -1)
         {
-            log::write("fork error\n","error");
+            log::write("[".__FUNCTION__."]:[".__LINE__."]"."fork error\n","error");
         }
         else if ($pid)
         {
@@ -184,7 +185,7 @@ function outbox_handle($outbox_server_socket, $outbox_reconnect_flag, $output_ar
         {
             if (init_connect_and_nonblock(OUTBOX_IP, OUTBOX_PORT, $outbox_server_socket))
             {
-                log::write("init_feed_connect outbox_server fail", "warn");
+                log::write("[".__FUNCTION__."]:[".__LINE__."]"."init_feed_connect outbox_server fail", "warn");
                 $outbox_reconnect_flag = 1;
             } 
             else
@@ -212,13 +213,13 @@ function outbox_handle($outbox_server_socket, $outbox_reconnect_flag, $output_ar
                 }
                 else
                 {
-                    log::write(__FUNCTION__ . 'unvalid ouput type ' . $output['type'], 'warn');
+                    log::write("[".__FUNCTION__."]:[".__LINE__."]"."unvalid ouput type ".$output['type'], 'warn');
                     return 0;
                 }
 
                 if (send_data_and_nonblock($outbox_server_socket, $pack, TIMEOUT))
                 {
-                    log::write("send data to outbox_server fail", "warn");
+                    log::write("[".__FUNCTION__."]:[".__LINE__."]"."send data to outbox_server fail", "warn");
                     $outbox_reconnect_flag = 1;
                 }
                 else
@@ -226,7 +227,7 @@ function outbox_handle($outbox_server_socket, $outbox_reconnect_flag, $output_ar
                     $pack = "";
                     if (recv_data_and_nonblock($outbox_server_socket, 6, $pack, TIMEOUT))
                     {
-                        log::write("recv data from outbox_server fail", "warn");
+                        log::write("[".__FUNCTION__."]:[".__LINE__."]"."recv data from outbox_server fail", "warn");
                         $outbox_reconnect_flag = 1;
                     }
                     else
@@ -251,13 +252,13 @@ function outbox_handle($outbox_server_socket, $outbox_reconnect_flag, $output_ar
                 }
                 else
                 {
-                    log::write(__FUNCTION__ . 'unvalid ouput type ' . $output['type'], 'warn');
+                    log::write("[".__FUNCTION__."]:[".__LINE__."]"."unvalid ouput type ".$output['type'], 'warn');
                     return 0;
                 }
 
                 if (send_data_and_nonblock($outbox_server_socket, $pack, TIMEOUT))
                 {
-                    log::write("send data to outbox_server fail", "warn");
+                    log::write("[".__FUNCTION__."]:[".__LINE__."]"."send data to outbox_server fail", "warn");
                     $outbox_reconnect_flag = 1;
                 }
                 else
@@ -265,7 +266,7 @@ function outbox_handle($outbox_server_socket, $outbox_reconnect_flag, $output_ar
                     $pack = "";
                     if (recv_data_and_nonblock($outbox_server_socket, 6, $pack, TIMEOUT))
                     {
-                        log::write("recv data from outbox_server fail", "warn");
+                        log::write("[".__FUNCTION__."]:[".__LINE__."]"."recv data from outbox_server fail", "warn");
                         $outbox_reconnect_flag = 1;
                     }
                     else
@@ -273,7 +274,7 @@ function outbox_handle($outbox_server_socket, $outbox_reconnect_flag, $output_ar
                         $temp = unpack("Llen/Sresult", $pack);
                         if ($temp['result'] != 0)
                         {
-                            log::write("recv data from outbox_server fail, result is {$temp['result']}", "warn");
+                            log::write("[".__FUNCTION__."]:[".__LINE__."]"."recv data from outbox_server fail, result is {$temp['result']}", "warn");
                         }
                     }
                 }
@@ -285,7 +286,7 @@ function outbox_handle($outbox_server_socket, $outbox_reconnect_flag, $output_ar
                     $pack = pack("LSLSL4", 28, 0xfff3, $output['delete_feedid']['user_id'], $output['delete_feedid']['cmd_id'], $output['delete_feedid']['app_id'], $output['delete_feedid']['timestamp'], $output['delete_feedid']['magic1'], $output['delete_feedid']['magic2']);
                     if (send_data_and_nonblock($outbox_server_socket, $pack, TIMEOUT))
                     {
-                        log::write("send data to outbox_server fail", "warn");
+                        log::write("[".__FUNCTION__."]:[".__LINE__."]"."send data to outbox_server fail", "warn");
                         $outbox_reconnect_flag = 1;
                     }
                     else
@@ -293,7 +294,7 @@ function outbox_handle($outbox_server_socket, $outbox_reconnect_flag, $output_ar
                         $pack = "";
                         if (recv_data_and_nonblock($outbox_server_socket, 6, $pack, TIMEOUT))
                         {
-                            log::write("recv data from outbox_server fail", "warn");
+                            log::write("[".__FUNCTION__."]:[".__LINE__."]"."recv data from outbox_server fail", "warn");
                             $outbox_reconnect_flag = 1;
                         }
                         else
@@ -301,7 +302,7 @@ function outbox_handle($outbox_server_socket, $outbox_reconnect_flag, $output_ar
                             $temp = unpack("Llen/Sresult", $pack);
                             if ($temp['result'] != 0)
                             {
-                                log::write("recv data from outbox_server fail, result is {$temp['result']}", "warn");
+                                log::write("[".__FUNCTION__."]:[".__LINE__."]"."recv data from outbox_server fail, result is {$temp['result']}", "warn");
                             }
                         }
                     }
@@ -311,7 +312,7 @@ function outbox_handle($outbox_server_socket, $outbox_reconnect_flag, $output_ar
                     $pack = pack("LSLSL4L3L", 44, 0xfff7, $output['delete_feedid']['user_id'], $output['delete_feedid']['cmd_id'], $output['delete_feedid']['app_id'], $output['delete_feedid']['timestamp'], $output['delete_feedid']['magic1'], $output['delete_feedid']['magic2'], $output['delete_feedid']['sender_uid'], $output['delete_feedid']['target_uid'], $output['delete_feedid']['passive_magic'], 0);
                     if (send_data_and_nonblock($outbox_server_socket, $pack, TIMEOUT))
                     {
-                        log::write("send data to outbox_server fail", "warn");
+                        log::write("[".__FUNCTION__."]:[".__LINE__."]"."send data to outbox_server fail", "warn");
                         $outbox_reconnect_flag = 1;
                     }
                     else
@@ -319,7 +320,7 @@ function outbox_handle($outbox_server_socket, $outbox_reconnect_flag, $output_ar
                         $pack = "";
                         if (recv_data_and_nonblock($outbox_server_socket, 6, $pack, TIMEOUT))
                         {
-                            log::write("recv data from outbox_server fail", "warn");
+                            log::write("[".__FUNCTION__."]:[".__LINE__."]"."recv data from outbox_server fail", "warn");
                             $outbox_reconnect_flag = 1;
                         }
                         else
@@ -327,7 +328,7 @@ function outbox_handle($outbox_server_socket, $outbox_reconnect_flag, $output_ar
                             $temp = unpack("Llen/Sresult", $pack);
                             if ($temp['result'] != 0)
                             {
-                                log::write("recv data from outbox_server fail, result is {$temp['result']}", "warn");
+                                log::write("[".__FUNCTION__."]:[".__LINE__."]"."recv data from outbox_server fail, result is {$temp['result']}", "warn");
                             }
                         }
                     }
@@ -345,31 +346,19 @@ function children_process()
 
     if (init_net(CACHE_IP, CACHE_PORT, $socket, $taskpack))
     {
-        log::write("init_net cache_server fail","error");
+        log::write("[".__FUNCTION__."]:[".__LINE__."]"."init_net cache_server fail","error");
         return -1;
     }        
   
-/* 
-    if (init_connect_and_nonblock(FEED_IP, FEED_PORT, $feed_socket))
-    {
-        log::write("init_feed_connect feed_server fail", "warn");
-        $feed_reconnect_flag = 1;
-    } 
-    else
-    {
-        $feed_reconnect_flag = 0;
-    }
-*/
-    
     if (init_connect_and_nonblock(STORAGE_IP, STORAGE_PORT, $storage_server_socket))
     {
-        log::write("init_connect storage_server fail reason: connect to storage_server", "error");
+        log::write("[".__FUNCTION__."]:[".__LINE__."]"."init_connect storage_server fail reason: connect to storage_server", "error");
         return -1;
     } 
 
     if (init_connect_and_nonblock(OUTBOX_IP, OUTBOX_PORT, $outbox_server_socket))
     {
-        log::write("init_feed_connect outbox_server fail", "warn");
+        log::write("[".__FUNCTION__."]:[".__LINE__."]"."init_feed_connect outbox_server fail", "warn");
         $outbox_reconnect_flag = 1;
     } 
     else
@@ -395,13 +384,13 @@ function children_process()
         //****************************
         if (send_data($socket, $pack))
         {
-            log::write("[request handler package]send_data fail", "error");
+            log::write("[".__FUNCTION__."]:[".__LINE__."]"." send_data fail", "error");
             return -1;
         }
         $pack = "";
         if (recv_data($socket, 2, $pack))
         {
-            log::write("[response handler package]recv_data 2 bytes fail", "error");
+            log::write("[".__FUNCTION__."]:[".__LINE__."]"."recv_data 2 bytes fail", "error");
             return -1;
         } 
 
@@ -409,13 +398,13 @@ function children_process()
 
         if ($temp['len'] < 13)
         {
-            log::write('recv data length is '. $temp['len'] .' < 13', 'warn');
+            log::write("[".__FUNCTION__."]:[".__LINE__."]"."recv data length is ". $temp['len'] ." < 13", 'warn');
             continue;
         }       
         
         if (recv_data($socket, $temp["len"], $pack))
         {
-            log::write("[response handler package]recv_data full data fail", "error");
+            log::write("[".__FUNCTION__."]:[".__LINE__."]"."recv_data full data fail", "error");
             return -1;
         }
         
@@ -440,7 +429,7 @@ function children_process()
                 {
                     if (-1 == $ret)
                     {
-                        log::write("[feed delete]delete feed fail", "error");
+                        log::write("[".__FUNCTION__."]:[".__LINE__."]"."delete feed fail", "error");
                         return -1;
                     }
                     else if (-2 == $ret)
@@ -449,7 +438,7 @@ function children_process()
                     }
                     else
                     {
-                        log::write("[feed delete]feed process error error:unvalid return value{$ret}", "error");
+                        log::write("[".__FUNCTION__."]:[".__LINE__."]"."feed process error error:unvalid return value{$ret}", "error");
                         return -1;
                     }
                 }
@@ -460,7 +449,7 @@ function children_process()
                 {
                     if (-1 == $ret)
                     {
-                        log::write("[feed_handle]feed process error fatal error", "error");
+                        log::write("[".__FUNCTION__."]:[".__LINE__."]"."feed process error fatal error", "error");
                         return -1;
                     }
                     else if (-2 == $ret) //表明这个feed没有拉取到数据或者一些警告错误 可以直接跳过
@@ -469,7 +458,7 @@ function children_process()
                     }
                     else 
                     {
-                        log::write("[feed_handle]feed process error error:unvalid return value{$ret}", "error");
+                        log::write("[".__FUNCTION__."]:[".__LINE__."]"."feed process error error:unvalid return value{$ret}", "error");
                         return -1;
                     }
                 }
@@ -495,7 +484,6 @@ function children_process()
             }
             else
             {
-                //$feed = unpack("Slen/Scmd_id/Luser_id/Ltimestamp/Cversion/Lapp_id", $pack); 
                 $feed = unpack("Slen/Scmd_id/Luser_id/Cversion/Ltimestamp/Lapp_id", $pack); 
                 $feed["data"] = substr($pack, 17, $feed["len"] - 17);
             }
@@ -517,7 +505,7 @@ function children_process()
             {
                 if (-1 == $ret)
                 {
-                    log::write("[feed_handle]feed process error fatal error", "error");
+                    log::write("[".__FUNCTION__."]:[".__LINE__."]"."feed process error fatal error", "error");
                     return -1;
                 }
                 else if (-2 == $ret) //表明这个feed没有拉取到数据或者一些警告错误 可以直接跳过
@@ -526,7 +514,7 @@ function children_process()
                 }
                 else 
                 {
-                    log::write("[feed_handle]feed process error error:unvalid return value{$ret}", "error");
+                    log::write("[".__FUNCTION__."]:[".__LINE__."]"."feed process error error:unvalid return value{$ret}", "error");
                     return -1;
                 }
             }
@@ -550,7 +538,6 @@ function children_process()
         {
             log::write(__LINE__."[process.php] unsupport cmd id".print_r($feed, true), "error");
         }
-
     }
 
     return 0;
@@ -562,16 +549,7 @@ ini_set("error_log", "log/mysys.log");
 ini_set('memory_limit', '1024M');
 error_reporting(E_ALL & ~E_NOTICE);
 date_default_timezone_set("Asia/Shanghai");
-/*
-$fpid = fopen("./pid", "wb");
-if ($fpid) {
-    fwrite($fpid, posix_getpid());
-    fclose($fpid);
-}
-else {                                                  
-    die("file ".$g_pid_file." open failed.\n");
-}                                                   
-*/
+
 process_control();
 
 ?>

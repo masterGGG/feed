@@ -9,7 +9,6 @@
 header("Content-Type: application/json; charset=utf8");
 require_once('function.php');
 
-//do_log('error', "ERROR: <".urlencode(json_encode($_REQUEST)).">");
 $action = '';
 if (isset($_REQUEST['action']) && $_REQUEST['action'] != '') {
     $action = $_REQUEST['action'];
@@ -30,7 +29,6 @@ if ($action == 'normal')
         $uid    = '';                                                 
         $app_id = '';                                             
         $cmd_id = '';                                             
-        //$tags_id = 0;                                             
         $offset = 0;
         $count  = 0;
         $timestamp = 0;
@@ -53,11 +51,6 @@ if ($action == 'normal')
         if (isset($_REQUEST['timestamp']) && $_REQUEST['timestamp'] != '') {
             $timestamp = $_REQUEST['timestamp'];
         }
-        /*
-        if (isset($_REQUEST['tags_id']) && $_REQUEST['tags_id'] != '') {
-            $tags_id = $_REQUEST['tags_id'];
-        }
-        */
 
         $rv = FALSE;
 
@@ -84,7 +77,7 @@ if ($action == 'normal')
             $arr_cmd_id = explode(',', $cmd_id);
         }
 
-        $rv = get_newsfeed($arr_uid, $arr_app_id, $arr_cmd_id, $offset, $count, $timestamp/*, $tags_id*/);
+        $rv = get_newsfeed($arr_uid, $arr_app_id, $arr_cmd_id, $offset, $count, $timestamp);
 
         if ($rv === FALSE) {
             echo json_encode(array('result' => -1));
@@ -111,7 +104,7 @@ if ($action == 'normal')
         $offset = 0;
         $count  = 0;
         $timestamp = 0;
-        $cmd_id = '';                                             
+        $cmd_id = '';                                 
 
         if (isset($_REQUEST['uid']) && $_REQUEST['uid'] != '') {
             $uid = $_REQUEST['uid'];
@@ -157,7 +150,6 @@ if ($action == 'normal')
         $offset = 0;
         $count  = 0;
         $timestamp = 0;
-        //$tags_id = 0;
 
         if (isset($_REQUEST['uid']) && $_REQUEST['uid'] != '') {
             $uid = $_REQUEST['uid'];
