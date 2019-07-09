@@ -49,5 +49,7 @@ define('RELATION_ADDR', '0.0.0.0:21145');
 define('TAG_CACHE_ADDR', '0.0.0.0:22080');
 
 // outbox里存放的passfeed的条数阈值
-define('MAX_OUTBOX_PASS_CNT', 50);
+define('MAX_OUTBOX_PASS_CNT', 30);
 define('MAX_OUTBOX_CNT', 30);
+
+define('DEBUG', true);
