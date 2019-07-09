@@ -111,6 +111,7 @@ if ($action == 'normal')
         $offset = 0;
         $count  = 0;
         $timestamp = 0;
+        $cmd_id = '';                                             
 
         if (isset($_REQUEST['uid']) && $_REQUEST['uid'] != '') {
             $uid = $_REQUEST['uid'];
@@ -130,8 +131,19 @@ if ($action == 'normal')
         if (isset($_REQUEST['timestamp']) && $_REQUEST['timestamp'] != '') {
             $timestamp = $_REQUEST['timestamp'];
         }
+        if (isset($_REQUEST['cmd_id']) && $_REQUEST['cmd_id'] != '') {
+            $cmd_id = $_REQUEST['cmd_id'];
+        }
+        if ($cmd_id === '')
+        {
+            $arr_cmd_id = array();
+        }
+        else
+        {
+            $arr_cmd_id = explode(',', $cmd_id);
+        }
 
-        $rv = get_passive_newsfeed($uid, $offset, $count, $timestamp);
+        $rv = get_passive_newsfeed($uid, $offset, $count, $timestamp, $arr_cmd_id);
         if ($rv === FALSE) {
             echo json_encode(array('result' => -1));
         }
@@ -258,6 +270,68 @@ if ($action == 'normal')
         if ($rv === FALSE) {
             echo json_encode(array('result' => -1));
         }
+        echo $rv;
+    }
+    else if ($type == 'home') {
+        $uid    = '';                                                 
+        $app_id = '';                                             
+        $cmd_id = '';                                             
+        $offset = 0;
+        $count  = 0;
+        $timestamp = 0;
+
+        if (isset($_REQUEST['uid']) && $_REQUEST['uid'] != '') {
+            $uid = $_REQUEST['uid'];
+        }
+        if (isset($_REQUEST['app_id']) && $_REQUEST['app_id'] != '') {
+            $app_id = $_REQUEST['app_id'];
+        }
+        if (isset($_REQUEST['cmd_id']) && $_REQUEST['cmd_id'] != '') {
+            $cmd_id = $_REQUEST['cmd_id'];
+        }
+        if (isset($_REQUEST['offset']) && $_REQUEST['offset'] != '') {
+            $offset = $_REQUEST['offset'];
+        }
+        if (isset($_REQUEST['count']) && $_REQUEST['count'] != '') {
+            $count = $_REQUEST['count'];
+        }
+        if (isset($_REQUEST['timestamp']) && $_REQUEST['timestamp'] != '') {
+            $timestamp = $_REQUEST['timestamp'];
+        }
+
+        $rv = FALSE;
+
+        if ($uid === '') {
+            echo json_encode(array('result' => -1));
+            do_log('error', "ERROR: uid: $uid app_id: $app_id cmd_id: $cmd_id offset: $offset count: $count");
+            exit();
+        }
+        $arr_uid = explode(',', $uid);
+        if ($app_id === '')
+        {
+            $arr_app_id = array();
+        }
+        else
+        {
+            $arr_app_id = explode(',', $app_id);
+        }
+        if ($cmd_id === '')
+        {
+            $arr_cmd_id = array();
+        }
+        else
+        {
+            $arr_cmd_id = explode(',', $cmd_id);
+        }
+
+        $rv = get_homepage_newsfeed($uid, $arr_app_id, $arr_cmd_id, $offset, $count, $timestamp);
+
+        if ($rv === FALSE) {
+            echo json_encode(array('result' => -1));
+            do_log('error', "ERROR: uid: $uid app_id: $app_id cmd_id: $cmd_id offset: $offset count: $count");
+            exit();
+        }
+
         echo $rv;
     }
     else
