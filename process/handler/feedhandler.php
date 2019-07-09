@@ -558,27 +558,6 @@ function feeddelete($pack, $input_arr, &$output_arr)
                 return -2;
             }
         }
-//
-//        $feed = unpack('Slen/Sopt_id/Luser_id/Cversion/Ltimestamp/Lapp_id/Lmagic1/Lmagic2/Scmd_id/a32verify',$pack);
-//        $str = substr($pack, 0, 27);
-//        $str .= DELETE_SECRET_KEY;
-//        $verify = md5($str);
-//        if ($verify != $feed['verify'])
-//        {
-//            log::write("The packet doesn't pass verify","warn");
-//            return -2;
-//        }
-//
-//        if (array_key_exists($feed["cmd_id"], $g_sys_conf["feed"]["user_defined_id"]))
-//        {
-//            if (false == delete_feed_user_defined($storage_server_socket, $feed))
-//            {
-//                log::write(__FUNCTION__."[".__LINE__."]"."delete feed fail from storage_server", "error");
-//                data_log_binary($pack, __FUNCTION__);
-//                return -1;
-//            }
-//        }
-//        else
         {
             if (false == delete_feed($storage_server_socket, $feed))
             {
@@ -939,9 +918,12 @@ function __init_completefeed($feed, &$completefeed) {
     __init_completefeed_magic($completefeed);
 }
 
-function __parse_article_info(&$feed, &$src_data) {
+function news_article($feed, &$comfeed, &$completefeed, &$passive_feed)
+{ 
+    __init_completefeed($feed, $completefeed);
     $src_data = unpack("Larticle_id", $feed["data"]);
     $feed["data"] = substr($feed["data"], 4);
+    
     //解析首张图片的长度并根据长度获取url
     $parse = unpack("Clen", $feed["data"]);
     $src_data["pic"] = substr($feed["data"], 1, $parse["len"]);
@@ -954,69 +936,24 @@ function __parse_article_info(&$feed, &$src_data) {
         $tag[] = $cur['tag'];
     }
     $src_data["tags"] = $tag;
+    
     //用于向tagList插入数据时的数据打包参数
     $feed['tag_cnt'] = $rv['tag_cnt'];
     $feed['tag_data'] = substr($feed['data'], 0, 4 * $rv['tag_cnt']);
-    //$feed["data"] = substr($feed['data'], 4 * $rv['tag_cnt']);
 
-    //$pic_cnt = unpack('Cpic_cnt/Ctext_len', substr($feed['data'], 0, 2));
-    //$src_data['pic_cnt'] = $pic_cnt['pic_cnt'];
-    //$src_data['text'] = substr($feed['data'], 2, $pic_cnt['text_len']);
-    //用于解析用户信息部分
-    $feed["data"] = substr($feed['data'], 2 + $pic_cnt['text_len']);
-//    DEBUG && log::write("XXXX [".__LINE__."] verify:".print_r($src_data, true),"debug");
-}
-function __is_bite_set($check, $pos) {
-    return $check & (1 << $pos);
-//    if ($check & (1 << $pos))
-//        return TRUE;
-//    return FALSE;
-}
-function __parse_user_role($role, &$src_data) {
-    //$src_data['verify'] = array();
-    if (__is_bite_set($role, 0)) {
-        $src['media'] = 1;
-    } else 
-        $src['media'] = 0;
-    
-    if (__is_bite_set($role, 1)) {
-        $src['official'] = 1;
-    } else 
-        $src['official'] = 0;
-    
-    if (__is_bite_set($role, 2)) {
-        $src['person_identity'] = 1;
-    } else 
-        $src['person_identity'] = 0;
-    
-    if (__is_bite_set($role, 3)) {
-        $src['hobby'] = 1;
-    } else 
-        $src['hobby'] = 0;
-        
-    $src_data["verify"] = $src;
-//    XDEBUG && log::write("XXXX [".__LINE__."] verify:".print_r($src_data, true),"debug");
-}
-function __parse_user_info($data, &$src_data) {
-    if (strlen($data) < 3) {
-        DEBUG && log::write("[".__LINE__."] Old article protocol not support".strlen($data)."> ","warn");
+    $completefeed["data"] = json_encode($src_data);
+    $code =  __fill_article_to_tag_list($feed, $completefeed);
+//    notify_kafka_new_article($feed['user_id'], $src_data['article_id'], $feed['new_feedid']);
+//    DEBUG && log::write("XXXX [".__LINE__."] constructor feedid:".print_r($completefeed, true),"debug");
+    return $code;
+
+    //推送模式模块
+    if(news_article_add_to_friend($feed['new_feedid'], $feed["user_id"], $feed["timestamp"]))
         return -1;
-    }
-    $rv = unpack('Cicon_len', $data);
-    if ($rv['icon_len'] > 0)
-        $src_data['icon'] = substr($data, 1, $rv['icon_len']);
-    $data = substr($data, 1 + $rv['icon_len']);
 
-    $rv = unpack('Cnickname_len', $data);
-    if ($rv['nickname_len'] > 0)
-        $src_data['nickname'] = substr($data, 1, $rv['nickname_len']);
-    $data = substr($data, 1 + $rv['nickname_len']);
-
-    $rv = unpack('Crole', $data);
-//    XDEBUG && log::write("XXXX [".__LINE__."] user role:<".$rv['role']."> ","debug");
-//    XDEBUG && log::write("XXXX [".__LINE__."] before verify:".print_r($src_data, true),"debug");
-    __parse_user_role($rv['role'], $src_data);
+    return 0;
 }
+
 function __fill_article_to_tag_list(&$feed, $completefeed) {
     //将帖子添加到指定归类的集合中
     global $g_tag_server_socket;
@@ -1024,7 +961,7 @@ function __fill_article_to_tag_list(&$feed, $completefeed) {
         if (init_connect_and_nonblock(TAG_CACHE_IP, TAG_CACHE_PORT, $g_tag_server_socket))
        {   
            log::write("init_connect tag_server fail reason: connect to relation_server", "error");
-            return -1;
+           return -1;
        }
         log::write("init_connect tag_server fail reason: connect to relation_server", "error");
     }
@@ -1049,24 +986,6 @@ function __fill_article_to_tag_list(&$feed, $completefeed) {
         log::write(__LINE__.'tag cache server interal fail', 'error');
         return -1;
     }
-
-    return 0;
-}
-
-function news_article($feed, &$comfeed, &$completefeed, &$passive_feed)
-{ 
-    __init_completefeed($feed, $completefeed);
-    __parse_article_info($feed, $src_data);
-//    __parse_user_info($feed['data'], $src_data);
-    $completefeed["data"] = json_encode($src_data);
-    $code =  __fill_article_to_tag_list($feed, $completefeed);
-    notify_kafka_new_article($feed['user_id'], $src_data['article_id'], $feed['new_feedid']);
-//    DEBUG && log::write("XXXX [".__LINE__."] constructor feedid:".print_r($completefeed, true),"debug");
-    return $code;
-
-    //推送模式模块
-    if(news_article_add_to_friend($feed['new_feedid'], $feed["user_id"], $feed["timestamp"]))
-        return -1;
 
     return 0;
 }
@@ -1174,7 +1093,8 @@ function news_comment($feed, &$comfeed, &$completefeed, &$passive_feed)
     __init_completefeed_common($feed, $completefeed);
     
     $src_data = unpack("Ltype/Larticle_id/Lauthor_id/Lcomment_mid/Lcomment_id", $feed["data"]);
-    $src["reply_id"] = $feed["user_id"];
+
+    $src_data["reply_id"] = $feed["user_id"];
     $json_src_data = json_encode($src_data);
     //通知被评论者，谁评论了我(被动feed)
     if ($src_data["comment_mid"] != $feed["user_id"])
@@ -1188,18 +1108,6 @@ function news_comment($feed, &$comfeed, &$completefeed, &$passive_feed)
     update_pfeeds_statistic($passive_feed);
     return 0;
 }
-/*10
-function news_($feed, &$comfeed, &$completefeed, &$passive_feed)
-{
-    $completefeed["user_id"] = $feed["user_id"];
-    
-    $completefeed["cmd_id"] = $feed["cmd_id"];
-    $completefeed["timestamp"] = $feed["timestamp"];
-    
-    $completefeed["data"] = "{}";
-    return 0;
-}
-*/
        
 function delete_article_by_tag($feed, $tags, $storage_server_socket) {
     //将帖子添加到指定归类的集合中
@@ -1281,174 +1189,15 @@ function delete_article(&$feed, $rqst, $storage_server_socket) {
             $feed['magic1'] = $var['magic1'];
             $feed['magic2'] = $var['magic2'];
             $feed['data'] = $var['data'];
-            DEBUG && log::write('['.__LINE__.']: Got feed: '.print_r($feed, true), "debug");
+//            DEBUG && log::write('['.__LINE__.']: Got feed: '.print_r($feed, true), "debug");
             delete_article_by_tag($feed, $tmp['tags'], $storage_server_socket);
-            $feedid = base64_encode(pack("LSLLLL", $feed['user_id'], $feed["cmd_id"], $feed["app_id"], $feed["timestamp"], $feed["magic1"], $feed["magic2"]));
-            notify_kafka_del_article($feed['user_id'], $article['id'], $feedid);
+//            $feedid = base64_encode(pack("LSLLLL", $feed['user_id'], $feed["cmd_id"], $feed["app_id"], $feed["timestamp"], $feed["magic1"], $feed["magic2"]));
+//            notify_kafka_del_article($feed['user_id'], $article['id'], $feedid);
                 
             return 0;
         }
     }
     return -2;
-}
-/*
-function news_article_v1($feed, &$comfeed, &$completefeed, &$passive_feed) {
-    __init_completefeed($feed, $completefeed);
-
-    __parse_article_info($feed, $src_data);
-
-    __parse_user_info($feed['data'], $src_data);
-    $completefeed["data"] = json_encode($src_data);
-
-    DEBUG && log::write("XXXX [".__LINE__."] new article data:".print_r($feed, true),"debug");
-    $code =  __fill_article_to_tag_list($feed, $completefeed);
-
-    return $code;
-
-    //推送模式模块
-    if(news_article_add_to_friend($feed['new_feedid'], $feed["user_id"], $feed["timestamp"]))
-        return -1;
-
-    return 0;
-}
-*/
-
-function __assign_com_feed(&$dst, $feed){
-    //初始化旧数据的feed索引
-    $dst['user_id'] = $feed['user_id'];
-    $dst['cmd_id'] = $feed['cmd_id'];
-    $dst['app_id'] = $feed['app_id'];
-    $dst['timestamp'] = $feed['timestamp'];
-    $dst['magic1'] = $feed['magic1'];
-    $dst['magic2'] = $feed['magic2'];
-}
-            
-//检查tag是否更新，若果更新需要从旧的taglist删除，添加到新的taglist
-function __check_if_need_update_tags($old_tag, $new_tag, $feed) {
-    if ($old_tag === $new_tag) {
-        DEBUG && log::write('['.__LINE__.']: feed tags not change: '.print_r($new_tag, true), "warn");
-        return TRUE;
-    }
-    $need_delete = array();
-    $need_update = array();
-    foreach ($old_tag as $tmp) {
-        if (!in_array($tmp, $new_tag)) 
-            $need_delete[] = $tmp;
-    }
-
-    $tag_cnt = 0;
-    foreach ($new_tag as $tmp) {
-        if (!in_array($tmp, $old_tag))  {
-            $tag_data = $tag_data.pack('L', $tmp);
-            $tag_cnt++;
-        }
-    }
-
-    if (!empty($need_delete)) {
-//        DEBUG && log::write('['.__LINE__.']: feed tags need delete: '.print_r($need_delete, true), "debug");
-        delete_article_by_tag($feed, $need_delete, $storage_server_socket);
-    }
-
-    if ($tag_cnt > 0) {
-//        DEBUG && log::write('['.__LINE__.']: feed tags need update: '.strlen($tag_data), "debug");
-        $feed['tag_data'] = $tag_data;
-        $feed['tag_cnt'] = $tag_cnt;
-        __fill_article_to_tag_list($feed, $feed);
-    }
-}
-
-function modify_article($feed, &$comfeed, &$completefeed, &$passive_feed) {
-    if (strlen($feed['data']) < 9) {
-        log::write('['.__LINE__.'] Can not parse parameters,data len < 9.<'.strlen($feed['data']).'>', 'error');
-        return -2; 
-    }
-
-    //修改feed的协议号为发帖协议号，以便用于帖子查询和更新
-    $feed['cmd_id'] = NEWS_ARTICLE;
-
-    __parse_article_info($feed, $src_data);
-
-    global $g_storage_server_socket;
-    $feed_list = array();
-    if (false == get_comfeed_time_span($g_storage_server_socket, 
-            $feed['user_id'],
-            $feed['cmd_id'],
-            $feed['timestamp'],
-            $feed['timestamp'],
-            $feed['app_id'],
-            $feed_list)) {
-        log::write('['.__LINE__.'] Can not find matched feed :'.print_r($feed, true), 'error');
-        return -1;
-    }
-    foreach ($feed_list as $var) {
-        $tmp = json_decode($var['data'], true);
-//    DEBUG && log::write('['.__LINE__.']: feed data is : '.print_r($var, true), "debug");
-        if ($src_data['article_id'] == $tmp['article_id']) {
-            $feed['magic1'] = $var['magic1'];
-            $feed['magic2'] = $var['magic2'];
-//            DEBUG && log::write('['.__LINE__.']: Got feed: '.print_r($feed, true), "debug");
-
-            __assign_com_feed($comfeed, $feed);
-            __assign_com_feed($completefeed, $feed);
-
-            $src_data['icon'] = $tmp['icon'];
-            $src_data['nickname'] = $tmp['nickname'];
-            $src_data['verify'] = $tmp['verify'];
-            $completefeed['data'] = json_encode($src_data);
-
-//            DEBUG && log::write('['.__LINE__.']: Got comfeed: '.print_r($comfeed, true), "debug");
-//            DEBUG && log::write('['.__LINE__.']: Got completefeed: '.print_r($completefeed, true), "debug");
-            //检查tag是否更新，若果更新需要从旧的taglist删除，添加到新的taglist
-            __check_if_need_update_tags($tmp['tags'], $src_data['tags'], $feed);
-            return 0;
-        }
-    }
-    
-    log::write('['.__LINE__.'] Can not find matched article<'.$src_data['article_id'].'>', 'error');
-    return -2;
-}
-
-function modify_user_info($feed, &$comfeed, &$completefeed, &$passive_feed) {
-    __parse_user_info($feed['data'], $src_data);
-
-//    DEBUG && log::write('['.__LINE__.']: feed: '.print_r($feed, true), "debug");
-//    DEBUG && log::write('['.__LINE__.']: src: '.print_r($src_data, true), "debug");
-    global $g_storage_server_socket;
-
-    //修改feed的协议号为发帖协议号，以便用于帖子查询和更新
-    $feed['cmd_id'] = NEWS_ARTICLE;
-    $feed_list = array();
-    if (false == get_comfeed_time_span($g_storage_server_socket, 
-            $feed['user_id'],
-            $feed['cmd_id'],
-            0,
-            $feed['timestamp'],
-            $feed['app_id'],
-            $feed_list)) {
-        log::write('['.__LINE__.'] Can not find matched feed :'.print_r($feed, true), 'error');
-        return -1;
-    }
-//    DEBUG && log::write('['.__LINE__.']: feed : '.print_r($feed_list, true), "debug");
-    foreach ($feed_list as &$var) {
-        $tmp = json_decode($var['data'], true);
-        if (array_key_exists('icon', $src_data) && $src_data['icon'] != $tmp['icon'])
-            $tmp['icon'] = $src_data['icon'];
-        if (array_key_exists('nickname', $src_data) && $src_data['nickname'] != $tmp['nickname'])
-            $tmp['nickname'] = $src_data['nickname'];
-        if (array_key_exists('verify', $src_data) && $src_data['verify'] != $tmp['verify'])
-            $tmp['verify'] = $src_data['verify'];
-//    DEBUG && log::write('['.__LINE__.']: feed modify data is : '.print_r($tmp, true), "debug");
-        $var['data'] = json_encode($tmp);
-    }
-//    DEBUG && log::write('['.__LINE__.']: feed modify feed is : '.print_r($feed_list, true), "debug");
-    foreach ($feed_list as $var) {
-        $ret = operate_feed_to_db($g_storage_server_socket, $var, $var);
-        if ($ret == 1) {
-            log::write(__FUNCTION__."[".__LINE__."]"."operate_feed_to_db update id duplicate dont happen", "warn");
-        } else if ($ret != 0) {
-            log::write(__FUNCTION__."[".__LINE__."]"."update to storage_server fail", "error");
-        }
-    }
 }
 
 function news_fans($feed, &$comfeed, &$completefeed, &$passive_feed) {
@@ -1460,18 +1209,18 @@ function news_fans($feed, &$comfeed, &$completefeed, &$passive_feed) {
     
     global $g_storage_server_socket;
     if (check_fans_pfeed_unique($g_storage_server_socket, $following['id'], $feed['user_id'], $feed['cmd_id'], $feed['app_id'], -1) == TRUE) {
-        log::write('<'.$feed['user_id'].'> Reliker following<'.$following['id'].'> again', "warn");
+        log::write('<'.$feed['user_id'].'> Refollowing<'.$following['id'].'> again', "warn");
         return 0;
     }
-    log::write('<'.$feed['user_id'].'> following <'.$following['id'].'> again', "warn");
+    log::write('<'.$feed['user_id'].'> following <'.$following['id'].'> first time', "warn");
     $src_data['fans'] = $feed['user_id'];
     $json_src_data = json_encode($src_data);
-        log::write("Fans ".print_r($src_data, true), "error");
+//        log::write("Fans ".print_r($src_data, true), "error");
     $passive_feed[] = produce_passive_feed($feed, $src_data['fans'], $following['id'], $json_src_data);
 
     __init_completefeed_common($feed, $completefeed);
     $completefeed['data'] = $json_src_data;
-        log::write("Fans ".print_r($completefeed_data, true), "error");
+//        log::write("Fans ".print_r($completefeed_data, true), "error");
     update_pfeeds_statistic($passive_feed);
     return 0;
 }
