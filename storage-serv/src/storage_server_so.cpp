@@ -258,6 +258,13 @@ extern "C" int handle_process(const char *p_recv, int recv_len,
                 STAT_END2TIME("get_pfeed_by_cmdid_pkgs");
                 break;
             }
+        case REQ_OP_PASS_GET_CNT_BY_CMDID:  // 28 =>2019-07-10 新增根据用户米米号和协议号查询被动feed的条数
+            {
+                STAT_START();
+                op_ret = feeds_store::get_p_feedcnt(op_buf, sizeof(op_buf), &sendlen, r_units, recv->get_p_feedcnt_items);
+                STAT_END2TIME("get_pfeed_count_by_cmdid");
+                break;
+            }
         default:           //error: can not handle op type
             {
                 STAT_START();

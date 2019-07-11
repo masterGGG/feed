@@ -69,7 +69,15 @@ typedef struct get_passive_key_pkg {
 }__attribute__((packed)) get_p_key_pkg_t; 
 
 typedef struct get_n_passive_indexs_pkg {
+    uint16_t flag;              //denote filter way of (cmd_id, app_id), have same meaning in following package
+                                /* one bit represent one feature, support bitwise or sematic
+                                * 0x1 => use cmd_id , the last bit
+                                * 0x2 => use app_id , the next to last bit
+                                * 0x4 => response with feed data, the third bit from the end
+                                */
     uint32_t mimi;              //fetch passive feed index for user
+    uint16_t cmd_id;              //协议号
+    uint32_t app_id;
     uint32_t starttime;         //start time of lastest n indexs, before starttime
                                 //0 represent now in storage server
     uint32_t prev_num;          //fetch prev_num feedid, before starttime ( <= starttime)
@@ -93,4 +101,15 @@ typedef struct get_passive_feedid_by_cmdid_pkg {
    uint32_t target_id;           //接收被动feed的米米号
 }__attribute__((packed)) get_p_feedid_by_cmdid_pkg_t; 
 
+/* 2019-07-10 新增根据用户米米号和协议号查询被动feed的条数 */
+#define     REQ_OP_PASS_GET_CNT_BY_CMDID    28
+typedef struct get_passive_count_by_cmdid_pkg {
+    uint32_t mimi;
+    uint16_t cmd_id;
+    uint32_t app_id;
+} __attribute__((packed)) get_p_feed_cnt_t;
+
+typedef struct passive_feed_cnt_pkg {
+    uint32_t  cnt;              //denote length of passive feed package
+}__attribute__((packed))  pfeed_cnt_t;
 #endif  /*__STORAGE_PROTO_PASS_H__*/

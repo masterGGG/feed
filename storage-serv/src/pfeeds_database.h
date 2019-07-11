@@ -62,6 +62,7 @@ public:
      * @return >=0 => feedid , <0 => error code
      */
     static int get_feedid_by_cmdid(char *resbuf, const int buflen, int &reslen, const int units, get_p_feedid_by_cmdid_pkg_t *pkg);
+    static int get_feedcnt_by_cmdid(char *resbuf, const int buflen, int &reslen, const int units, get_p_feed_cnt_t *pkg);
 };
 
 #endif  /*__PFEEDS_DATABASE_H__*/

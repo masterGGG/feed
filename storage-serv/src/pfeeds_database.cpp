@@ -252,12 +252,35 @@ int pfeeds_database::get_indexs(char *resbuf, const int buflen, int *reslen, con
 
     for (int i=0 ; i<units ; i++) { //fetch for target user of each package
         indexn_p_pkg_t *cur_pkg = pkg + i;
+        /*
+         * 2019-07-10
+         * 支持按协议号过滤功能
+         *///>>>>>>>>>>>>>>>>>>begin
+        bool use_cmd_id = pkg->flag & 0x1;
+        bool use_app_id = pkg->flag & 0x2;
+        bool with_data  = pkg->flag & 0x4;
+        const char * data_fld = with_data ? ",data " : " ";
+        const char * end_fld = " and active_time < %u order by target_id, active_time desc limit %u;";
+        //<<<<<<<<<<<<<<<<end
         uint32_t dis_id = pkg->mimi;
         uint32_t starttime = cur_pkg->starttime == 0 ? time(NULL) : cur_pkg->starttime;
-        snprintf(sql_buf, max_buf_size, "select user_id,cmd_id,app_id,timestamp,magic,sender_id,target_id,p_magic,active_time "
+        int sql_cnt = snprintf(sql_buf, max_buf_size, "select user_id,cmd_id,app_id,timestamp,magic,sender_id,target_id,p_magic,active_time %s"
                 "from db_newsfeed_%d.t_pass_newsfeed_%d "
-                "where target_id=%u and active_time <= %u order by target_id, active_time desc limit %u;",
-                get_dbid(dis_id), get_tid(dis_id), cur_pkg->mimi, starttime, cur_pkg->prev_num );
+                "where target_id=%u",
+                data_fld, get_dbid(dis_id), get_tid(dis_id), cur_pkg->mimi);
+//, cur_pkg->cmd_id, cur_pkg->app_id, starttime, cur_pkg->prev_num );
+//                "where target_id=%u and cmd_id=%u and app_id=%u and active_time < %u order by target_id, active_time desc limit %u;",
+        char *new_buf = nullptr;
+        if (use_cmd_id == true) {
+            new_buf = sql_buf + sql_cnt;
+            sql_cnt +=snprintf(new_buf, max_buf_size - sql_cnt, " and cmd_id = %u", cur_pkg->cmd_id);
+        }
+        if (use_app_id == true) {
+            new_buf = sql_buf + sql_cnt;
+            sql_cnt +=snprintf(new_buf, max_buf_size - sql_cnt, " and app_id = %u", cur_pkg->app_id);
+        }
+        new_buf = sql_buf + sql_cnt;
+        snprintf(new_buf, max_buf_size - sql_cnt, end_fld, starttime, cur_pkg->prev_num);
 
     DEBUG_SQL(sql_buf);
         i_mysql_iface *db = gconfig::get_db_conn(dis_id);
@@ -287,15 +310,21 @@ int pfeeds_database::get_indexs(char *resbuf, const int buflen, int *reslen, con
                 p_pfeed->fid.target_id = strtoul(row[6], &endptr, 10);
                 p_pfeed->fid.p_magic = strtoul(row[7], &endptr, 10);
                 p_pfeed->active_time = strtoul(row[8], &endptr, 10);
-                p_pfeed->len = P_FEED_HEAD_SZ;
+                if (with_data == false) {
+                    p_pfeed->len = P_FEED_HEAD_SZ;
+                } else {
+                    size_t vlen = strlen(row[9]); 
+                    p_pfeed->len = P_FEED_HEAD_SZ + vlen;
+                    memcpy(p_pfeed->data, row[9], vlen);
+                }
 
-                total_cnt ++;
-
-                buf_idx += P_FEED_HEAD_SZ;
+                buf_idx += p_pfeed->len;
                 if (buf_idx - resbuf > buflen) {
                     ERROR_LOG("[get passive idxs] response package too long %ld bytes", buf_idx - resbuf);
                     return -1;
                 }
+
+                total_cnt ++;
                 row = db->select_next_row(false);
             } //end of once fetch
         }
@@ -493,11 +522,12 @@ int pfeeds_database::get_feedid_by_cmdid(char *resbuf, const int buflen, int &re
             size_t vlen = strlen(row[5]); 
             p_pfeed->len = P_FEED_HEAD_SZ+vlen;
             memcpy(p_pfeed->data, row[5], vlen);
-            buf_idx += p_pfeed->len;
-            if (buf_idx - resbuf > buflen) {
-                ERROR_LOG("[get pfeed package] response package too long %ld bytes", buf_idx - resbuf);
-                return -1;
-            }
+        }
+        
+        buf_idx += p_pfeed->len;
+        if (buf_idx - resbuf > buflen) {
+            ERROR_LOG("[get pfeed package] response package too long %ld bytes", buf_idx - resbuf);
+            return -1;
         }
         total_cnt ++;         
         row = db->select_next_row(false);
@@ -506,4 +536,58 @@ int pfeeds_database::get_feedid_by_cmdid(char *resbuf, const int buflen, int &re
 
     reslen = buf_idx - resbuf;
     return total_cnt;
+}
+
+int pfeeds_database::get_feedcnt_by_cmdid(char *resbuf, const int buflen, int &reslen, const int units, get_p_feed_cnt_t *pkg)
+{
+    if (resbuf == NULL || units < 0 || units > MAX_ALLOW_UNITS) {
+        ERROR_LOG("null value, or units not allowed %d for get_indexs", units);
+        return -1;
+    }
+
+    int total_cnt = 0;
+    char *buf_idx = resbuf;
+    uint32_t dis_id = pkg->mimi;
+    
+    snprintf(sql_buf, max_buf_size, "select count(*) from db_newsfeed_%d.t_pass_newsfeed_%d" 
+            " where target_id = %u"
+            " and cmd_id = %u"
+            " and app_id = %u",
+            get_dbid(dis_id), 
+            get_tid(dis_id), 
+            pkg->mimi,
+            pkg->cmd_id,
+            pkg->app_id);
+
+    DEBUG_SQL(sql_buf);
+        
+    i_mysql_iface *db = gconfig::get_db_conn(dis_id);
+    if (db == NULL) {
+        ERROR_LOG("[get passive feedid] fail to get database connection for mimi: %u", dis_id);
+        return -1;
+    }
+    
+    MYSQL_ROW row;
+    int effect_rows = db->select_first_row(&row, "%s", sql_buf);
+    if (effect_rows < 0) {
+        ERROR_LOG("[get passive feedid] database failure, sql:%s, err str: %s", sql_buf, db->get_last_errstr());
+        return -1;
+    }
+    else if (effect_rows == 0) {
+        WARN_LOG("get 0 pfeedid, sql: %s", sql_buf);
+        return total_cnt;    
+    }
+        
+    if (effect_rows != 1) {
+        WARN_LOG("get 0 pfeed cnt, sql: %s", sql_buf);
+        return 0;
+    }
+
+    pfeed_cnt_t *p_pfeed = (pfeed_cnt_t *)buf_idx;
+    char *endptr = NULL;
+    p_pfeed->cnt = strtoul(row[0], &endptr, 10);        
+    DEBUG_LOG("[get passive feedcnt] database %u", p_pfeed->cnt);
+
+    reslen = sizeof(uint32_t);
+    return 1;
 }

@@ -1137,3 +1137,32 @@ int feeds_store::get_p_feedid_by_cmdid_pkgs(char *send_buf, const size_t buflen,
     *res_pkg_len = res->len;
     return 0;
 }
+int feeds_store::get_p_feedcnt(char *send_buf, const size_t buflen, int *res_pkg_len,
+        const int units, get_p_feed_cnt_t *pkg)
+{
+    if (send_buf == NULL || res_pkg_len == NULL || pkg == NULL || units < 0) {
+        ERROR_LOG("null value for pfeed get pfeedid by cmdid pkgs");
+        return -1;
+    }
+    
+    if (units != 1) {
+        *res_pkg_len = build_simple_msg(send_buf, buflen, RES_OP_ERR_UNITS);
+        return -1;
+    }
+    
+    int body_len = 0;
+    int ret = pfeeds_database::get_feedcnt_by_cmdid(send_buf + res_hsz, buflen - res_hsz, body_len, units, pkg);
+    if (ret < 0) {
+        ERROR_LOG("[store::del_p] fail to get passive feed count by target_id:[%u] cmdid:[%u]", pkg->mimi, pkg->cmd_id);
+        *res_pkg_len = build_simple_msg(send_buf, buflen, RES_OP_ERROR);
+        return -1;
+    }
+
+    response_pkg_t *res = (response_pkg_t *)send_buf;
+    res->len = res_hsz + body_len;
+    res->ret = RES_OP_SUCCESS;
+    res->units = ret;
+
+    *res_pkg_len = res->len;
+    return 0;
+}
