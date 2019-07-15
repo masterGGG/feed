@@ -104,7 +104,7 @@ if ($action == 'normal')
         $offset = 0;
         $count  = 0;
         $timestamp = 0;
-        $cmd_id = '';                                 
+        $cmd_id = ''; 
 
         if (isset($_REQUEST['uid']) && $_REQUEST['uid'] != '') {
             $uid = $_REQUEST['uid'];
@@ -127,16 +127,8 @@ if ($action == 'normal')
         if (isset($_REQUEST['cmd_id']) && $_REQUEST['cmd_id'] != '') {
             $cmd_id = $_REQUEST['cmd_id'];
         }
-        if ($cmd_id === '')
-        {
-            $arr_cmd_id = array();
-        }
-        else
-        {
-            $arr_cmd_id = explode(',', $cmd_id);
-        }
 
-        $rv = get_passive_newsfeed($uid, $offset, $count, $timestamp, $arr_cmd_id);
+        $rv = get_passive_newsfeed($uid, $offset, $count, $timestamp, $cmd_id);
         if ($rv === FALSE) {
             echo json_encode(array('result' => -1));
         }
@@ -426,6 +418,7 @@ else if ($action == 'notice')
         do_log('error', "ERROR: uid: $uid cmd_id: $cmd_id type: $type");
         exit();
     }
+    do_log('error', "ERROR: uid: $uid cmd_id: $cmd_id count: $type");
     $arr_uid = explode(',', $uid);
     $rv = get_notice($arr_uid, $type, $arr_cmd_id);
 
@@ -456,6 +449,34 @@ do_log('error', '['.__LINE__.']: >>>>>>>>>>>>>> BEGIN <<<<<<<<<<<<:');
         echo json_encode(array('result' => -1));
     }
     do_log('error', '['.__LINE__.']: >>>>>>>>>>>>>> END <<<<<<<<<<<<:');
+    echo $rv; 
+} else if ($action == 'stat') {
+    $cmd_id = '';
+    $uid = '';
+    $type = '';
+
+    if (isset($_REQUEST['uid']) && $_REQUEST['uid'] != '') {
+        $uid = $_REQUEST['uid'];
+    }
+    if (isset($_REQUEST['type']) && $_REQUEST['type'] != '') {
+        $type = $_REQUEST['type'];
+    }
+            
+    if (isset($_REQUEST['cmd_id']) && $_REQUEST['cmd_id'] != '') 
+        $cmd_id = $_REQUEST['cmd_id'];
+    
+    if ($uid == '' || $type == '' || $cmd_id == '')
+    {
+        echo json_encode(array('result' => -1));
+        do_log('error', "ERROR: uid: $uid cmd_id: $cmd_id type: $type");
+        exit();
+    }
+    
+    $rv = get_pfeed_stat($uid, $type, $cmd_id);
+
+    if ($rv === FALSE) {
+        echo json_encode(array('result' => -1));
+    }
     echo $rv; 
 } else {
     echo json_encode(array('result' => -1));

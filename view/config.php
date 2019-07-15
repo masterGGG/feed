@@ -52,4 +52,4 @@ define('TAG_CACHE_ADDR', '0.0.0.0:22080');
 define('MAX_OUTBOX_PASS_CNT', 30);
 define('MAX_OUTBOX_CNT', 30);
 
-define('DEBUG', true);
+define('DEBUG_V0710', true);
