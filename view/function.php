@@ -185,7 +185,7 @@ function get_passive_feedid($uid)
 }
 
 //TODO 支持按协议号清空对应的统计数据
-function reset_statistic_pfeed($uid) {
+function reset_statistic_pfeed($uid, $cmd_id) {
     //去重
     $stat_serv = explode(':', constant('TAG_CACHE_ADDR'));
     $stat_client = new netclient($stat_serv[0], $stat_serv[1]);
@@ -195,6 +195,8 @@ function reset_statistic_pfeed($uid) {
     }
         
     $protobuf = new \Mifan\pCommonStat();
+    if ($cmd_id !== '')
+        $protobuf->appendCmd($cmd_id);
     $body = $protobuf->serializeToString();
             
     $rqst = pack('L2SL2', 18 + strlen($body), 0, 0xA203, 0, $uid).$body;
@@ -786,7 +788,7 @@ function get_passive_newsfeed($uid, $offset, $count, $timestamp, $cmd_id)
             $next_offset = $offset == -1 ? $count : $offset + $count;
         }
         if ($offset == -1)        
-            reset_statistic_pfeed($uid); 
+            reset_statistic_pfeed($uid, $cmd_id); 
         $arr_result = array();
         $arr_result['current_page'] = $arr_feeds;
         $arr_result['have_next'] = $have_next;
@@ -850,7 +852,7 @@ function get_passive_newsfeed($uid, $offset, $count, $timestamp, $cmd_id)
             if ($count !== 0) 
                 $arr_feedid = array_slice($arr_feedid, $offset, $count);
         } else {
-            reset_statistic_pfeed($uid); 
+            reset_statistic_pfeed($uid, 0); 
             DEBUG_V0710 && do_log('debug', "Query pass feed:mimi<".$uid.'>');
             $arr_feedid = array_slice($arr_feedid, 0, $count);
         }
@@ -1464,6 +1466,7 @@ function get_homepage_feedid_outbox($uid, $offset, $count, &$arr_feedid) {
         $feedid_count = $offset + $count;
 
     do_log('error', '['.__FUNCTION__.']['.__LINE__.'] outbox feedid count'.$feedid_count);
+    $arr_feedid = array();
     for ($j = $offset; $j != $feedid_count; ++$j) {
         $binary = substr($outbox_resp, OUTBOX_RESPONSE_HEAD_LEN + $j * FEEDID_LEN, FEEDID_LEN);
         $feedid = binary_to_feedid($binary);
@@ -1537,13 +1540,16 @@ function get_homepage_feed_storage($uid, $offset, $count, $timestamp, &$arr_feed
 
 function get_homepage_feed($uid, $offset, $count, $timestamp, &$arr_feeds) {
     if ($offset < MAX_OUTBOX_CNT) { 
+        $arr_feeds = array();
         get_homepage_feedid_outbox($uid, $offset, $count, $arr_feedid);
 //        do_log('error', '['.__FUNCTION__.']['.__LINE__.'] feedid list'.print_r($arr_feedid, true));
         // 从storage-server获取feed内容
-        $arr_feeds = get_feeds($arr_feedid);
-        if ($arr_feeds === FALSE) 
-            return FALSE;
-        usort($arr_feeds, 'feedid_cmp');
+        if (count($arr_feedid) > 0) {
+            $arr_feeds = get_feeds($arr_feedid);
+            if ($arr_feeds === FALSE) 
+                return FALSE;
+            usort($arr_feeds, 'feedid_cmp');
+        }
     }
     else 
         get_homepage_feed_storage($uid, $offset,$count, $timestamp, $arr_feeds);
