@@ -19,31 +19,24 @@ if ($client->open_conn(1) === FALSE) {
     return FALSE;
 }
 
-for ($i = 1; $i != 10; ++$i) {
     $feedid = new feedid();
-    $feedid->mimi = 1110+$i;
-    $feedid->cmd_id = 7005;
+    $feedid->mimi = 38743981;
+    $feedid->cmd_id = 7006;
     $feedid->version = 1;
     $feedid->timestamp = time();
     $feedid_binary = $feedid->to_binary();
 
-    $aid = 612;
-    $amid = 1112;
-    $cmid = 1113;
-    $cid = 10;
-    
-    $f_arr_1 = pack('S',37).$feedid_binary.pack('LLLLLL', 7005, 0, $aid, $amid, $cmid, $cid);
+    $aid = 600;
+    $amid = 1227401110;
 
-//    print("total buffer:{$f_arr_1}\n");
-//    $f_unpack_ret = unpack('Slen/Scmd/Lmid/Cversion/Ltime/Lappid/Ltype/Larticle_id/Lauthor_id/LcommentMimi/LcommentID',$f_arr_1);
-//    var_dump($f_unpack_ret);
+    $f_arr_1 = pack('S',25).$feedid_binary.pack('LLL', 7004, $aid, $amid);
+
     $rqst_msg = $f_arr_1;
     $resp_msg = FALSE;
-   if (($resp_msg = $client->send_rqst($rqst_msg, 5)) === FALSE) {
+    if (($resp_msg = $client->send_rqst($rqst_msg, 5)) === FALSE) {
         do_log('error', 'ERROR: client->send_rqst');
         return FALSE;
     }
-}
 
 if ($client->close_conn() === FALSE) {
     do_log('error', 'ERROR: client->close_conn');
