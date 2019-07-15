@@ -1242,3 +1242,60 @@ function check_fans_pfeed_unique($storage_server_socket, $target_id, $sender_id,
     }
     return TRUE;
 }
+
+function get_pfeed_cnt_according_cmd($storage_server_socket, $user_id, $cmd_id, $app_id, &$cnt) {
+    if (!isset($user_id, $cmd_id, $app_id)){
+        log::write("[".__FILE__."]:[".__LINE__."]".__FUNCTION__." para unset mimi_id:{$mimi_id} cmd_id:{$cmd_id} app_id:{$app_id}","error");
+        return false;
+    }
+    if ($storage_server_socket === false) {
+    }
+    
+    $request_pack_format = array("LS2LSL");
+    $request_pack_content = array(
+                            'len' => 18,
+                            'op' => 28,
+                            'units' => 1,
+                            'mimi' => $user_id,
+                            'cmd_id' => $cmd_id,
+                            'app_id' => $app_id
+    );
+    $para = array_merge($request_pack_format, $request_pack_content);
+    $request_pack = call_user_func_array('pack',array_values($para));
+
+    DEBUG_0710 && log::write("[".__FILE__."]:[".__LINE__."]".print_r($request_pack_content, true), "debug");
+
+    if (send_data_and_nonblock($storage_server_socket, $request_pack, TIMEOUT))
+    {
+        log::write("[".__FILE__."]:[".__LINE__."]"."send data to storage_server fail", "error");
+        return false;
+    }
+    $response_pack = "";
+    if (recv_data_and_nonblock($storage_server_socket, 4, $response_pack, TIMEOUT))
+    {
+        log::write("[".__FILE__."]:[".__LINE__."]"."recv data to storage_server fail", "error");
+        return false;
+    }
+    $temp = unpack("Llen", $response_pack);
+    if (recv_data_and_nonblock($storage_server_socket, $temp['len'], $response_pack, TIMEOUT))
+    {
+        log::write("[".__FILE__."]:[".__LINE__."]"."recv data to storage_server fail", "error");
+        return false;
+    }
+    
+    $response_pack_content = unpack("Llen/Sret/Sunits", $response_pack); 
+    if ($response_pack_content['ret'] != 0)
+    {
+            log::write("[".__FILE__."]:[".__LINE__."]"."get_feed_according_time function request storage error ret:{$response_pack_content['ret']}","error");
+            return false;     
+    }
+    
+    $units = $response_pack_content['units']; 
+    if ($units = 1) {
+        $response = unpack("Lcnt", substr($response_pack, 8));
+        $cnt = $response['cnt'];
+        return true;
+    }
+
+    return false;
+}

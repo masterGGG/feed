@@ -943,7 +943,7 @@ function news_article($feed, &$comfeed, &$completefeed, &$passive_feed)
 
     $completefeed["data"] = json_encode($src_data);
     $code =  __fill_article_to_tag_list($feed, $completefeed);
-//    notify_kafka_new_article($feed['user_id'], $src_data['article_id'], $feed['new_feedid']);
+    notify_kafka_new_article($feed['user_id'], $src_data['article_id'], $feed['new_feedid']);
 //    DEBUG && log::write("XXXX [".__LINE__."] constructor feedid:".print_r($completefeed, true),"debug");
     return $code;
 
@@ -1279,11 +1279,11 @@ function notify_kafka_new_article($uid, $articleId, $feedid) {
     $serializeBuf = __notify_gen_message($uid, $articleId, $feedid);
     $info_ = new \Mifan\noteArticle();
     $info_->ParseFromString($serializeBuf);
-    log::write('['.__FUNCTION__.']['.__LINE__.'] Kafka new article['.$info_->getUserid().' - '.$info_->getArticleid());
+    log::write('['.__FUNCTION__.']['.__LINE__.'] Kafka new article['.$info_->getUserid().' - '.$info_->getArticleid().' - '.$info_->getFeedid());
     $kTopic->produce(RD_KAFKA_PARTITION_UA, 0, "article:$serializeBuf", $option);
 }
 
-function notify_kafka_del_article($uid, $articleId) {
+function notify_kafka_del_article($uid, $articleId, $feedid) {
     global $kCnf;
     global $kProducerCnf;
     global $kTopicCnf;
@@ -1293,7 +1293,7 @@ function notify_kafka_del_article($uid, $articleId) {
     $kTopic = $kProducerCnf->newTopic(KAFKA_NOTE_DEL_ARTICLE, $kTopicCnf);
     $option = KAFKA_NOTE_ARTICLE_OPTION;
 
-    $serializeBuf = __notify_gen_message($uid, $articleId);
+    $serializeBuf = __notify_gen_message($uid, $articleId, $feedid);
     $info_ = new \Mifan\noteArticle();
     $info_->ParseFromString($serializeBuf);
     log::write('['.__FUNCTION__.']['.__LINE__.'] Kafka new article['.$info_->getUserid().' - '.$info_->getArticleid());
