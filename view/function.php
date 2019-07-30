@@ -82,7 +82,7 @@ function get_passive_newsfeed_from_storageDB($uid, $timestamp, $cmd_id, $app_id,
         do_log('error', __FUNCTION__ ."----".__LINE__ ."ERROR: len: {$rv_0['len']} result: {$rv_0['ret']}");
         return FALSE;
     }
-    DEBUG_V0710 && do_log('debug', __FUNCTION__ ."----".__LINE__ ."ERROR: len: {$rv_0['len']} result: {$rv_0['ret']}");
+    DEBUG_V0716 && do_log('debug', __FUNCTION__ ."----".__LINE__ ."ERROR: len: {$rv_0['len']} result: {$rv_0['ret']}");
 
     $storage_resp = substr($storage_resp, 4 + 2 + 2);
     
@@ -667,7 +667,7 @@ function get_pfeed_stat($uid, $type, $cmd_id) {
     $resp_protobuf->ParseFromString(substr($resp, 18));
     for ($i = 0; $i != $resp_protobuf->getCntCount(); ++$i) {
         $rv['num'] = $resp_protobuf->getCntAt($i);
-        do_log('debug', '['.__LINE__.'] Cnt is set:'.$rv['num']);
+        DEBUG_V0716 && do_log('debug', '['.__LINE__.'] Cnt is set:'.$rv['num']);
     }
     return json_encode($rv);
 }
@@ -778,7 +778,7 @@ function get_passive_newsfeed($uid, $offset, $count, $timestamp, $cmd_id)
     $have_next = 0;
     $next_offset = 0;
     if ($cmd_id != '') {
-        DEBUG_V0710 && do_log('debug', '['.__LINE__.'] CMD is set:'.$cmd_id.' timestamp:'.$timestamp.' count:'.$count);
+        DEBUG_V0716 && do_log('debug', '['.__LINE__.'] CMD is set:'.$cmd_id.' timestamp:'.$timestamp.' count:'.$count);
         $app_id = 1;
         $cmd_id += 15000;
         $arr_feeds = array();
@@ -787,6 +787,7 @@ function get_passive_newsfeed($uid, $offset, $count, $timestamp, $cmd_id)
             $have_next = 1;
             $next_offset = $offset == -1 ? $count : $offset + $count;
         }
+       
         if ($offset == -1)        
             reset_statistic_pfeed($uid, $cmd_id); 
         $arr_result = array();
@@ -825,7 +826,7 @@ function get_passive_newsfeed($uid, $offset, $count, $timestamp, $cmd_id)
                 $ncount++;
             }
             $arr_feedid = array_slice($arr_feedid, $offset, $ncount);
-            DEBUG_V0710 && do_log('debug', "lastTime:".$last_time." eraase count:".$ncount." reset count:".count($arr_feedid));
+            DEBUG_V0716 && do_log('debug', "lastTime:".$last_time." eraase count:".$ncount." reset count:".count($arr_feedid));
         } else {
             if ($cnt_feedid ==MAX_OUTBOX_PASS_CNT) {
                 $have_next = 1;
@@ -843,7 +844,7 @@ function get_passive_newsfeed($uid, $offset, $count, $timestamp, $cmd_id)
                 }
             }
         }
-        DEBUG_V0710 && do_log('debug', '['.__LINE__."] Outbox CNT:<".$cnt_feedid."> have next:<".$have_next." >reset count:<".$next_offset.'>');
+        DEBUG_V0716 && do_log('debug', '['.__LINE__."] Outbox CNT:<".$cnt_feedid."> have next:<".$have_next." >reset count:<".$next_offset.'>');
 
         usort($arr_feedid, 'passive_feedid_cmp');
         // 对feedid进行分页
@@ -853,14 +854,14 @@ function get_passive_newsfeed($uid, $offset, $count, $timestamp, $cmd_id)
                 $arr_feedid = array_slice($arr_feedid, $offset, $count);
         } else {
             reset_statistic_pfeed($uid, 0); 
-            DEBUG_V0710 && do_log('debug', "Query pass feed:mimi<".$uid.'>');
+            DEBUG_V0716 && do_log('debug', "Query pass feed:mimi<".$uid.'>');
             $arr_feedid = array_slice($arr_feedid, 0, $count);
         }
         if ($offset <= 0) 
             set_timestamp($uid, $up_time, 'yuwo');
     } else { 
         $arr_feedid = get_pass_feedid_from_stor($uid, $count, $timestamp);
-//        DEBUG_V0710 && do_log('debug', '['.__LINE__.'] got feedid from stor:'.print_r($arr_feedid, true));
+//        DEBUG_V0716 && do_log('debug', '['.__LINE__.'] got feedid from stor:'.print_r($arr_feedid, true));
         if ($arr_feedid != FALSE) {
             $total_count = count($arr_feedid);
             $have_next = 1;
@@ -869,10 +870,10 @@ function get_passive_newsfeed($uid, $offset, $count, $timestamp, $cmd_id)
             $total_count = 0;
             $arr_feedid = array();
         }
-        DEBUG_V0710 && do_log('debug', '['.__LINE__."] Query pass feed:mimi<".$uid.'> from storage count:'.$total_count);
+        DEBUG_V0716 && do_log('debug', '['.__LINE__."] Query pass feed:mimi<".$uid.'> from storage count:'.$total_count);
     }
 
-//    DEBUG_V0710 && do_log('debug', '['.__LINE__."] Query pass feedid cnt<".count($arr_feedid).'>');
+//    DEBUG_V0716 && do_log('debug', '['.__LINE__."] Query pass feedid cnt<".count($arr_feedid).'>');
     // 根据arr_app_id、arr_cmd_id及业务逻辑对feedid进行过滤
     global $g_arr_app_id;
     global $g_arr_cmd_id;
@@ -881,7 +882,7 @@ function get_passive_newsfeed($uid, $offset, $count, $timestamp, $cmd_id)
     $g_arr_cmd_id[] = 22005;
     if (count($arr_feedid) > 0)
         $arr_feedid = array_filter($arr_feedid, 'feedid_filter');
-    DEBUG_V0710 && do_log('debug', '['.__LINE__."] Filter pass feedid cnt<".count($arr_feedid).'>');
+    DEBUG_V0716 && do_log('debug', '['.__LINE__."] Filter pass feedid cnt<".count($arr_feedid).'>');
 
     // 从storage-server获取feed内容
     $arr_feeds = array();
@@ -957,6 +958,85 @@ function get_newsfeed_by_tags($my_id, $arr_app_id, $arr_cmd_id, $count, $begin_t
     return json_encode($arr_result);
 }
 
+require 'Mifan/pullReq.php';
+require 'Mifan/pullRes.php';
+function get_recommend_feedid($uid, $count) {
+    $addr_ = explode(':', constant('RECOMMEND_ADDR'));
+    $client_ = new netClient($addr_[0], $addr_[1]);
+    if ($client_->open_conn(1) === FALSE) {
+        do_log('error', __LINE__.' Connnect to recommend server failed'.print_r($addr_, true));
+        return FALSE;
+    }
+
+    $protobuf = new \Mifan\pullReq();
+    $protobuf->setCount($count);
+
+    $seri_buf = $protobuf->serializeToString();
+
+    $rqst_ = pack('LLSLL', 18 + strlen($seri_buf), 0, 1, 0, $uid).$seri_buf;
+    $resp_ = FALSE;
+    if (($resp_ = $client_->send_rqst($rqst_, TIMEOUT)) == FALSE) {
+        do_log('error', __LINE__.' Recv from recommend server failed'.print_r($addr_, true));
+        return FALSE;
+    }
+
+    $client_->close_conn();
+            
+    $result = unpack('Llen/Lseq/Scmd_id/Lresult/Lmid', $resp_);
+    if ($result['result'] != 0) {
+        do_log('error', __LINE__.' Recommend server query failed'.print_r($result, true));
+        return FALSE;
+    }
+    
+    $resp_body = substr($resp_, 18);
+    $feed_list = new \Mifan\pullRes();
+    $feed_list->ParseFromString($resp_body);
+    if (0 == $feed_list->getFeedidCount()) {
+        do_log('error', __LINE__.' Recommend have no resource');
+        return FALSE;
+    }
+    //var_dump($feed_list);
+    $arr_feedid = array();
+    for ($i = 0; $i != $feed_list->getFeedidCount(); ++$i) {
+        $binary = base64_decode($feed_list->getFeedidAt($i));
+        $arr_feedid[] =  binary_to_feedid($binary);
+    }
+
+    return $arr_feedid;
+}
+function get_newsfeed_of_recommend($arr_uid, $arr_app_id, $arr_cmd_id, $offset, $count, $timestamp) {
+    $my_id = $arr_uid[0];
+    $arr_feedid = get_recommend_feedid($my_id, $count);
+    if ($arr_feedid === FALSE) {
+        $arr_feedid = get_maylike_feedid($my_id);
+        if ($arr_feedid === FALSE) {
+            do_log('error', 'get_newsfeed_of_maylike: get_feedid');
+            return FALSE;
+        }
+        return get_newsfeed_common($my_id, $arr_feedid, $arr_app_id, $arr_cmd_id, $offset, $count, $timestamp, TRUE);
+    } else {
+        //do_log('error', __LINE__.'xxx get_newsfeed: last_time: '.print_r($arr_feedid, true));
+        // 从storage-server获取feed内容
+        $arr_feeds = array();
+        if (count($arr_feedid) > 0) {
+            $arr_feeds = get_feeds($arr_feedid);
+            if ($arr_feeds === FALSE) {
+                return FALSE;
+            }
+        }
+
+        $article_list = array();
+        foreach ($arr_feeds as $key_0 => &$feed_0) 
+            $article_list[] = $feed_0['data']['article_id'];
+        do_log('error', 'Recommend Request<mimi:'.$my_id.',offset:'.$offset.',conut:'.$count.'> - Response<'.json_encode($article_list).'> ');
+        $arr_result = array();
+        $arr_result['current_page'] = $arr_feeds;
+        $arr_result['have_next'] = 1;
+        $arr_result['next_offset'] = $offset == -1 ? $count : $offset + $count;
+        return json_encode($arr_result);
+    }
+}
+
 function get_newsfeed_of_latest($arr_uid, $arr_app_id, $arr_cmd_id, $offset, $count, $timestamp) {
     $my_id = $arr_uid[0];
     $arr_feedid = get_feedid($arr_uid, TRUE);
@@ -965,7 +1045,7 @@ function get_newsfeed_of_latest($arr_uid, $arr_app_id, $arr_cmd_id, $offset, $co
         return FALSE;
     }
     //do_log('error', __LINE__.'xxx get_newsfeed: last_time: '.$timestamp);
-    notify_kafka_active_user($my_id, $timestamp);
+//    notify_kafka_active_user($my_id, $timestamp);
     return get_newsfeed_common($my_id, $arr_feedid, $arr_app_id, $arr_cmd_id, $offset, $count, $timestamp, TRUE);
 }
 
@@ -1052,6 +1132,7 @@ function get_newsfeed_common($my_id, $arr_feedid, $arr_app_id, $arr_cmd_id, $off
     $last_feed = FALSE;
     $arr_join_friend = array();
     // 判断是否需要合并
+    $is_latest = TRUE;
     $article_list = array();
     foreach ($arr_feeds as $key_0 => &$feed_0) {
         if ($is_latest) {
@@ -1332,7 +1413,7 @@ function get_update_mid(&$arr_uid) { //,$count) {
     }
     
     $timestamp = gettimeofday(true);
-    $relation_rqst = pack("LLsLLLLL", 18+4+4+4, 10086, 0xA102, 0, $arr_uid[0], 0, $timestamp, 100);
+    $relation_rqst = pack("LLsLLLLL", 18+4+4+4, 10086, 0xA102, 0, $arr_uid[0], 0, $timestamp, 200);
     $relation_resp = FALSE;
     
     if (($relation_resp = $redis_cli->send_rqst($relation_rqst,TIMEOUT)) === FALSE) {
@@ -1460,12 +1541,12 @@ function get_homepage_feedid_outbox($uid, $offset, $count, &$arr_feedid) {
     }
 
     $feedid_count = ($rv['len'] - OUTBOX_RESPONSE_HEAD_LEN) / FEEDID_LEN;
-    do_log('error', '['.__FUNCTION__.']['.__LINE__.'] outbox_client->response'.print_r($rv, true));
+    //DEBUG && do_log('error', '['.__FUNCTION__.']['.__LINE__.'] outbox_client->response'.print_r($rv, true));
     //只取对应条数的feedid
     if ($feedid_count > $offset + $count)
         $feedid_count = $offset + $count;
 
-    do_log('error', '['.__FUNCTION__.']['.__LINE__.'] outbox feedid count'.$feedid_count);
+    //DEBUG && do_log('error', '['.__FUNCTION__.']['.__LINE__.'] outbox feedid count'.$feedid_count);
     $arr_feedid = array();
     for ($j = $offset; $j != $feedid_count; ++$j) {
         $binary = substr($outbox_resp, OUTBOX_RESPONSE_HEAD_LEN + $j * FEEDID_LEN, FEEDID_LEN);
@@ -1579,36 +1660,91 @@ function get_homepage_newsfeed($uid, $arr_app_id, $arr_cmd_id, $offset, $count, 
     $arr_result['next_offset'] = $offset + $cnt;
     return json_encode($arr_result);
 }
+function get_recommend_user($uid, $type, $offset, $count) {
+    $result = array();
+    $next_offset = 0;
+    $arr_uid = array();
+    $key_ = 'feeds:'.$uid.':recommends';
+    DEBUG && do_log('debug', '['.__LINE__.']: mimi:['.$key_.'] offset:['.$offset.'] count:['.$count.']');
 
-function notify_kafka_active_user($uid, $timestamp) {
-    require_once('Mifan/noteActiveUser.php');
-    $kCnf = new RdKafka\Conf();
-    $kCnf->setDrMsgCb(function ($kafka, $message) {
-        file_put_contents('./log/kafka.debug', var_export($message, true).PHP_EOL, FILE_APPEND);
-    });
+    $list_ = ['10.25.144.75:7000', '10.25.144.75:7001', '10.25.144.75:7002'];
+    $client_ = new RedisCluster(NULL, $list_);
+    $active = $client_->exists($key_);
+    DEBUG_V0716 && do_log('debug', '['.__LINE__.']: user:['.$uid.'] active:['.$active.']');
+    if ($active = 1)
+        $arr_uid = $client_->lRange($key_, $offset, $offset + $count - 1);
+    else
+        $arr_uid = $client_->lRange('feeds:default:recommends', $offset, $offset + $count - 1);
+    $cnt = count($arr_uid);
+    if ($cnt == $count)
+        $next_offset = $offset + $count;
+    if ($next_offset >= 500)
+        $next_offset = 0;
+    $result['list'] = $arr_uid;
+    $result['next_offset'] = $next_offset;
+    return json_encode($result);
+}
+function get_maylike_feedid($uid) {
+    $arr_uid = array();
+    $key_ = 'feeds:'.$uid.':recommends';
 
-    $kCnf->setErrorCb(function ($kafka, $err, $reason) {
-        file_put_contents('./log/kafka.error', var_export($message, true).PHP_EOL, FILE_APPEND); 
-    });
+    $list_ = ['10.25.144.75:7000', '10.25.144.75:7001', '10.25.144.75:7002'];
+    $client_ = new RedisCluster(NULL, $list_);
+    $active = $client_->exists($key_);
+    DEBUG_V0716 && do_log('debug', '['.__LINE__.']: user:['.$uid.'] active:['.$active.']');
+    if ($active = 1)
+        $arr_uid = $client_->lRange($key_, 10, 310);
+    else
+        $arr_uid = $client_->lRange('feeds:default:recommends', 10, 310);
 
-    $kProducerCnf = new RdKafka\Producer($kCnf);
-    $kProducerCnf->setLogLevel(LOG_DEBUG);
-    $kProducerCnf->addBrokers('10.1.1.187');
+    if (count($arr_uid) == 0)
+        return FALSE;
     
-    $kTopicCnf = new RdKafka\TopicConf();
-// -1必须等所有brokers同步完成的确认 1当前服务器确认 0不确认，这里如果是0回调里的offset无返回，如果是1和-1会返回offset
-// 我们可以利用该机制做消息生产的确认，不过还不是100%，因为有可能会中途kafka服务器挂掉
-    $kTopicCnf->set('request.required.acks', 0);
-    
-    $kTopic = $kProducerCnf->newTopic('mifan-note-active-user', $kTopicCnf);
-    $option_ = 'user:';
+    $arr_feedid = array();
 
-    if (!isset($timestamp))
-        $timestamp = gettimeofday(true);
-        do_log('error', '['.__LINE__.']: mimi:['.$uid.'] active time['.$timestamp.']');
-    $protobuf_ = new \Mifan\noteActiveUser();
-    $protobuf_->setUserid($uid);
-    $protobuf_->setTime($timestamp);
-    $serializebuf_ = $protobuf_->serializeToString();
-    $kTopic->produce(RD_KAFKA_PARTITION_UA, 0, "user:$serializebuf_", $option_);
+    $arr_outbox_addr = explode(':', constant('OUTBOX_ADDR'));
+    $outbox_client = new netclient($arr_outbox_addr[0], $arr_outbox_addr[1]); 
+    if ($outbox_client->open_conn(1) === FALSE) {
+        do_log('error', 'get_feedid: outbox_client->open_conn');
+        return FALSE;
+    }
+
+    $uid_count = count($arr_uid);
+    for ($i = 0; $i < $uid_count; $i += MAX_OUTBOX_REQUEST_COUNT) {
+        $arr_slice_uid = array_slice($arr_uid, $i, MAX_OUTBOX_REQUEST_COUNT);
+
+        $outbox_rqst_len = 4 + 2;
+        $outbox_rqst_body = '';
+        foreach ($arr_slice_uid as $uid) {
+            $outbox_rqst_body .= pack('L', $uid);
+            $outbox_rqst_len += 4;
+        }
+
+        $outbox_rqst = pack('LS', $outbox_rqst_len, OUTBOX_OPCODE) . $outbox_rqst_body;
+        $outbox_resp = FALSE;
+        if (($outbox_resp = $outbox_client->send_rqst($outbox_rqst, TIMEOUT)) === FALSE) {
+            do_log('error', 'get_feedid: outbox_client->send_rqst');
+            return FALSE;
+        }
+
+        $rv = unpack('Llen/Sresult', $outbox_resp);
+        if ($rv['result'] != 0) {
+            do_log('error', "get_feedid: len: {$rv['len']} result: {$rv['result']}");
+            return FALSE;
+        }
+
+        $feedid_count = ($rv['len'] - OUTBOX_RESPONSE_HEAD_LEN) / FEEDID_LEN;
+        for ($j = 0; $j != $feedid_count; ++$j) {
+            $binary = substr($outbox_resp, OUTBOX_RESPONSE_HEAD_LEN + $j * FEEDID_LEN, FEEDID_LEN);
+            $feedid = binary_to_feedid($binary);
+            $arr_feedid[] = $feedid;
+        }
+    }
+
+    if ($outbox_client->close_conn() === FALSE) {
+        do_log('error', 'get_feedid: outbox_client->close_conn');
+        return FALSE;
+    }
+
+    return $arr_feedid;
 }

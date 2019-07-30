@@ -134,6 +134,68 @@ if ($action == 'normal')
         }
         echo $rv;
     } 
+    else if ($type == 'recommend')
+    {
+        $uid  = '';                                   
+        $app_id = '';
+        $cmd_id = '';                                 
+        $offset = 0;
+        $count  = 0;
+        $timestamp = 0;
+
+        if (isset($_REQUEST['uid']) && $_REQUEST['uid'] != '') {
+            $uid = $_REQUEST['uid'];
+        }
+        else
+        {
+            echo json_encode(array('result' => -1));
+            exit();
+        }
+
+        if (isset($_REQUEST['app_id']) && $_REQUEST['app_id'] != '') {
+            $app_id = $_REQUEST['app_id'];
+        }
+        if (isset($_REQUEST['cmd_id']) && $_REQUEST['cmd_id'] != '') {
+            $cmd_id = $_REQUEST['cmd_id'];
+        }
+        if (isset($_REQUEST['offset']) && $_REQUEST['offset'] != '') {
+            $offset = $_REQUEST['offset'];
+        }
+        if (isset($_REQUEST['count']) && $_REQUEST['count'] != '') {
+            $count = $_REQUEST['count'];
+        }
+        if (isset($_REQUEST['timestamp']) && $_REQUEST['timestamp'] != '') {
+            $timestamp = $_REQUEST['timestamp'];
+        }
+        /*
+        if (isset($_REQUEST['tags_id']) && $_REQUEST['tags_id'] != '') {
+            $tags_id = $_REQUEST['tags_id'];
+        }
+        */
+
+        $arr_uid = explode(',', $uid);
+        if ($app_id === '')
+        {
+            $arr_app_id = array();
+        }
+        else
+        {
+            $arr_app_id = explode(',', $app_id);
+        }
+        if ($cmd_id === '')
+        {
+            $arr_cmd_id = array();
+        }
+        else
+        {
+            $arr_cmd_id = explode(',', $cmd_id);
+        }
+        $rv = get_newsfeed_of_recommend($arr_uid, $arr_app_id, $arr_cmd_id, $offset, $count, $timestamp/*, $tags_id*/);
+        if ($rv === FALSE) {
+            echo json_encode(array('result' => -1));
+        }
+        echo $rv;
+    }
     else if ($type == 'latest')
     {
         $uid  = '';                                   
@@ -418,7 +480,6 @@ else if ($action == 'notice')
         do_log('error', "ERROR: uid: $uid cmd_id: $cmd_id type: $type");
         exit();
     }
-    do_log('error', "ERROR: uid: $uid cmd_id: $cmd_id count: $type");
     $arr_uid = explode(',', $uid);
     $rv = get_notice($arr_uid, $type, $arr_cmd_id);
 
@@ -473,6 +534,30 @@ do_log('error', '['.__LINE__.']: >>>>>>>>>>>>>> BEGIN <<<<<<<<<<<<:');
     }
     
     $rv = get_pfeed_stat($uid, $type, $cmd_id);
+
+    if ($rv === FALSE) {
+        echo json_encode(array('result' => -1));
+    }
+    echo $rv; 
+} else if ($action == 'recommend') {
+    $uid = '';
+    $type = '';
+    $offset = 0;
+    $count  = 0;
+    if (isset($_REQUEST['uid']) && $_REQUEST['uid'] != '') {
+        $uid = $_REQUEST['uid'];
+    }
+    if (isset($_REQUEST['type']) && $_REQUEST['type'] != '') {
+        $type = $_REQUEST['type'];
+    }
+    if (isset($_REQUEST['offset']) && $_REQUEST['offset'] != '') {
+        $offset = $_REQUEST['offset'];
+    }
+    if (isset($_REQUEST['count']) && $_REQUEST['count'] != '') {
+        $count = $_REQUEST['count'];
+    }
+            
+    $rv = get_recommend_user($uid, $type, $offset, $count);
 
     if ($rv === FALSE) {
         echo json_encode(array('result' => -1));
