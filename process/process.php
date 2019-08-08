@@ -7,7 +7,7 @@ require dirname(__FILE__) . DIRECTORY_SEPARATOR . 'Mifan' . DIRECTORY_SEPARATOR 
 require dirname(__FILE__) . DIRECTORY_SEPARATOR . 'Mifan' . DIRECTORY_SEPARATOR .  'feedidFromMine.php';
 require dirname(__FILE__) . DIRECTORY_SEPARATOR . 'Mifan' . DIRECTORY_SEPARATOR .  'dropFeedidFromTag.php';
 require dirname(__FILE__) . DIRECTORY_SEPARATOR . 'Mifan' . DIRECTORY_SEPARATOR .  'pUpdateStat.php';
-require dirname(__FILE__) . DIRECTORY_SEPARATOR . 'Mifan' . DIRECTORY_SEPARATOR .  'noteArticle.php';
+require dirname(__FILE__) . DIRECTORY_SEPARATOR . 'Mifan' . DIRECTORY_SEPARATOR .  'noteScore.php';
 declare(ticks=1);
 
 $g_pid_arr = array();
@@ -442,8 +442,16 @@ function children_process()
                         return -1;
                     }
                 }
-            }
-            else if ($feed['cmd_id'] == 201 || $feed['cmd_id'] == 202)
+            } else if ($feed['cmd_id'] > 100 && $feed['cmd_id'] < 200) {
+                if (is_feed_valid($feed)) {
+                    log::write("[".__FUNCTION__."]:[".__LINE__."]".'invalid feed format'.print_r($feed, true), "error");
+                    continue;
+                }
+
+                $feed["data"] = substr($pack, 17, $feed["len"] - 17);
+                $g_sys_conf['feed']['operator'][$feed['cmd_id']]($feed);
+                continue;
+            } else if ($feed['cmd_id'] == 201 || $feed['cmd_id'] == 202)
             {
                 if ($ret = feed_update_sync($pack, $input_arr, $output_arr))
                 {

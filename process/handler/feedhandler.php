@@ -943,7 +943,6 @@ function news_article($feed, &$comfeed, &$completefeed, &$passive_feed)
 
     $completefeed["data"] = json_encode($src_data);
     $code =  __fill_article_to_tag_list($feed, $completefeed);
-    notify_kafka_new_article($feed['user_id'], $src_data['article_id'], $feed['new_feedid']);
 //    DEBUG && log::write("XXXX [".__LINE__."] constructor feedid:".print_r($completefeed, true),"debug");
     return $code;
 
@@ -1086,6 +1085,7 @@ function news_liker($feed, &$comfeed, &$completefeed, &$passive_feed)
     __init_completefeed_common($feed, $completefeed);
     $completefeed['data'] = json_encode($src_data);
     update_pfeeds_statistic($passive_feed);
+    notify_kafka_update_score(__notify_gen_message($feed['user_id'], $src_data['article_id'], $feed['cmd_id'], $src_data['author_id']));
     return 0;
 }
 function news_comment($feed, &$comfeed, &$completefeed, &$passive_feed)
@@ -1106,6 +1106,7 @@ function news_comment($feed, &$comfeed, &$completefeed, &$passive_feed)
 
     $completefeed['data'] = json_encode($src_data);
     update_pfeeds_statistic($passive_feed);
+    notify_kafka_update_score(__notify_gen_message($feed['user_id'], $src_data['article_id'], $feed['cmd_id'], $src_data['author_id']));
     return 0;
 }
        
@@ -1192,7 +1193,6 @@ function delete_article(&$feed, $rqst, $storage_server_socket) {
 //            DEBUG && log::write('['.__LINE__.']: Got feed: '.print_r($feed, true), "debug");
             delete_article_by_tag($feed, $tmp['tags'], $storage_server_socket);
 //            $feedid = base64_encode(pack("LSLLLL", $feed['user_id'], $feed["cmd_id"], $feed["app_id"], $feed["timestamp"], $feed["magic1"], $feed["magic2"]));
-//            notify_kafka_del_article($feed['user_id'], $article['id'], $feedid);
                 
             return 0;
         }
@@ -1229,11 +1229,12 @@ global $kCnf;
 global $kProducerCnf;
 global $kTopicCnf;
 
-function __notify_gen_message($uid, $articleid, $feedid) {
-    $protobuf_ = new \Mifan\noteArticle();
-    $protobuf_->setUserid($uid);
-    $protobuf_->setArticleid($articleid);
-    $protobuf_->setFeedid($feedid);
+function __notify_gen_message($uid, $article, $cmd_id, $author) {
+    $protobuf_ = new \Mifan\noteScore();
+    $protobuf_->setUser($uid);
+    $protobuf_->setArticle($article);
+    $protobuf_->setCmd($cmd_id);
+    $protobuf_->setAuthor($author);
     return $protobuf_->serializeToString();
 }
 function __check_kafka_cnf_exist_and_init(&$kCnf, &$kProducerCnf, &$kTopicCnf) {
@@ -1266,36 +1267,26 @@ function __check_kafka_cnf_exist_and_init(&$kCnf, &$kProducerCnf, &$kTopicCnf) {
     }
 }
 
-function notify_kafka_new_article($uid, $articleId, $feedid) {
+function notify_kafka_update_score($msg) {
     global $kCnf;
     global $kProducerCnf;
     global $kTopicCnf;
 
     __check_kafka_cnf_exist_and_init($kCnf, $kProducerCnf, $kTopicCnf);
 
-    $kTopic = $kProducerCnf->newTopic(KAFKA_NOTE_NEW_ARTICLE, $kTopicCnf);
+    $kTopic = $kProducerCnf->newTopic(KAFKA_NOTE_UPDATE_SCORE, $kTopicCnf);
     $option = KAFKA_NOTE_ARTICLE_OPTION;
 
-    $serializeBuf = __notify_gen_message($uid, $articleId, $feedid);
-    $info_ = new \Mifan\noteArticle();
-    $info_->ParseFromString($serializeBuf);
-    log::write('['.__FUNCTION__.']['.__LINE__.'] Kafka new article['.$info_->getUserid().' - '.$info_->getArticleid().' - '.$info_->getFeedid());
-    $kTopic->produce(RD_KAFKA_PARTITION_UA, 0, "article:$serializeBuf", $option);
+    $kTopic->produce(RD_KAFKA_PARTITION_UA, 0, $msg, $option);
 }
 
-function notify_kafka_del_article($uid, $articleId, $feedid) {
-    global $kCnf;
-    global $kProducerCnf;
-    global $kTopicCnf;
 
-    __check_kafka_cnf_exist_and_init($kCnf, $kProducerCnf, $kTopicCnf);
-
-    $kTopic = $kProducerCnf->newTopic(KAFKA_NOTE_DEL_ARTICLE, $kTopicCnf);
-    $option = KAFKA_NOTE_ARTICLE_OPTION;
-
-    $serializeBuf = __notify_gen_message($uid, $articleId, $feedid);
-    $info_ = new \Mifan\noteArticle();
-    $info_->ParseFromString($serializeBuf);
-    log::write('['.__FUNCTION__.']['.__LINE__.'] Kafka new article['.$info_->getUserid().' - '.$info_->getArticleid());
-    $kTopic->produce(RD_KAFKA_PARTITION_UA, 0, "article:$serializeBuf", $option);
+function click_article($feed){
+    $src_data = unpack("Larticle_id/Lauthor_id", $feed["data"]);
+    if ($src_data['author_id'] == $feed['user_id']) {
+        //log::write("Do not support click myself".print_r($feed, true), "warn");
+        return 0;
+    }
+    
+    notify_kafka_update_score(__notify_gen_message($feed['user_id'], $src_data['article_id'], $feed['cmd_id'], $src_data['author_id']));
 }
